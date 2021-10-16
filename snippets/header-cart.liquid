@@ -1,9 +1,0 @@
-{% unless template == 'cart' or  template == 'cart.demo-cart-2' or  template == 'cart.demo-cart-3' or settings.catalog_mode %}
-<div class="dropdn dropdn_fullheight minicart {{ class }} {% unless section.settings.cart %}d-none{% endunless %}">
-    <a href="#" class="dropdn-link js-dropdn-link minicart-link" data-panel="#dropdnMinicart" title="{{ 'cart.general.title' | t }}">
-        <i class="icon-{{ settings.minicart_icon }}"></i>
-        <span class="minicart-qty">{{ cart.item_count }}</span>
-        <span class="minicart-total hide-mobile {% if cart.item_count == 0 %}d-none{% endif %}">{{ cart.total_price | money }}</span>
-    </a>
-</div>
-{% endunless %}
