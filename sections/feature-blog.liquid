@@ -1,0 +1,259 @@
+<div class="page-width feature-blog blog-page">
+  <div class="container">
+  {% if section.settings.title != blank %}
+  <div class="widget-title text-center">   
+    <h2>
+      <span class="box-title">{{section.settings.title}}</span>
+    </h2>
+  </div>
+  {% endif %}
+  {%- assign blog = blogs[section.settings.blog] -%}
+  {% unless blog.articles_count == 0 %}
+  <div class="content-blog">
+      <ul class="list-blog blog-grid row">
+          {% for article in blog.articles limit: section.settings.post_limit %}
+          <li class="item col-md-6 col-xl-6">
+              <h4>
+                <a href="{{ article.url }}">
+                  {% if settings.enable_multilang %}
+                  <span class="lang1">{{ article.title | split: '|' | first }}</span>
+                  <span class="lang2">{{ article.title | split: '|' | last }}</span>
+                  {% else %}
+                  {{ article.title | split: '|' | first }}
+                  {% endif %}
+                </a>
+              </h4>
+              <div class="blog_author">
+                  {% comment %}
+                  Don't be fooled, the ? in comments_enabled? is part of the liquid tag.
+                  {% endcomment %}
+                  {% if blog.comments_enabled? %}
+                  <a href="{{ article.url }}#comments" {% if settings.enable_multilang %} data-translate="blogs.comments.comments_with_count|count:{{article.comments_count}}" {%endif%}>
+                      {{ 'blogs.comments.comments_with_count' | t: count: article.comments_count }}
+                  </a>
+                  <span> / </span>
+                  {% endif %}
+                  {% if section.settings.blog_show_date %}
+                  <span class="article__date">
+                      Posted on {{ article.published_at | time_tag: format: 'month_day_year' }}
+                  </span>
+                  {% endif %}
+                  {% if section.settings.blog_show_author %}
+                  <span class="article__author">by {{article.author}}</span>
+                  {% endif %}
+              </div>
+              <div class="article-details">
+                  {% if article.image %}
+                  {% assign image_alt = article.title | escape %}
+                  <div class="article-img">
+                      <a href="{{article.url}}">
+                        <img alt="{{ product.images[0].alt | escape }}"
+                             class="images-one lazyload"
+                             src="{{article | img_url: '1024x1024'}}"
+                             data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+                             data-aspectratio="{{ product.featured_image.aspect_ratio }}"
+                             data-sizes="auto" alt="{{image_alt}}">
+                      </a>
+                  </div>
+                  {% endif %}
+                  <div class="rte article-excerpt">
+                      <div class="desc">
+                          {% if section.settings.layout == 'list' %}
+                          {% if settings.enable_multilang %}
+                          <div class="lang1">
+                              {{ article.excerpt_or_content | strip_html | truncatewords: 80 | split:"[lang2]" | first | split:"|" |first}}
+                          </div>
+                          <div class="lang2">
+                              {{ article.excerpt_or_content | strip_html | truncatewords: 80 | split:"[lang2]" | last | split:"|" |last }}
+                          </div>
+                          {% else %}
+                          {{ article.excerpt_or_content | strip_html | truncatewords: 80 | split:"[lang2]" | first | split:"|" |first}}
+                          {% endif %}
+                          {% else %}
+                          {% if settings.enable_multilang %}
+                          <div class="lang1">
+                              {{ article.excerpt_or_content | strip_html | truncatewords: 30 | split:"[lang2]" | first | split:"|" |first}}
+                          </div>
+                          <div class="lang2">
+                              {{ article.excerpt_or_content | strip_html | truncatewords: 30 | split:"[lang2]" | last | split:"|" |last }}
+                          </div>
+                          {% else %}
+                          {{ article.excerpt_or_content | strip_html | truncatewords: 30 | split:"[lang2]" | first | split:"|" |first}}
+                          {% endif %}
+                          {% endif %}
+                      </div>
+                      <p class="button">
+                          <a href="{{ article.url }}" class="btn btn-secondary" {% if settings.enable_multilang %}data-translate="blogs.article.read_more" {% endif %}>
+                              {{ 'blogs.article.read_more' | t }}
+                          </a>
+                      </p>
+                  </div>
+              </div>
+          </li>
+          {% endfor %}
+      </ul>
+  </div>
+  {% endunless %}
+  {% if section.settings.show_view_all %}
+  <hr class="hr--invisible" aria-hidden="true">
+  </hr>
+  <div class="text-center">
+      <a href="{{ blog.url }}" class="btn" aria-label="{{ 'blogs.article.view_all_blogs' | t }}">
+          {{ 'blogs.article.view_all' | t }}
+      </a>
+  </div>
+  {% endif %}
+  </div>
+</div>
+
+
+
+{% schema %}
+{
+  "name": {
+    "de": "Blogposts",
+    "en": "Blog posts",
+    "es": "Entradas del blog",
+    "fr": "Articles de blog",
+    "it": "Articoli del blog",
+    "ja": "ブログ記事",
+    "nl": "Blogberichten",
+    "pt-BR": "Posts do blog",
+    "zh-CN": "博客文章",
+    "zh-TW": "部落格文章"
+  },
+  "class": "index-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": {
+        "de": "Titel",
+        "en": "Heading",
+        "es": "Título",
+        "fr": "En-tête",
+        "it": "Heading",
+        "ja": "見出し",
+        "nl": "Kop",
+        "pt-BR": "Título",
+        "zh-CN": "标题",
+        "zh-TW": "標題"
+      },
+      "default": {
+        "de": "Blogposts",
+        "en": "Blog posts",
+        "es": "Entradas del blog",
+        "fr": "Articles de blog",
+        "it": "Articoli del blog",
+        "ja": "ブログ記事",
+        "nl": "Blogberichten",
+        "pt-BR": "Posts do blog",
+        "zh-CN": "博客文章",
+        "zh-TW": "部落格文章"
+      }
+    },
+    {
+      "id": "blog",
+      "type": "blog",
+      "label": {
+        "de": "Blog",
+        "en": "Blog",
+        "es": "Blog",
+        "fr": "Blog",
+        "it": "Blog",
+        "ja": "ブログ",
+        "nl": "Blog",
+        "pt-BR": "Blog",
+        "zh-CN": "博客",
+        "zh-TW": "部落格"
+      }
+    },
+    {
+      "type": "range",
+      "id": "post_limit",
+      "label": {
+        "de": "Posts",
+        "en": "Posts",
+        "es": "Publicaciones",
+        "fr": "Articles",
+        "it": "Articoli",
+        "ja": "投稿",
+        "nl": "Berichten",
+        "pt-BR": "Posts",
+        "zh-CN": "文章",
+        "zh-TW": "貼文"
+      },
+      "min": 3,
+      "max": 12,
+      "step": 3,
+      "default": 3
+    },
+    {
+      "type": "checkbox",
+      "id": "blog_show_author",
+      "label": {
+        "de": "Autor anzeigen",
+        "en": "Show author",
+        "es": "Mostrar autor",
+        "fr": "Afficher l'auteur",
+        "it": "Mostra autore",
+        "ja": "執筆者を表示する",
+        "nl": "Auteur weergeven",
+        "pt-BR": "Mostrar autor",
+        "zh-CN": "显示作者",
+        "zh-TW": "顯示作者"
+      },
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "blog_show_date",
+      "label": {
+        "de": "Datum anzeigen",
+        "en": "Show date",
+        "es": "Mostrar fecha",
+        "fr": "Afficher la date",
+        "it": "Mostra data",
+        "ja": "日付を表示する",
+        "nl": "Datum weergeven",
+        "pt-BR": "Exibir data",
+        "zh-CN": "显示日期",
+        "zh-TW": "顯示日期"
+      },
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": {
+        "de": "Blogposts",
+        "en": "Blog posts",
+        "es": "Entradas del blog",
+        "fr": "Articles de blog",
+        "it": "Articoli del blog",
+        "ja": "ブログ記事",
+        "nl": "Blogberichten",
+        "pt-BR": "Posts do blog",
+        "zh-CN": "博客文章",
+        "zh-TW": "部落格文章"
+      },
+      "category": {
+        "de": "Blog",
+        "en": "Blog",
+        "es": "Blog",
+        "fr": "Blog",
+        "it": "Blog",
+        "ja": "ブログ",
+        "nl": "Blog",
+        "pt-BR": "Blog",
+        "zh-CN": "博客",
+        "zh-TW": "部落格"
+      },
+      "settings": {
+        "blog": "News",
+        "post_limit": 3
+      }
+    }
+  ]
+}
+{% endschema %}

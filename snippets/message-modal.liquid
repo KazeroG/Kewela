@@ -1,0 +1,50 @@
+<div class="loading-modal modal" {% if settings.enable_multilang %}data-translate="cart.ajax_cart.loading"{% endif %}>{{ 'cart.ajax_cart.loading' | t }}...</div>
+<div class="ajax-error-modal modal">
+  <div class="modal-inner">
+    <div class="ajax-error-title" {% if settings.enable_multilang %}data-translate="cart.ajax_cart.error"{% endif %}>{{ 'cart.ajax_cart.error' | t }}</div>
+    <div class="ajax-error-message"></div>
+  </div>
+</div>
+<div class="ajax-success-modal modal">
+  <div class="overlay"></div>
+  <div class="content">
+    <div class="ajax-left">
+      <img class="ajax-product-image" alt="&nbsp;" src="" style="max-width:72px; max-height:72px"/>
+    </div>
+    <div class="ajax-right">
+      <p class="ajax-product-vendor"></p>
+      <p class="ajax-product-title"></p>
+      <p class="success-message btn-go-to-cart" {% if settings.enable_multilang %}data-translate="cart.ajax_cart.success_text"{% endif %}>{{ 'cart.ajax_cart.success_text' | t }}</p>
+      <p class="success-message btn-go-to-wishlist" {% if settings.enable_multilang %}data-translate="wishlist.ajax_wishlist.success_text"{% endif %}>{{ 'wishlist.ajax_wishlist.success_text' | t }}</p>        
+      <div class="actions">
+        <button class="btn-secondary continue-shopping" onclick="javascript:void(0)" {% if settings.enable_multilang %}data-translate="cart.ajax_cart.continue_shopping"{% endif %}>{{ 'cart.ajax_cart.continue_shopping' | t }}</button>
+        <button class="btn-secondary btn-go-to-cart" onclick="window.location='{{ routes.cart_url }}'" {% if settings.enable_multilang %}data-translate="cart.ajax_cart.go_to_cart"{% endif %}>{{ 'cart.ajax_cart.go_to_cart' | t }}</button>
+        <button class="btn-secondary btn-go-to-wishlist" onclick="window.location='{{ pages['wish-list'].url }}'" {% if settings.enable_multilang %}data-translate="wishlist.ajax_wishlist.go_to_wishlist"{% endif %}>{{ 'wishlist.ajax_wishlist.go_to_wishlist' | t }}</button>
+      </div>
+    </div>
+    <a href="javascript:void(0)" class="close-modal">
+      <svg viewBox="0 0 24 24" id="icon-close" width="100%" height="100%">
+        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
+      </svg>
+    </a>
+  </div>    
+</div>
+
+
+<div class="newsletter-success-modal">
+    <div class="modal-overlay"></div>
+    <div class="halo-modal-content">
+      <a class="close close-modal" title="{{ 'cart.ajax_cart.close' | t }}">
+        {% render 'icon-close' %}
+      </a>
+
+      <div class="halo-modal-body success">
+        <i class="fa fa-check" aria-hidden="true"></i>
+        <span>{{settings.newssletter_success_text}}</span>
+      </div>
+      <div class="halo-modal-body error">
+        <i class="fa fa-times"></i>
+        <span>{{settings.newssletter_error_text}}</span>
+      </div>
+    </div> 
+</div>

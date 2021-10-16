@@ -1,0 +1,129 @@
+{% if section.settings.show_product_list_home_page%}
+  {% assign total = collections[section.settings.product_list_collection].all_products_count | plus:0 %}
+  <div class="widget-new-product {{section.id}} container wow fadeInUp"  data-wow-delay="{{ settings.time_lazy_load }}ms" data-new-arrivals-product>
+    {% if section.settings.title != blank %}
+    <div class="widget-title">   
+      <h2 class="text-center">{% render 'multilang' with section.settings.title %}</h2>
+    </div>
+    {% endif %}
+    <div class="widget-product">
+      <div class="products-grid row" data-products-to-show="{{ section.settings.product_list_limit | plus:0 }}" data-total-products="{{ total }}">
+        {% if section.settings.collection_results_per_row1 != blank and section.settings.collection_results_per_row1 != '5' %}
+          {% assign product_grid = 12 | divided_by: section.settings.collection_results_per_row1 %}
+          {% assign columns = true %}
+        {% endif %}
+      
+        {% assign product_limitation = 0 %}
+        {% if section.settings.display_infinite_scrolling_homepage %}
+        {% assign product_limitation = section.settings.product_list_limit | plus: 0 %}
+        {% endif %}
+        
+        {% for product in collections[section.settings.product_list_collection].products limit:section.settings.product_list_limit %}
+          <div class="{% if settings.product_image_border %}grid-item-border{% endif %}{% if settings.product_image_crop %} crop_image{% else %} no_crop_image{% endif %} grid-item col-xs-6 col-sm-4 {% if product_grid == 3 %}col-md-3{% endif %} {% if columns %}col-lg-{{product_grid}}{% else %}col{% endif %}" {% if section.settings.display_infinite_scrolling_homepage and forloop.index > product_limitation %} style="display:none" {% endif %}>
+          {% render 'product-grid-item', product: product %}
+          </div>
+        {% else %}
+        {% for product in (1..section.settings.product_list_limit) %}
+         <div class="grid-item no-product col-xs-6 col-sm-4 {% if product_grid == 3 %}col-md-3{% endif %} {% if columns %}col-lg-{{product_grid}}{% else %}col{% endif %}">
+           <div class="grid-view-item ">
+             <a href="#" class="grid-view-item__link">
+               <div class="grid-view-item__image">
+                 {% capture current %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}
+                 {{ 'product-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+               </div>
+               <div class="product-title"><span>Your product's name</span></div>
+              </a>
+              <div class="price-box">
+                <span> $250.00 </span>
+              </div>
+           </div>
+         </div>
+        {% endfor %}
+        {% endfor %}
+     </div>
+     
+      {% assign products_to_show = section.settings.product_list_limit | plus:0 %} 
+      {% if section.settings.display_infinite_scrolling_homepage and section.settings.product_list_collection != bank %}
+
+      {% assign collection = collections[section.settings.product_list_collection] %} 
+      {%- assign product_limit = product_limit | default: section.settings.product_list_limit | plus: 0 -%}
+      
+      <div class="infinite-scrolling-homepage wow fadeIn">
+        <a class="btn btn--secondary-accent btn--big btn-product-show-more" data-collection="{{ collection.handle }}" data-limit="{{ product_limit }}" data-page="2" data-total="{{  }}" href="{{ paginate.next.url }}" {% if total <= product_limit %}disabled="disabled"{% endif %}>
+          {{ 'home_page.show_more' | t}}
+        </a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+{% endif %} 
+{% schema %}
+  {
+    "name": "Featured Products",
+	"class": "index-section match-nav change-color",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "show_product_list_home_page",
+        "label": "Enable",
+        "default": true
+      },
+	 {
+        "type": "text",
+        "id": "title",
+        "label": "Title",
+        "default": "New Arrivals"
+      },
+      {
+        "type": "collection",
+        "id": "product_list_collection",
+        "label": "Collection to use"
+      },
+      {
+        "type": "checkbox",
+        "id": "display_infinite_scrolling_homepage",
+        "label": "Display Show More Button?",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "product_list_limit",
+        "label": "Number of products to show at one time",
+        "default": "5"
+      },
+      {
+        "type": "select",
+        "id": "collection_results_per_row1",
+        "label": "Products per row",
+        "options": [
+          {
+            "value": "3",
+            "label": "3"
+          },
+          {
+            "value": "4",
+            "label": "4"
+          },
+          {
+            "value": "5",
+            "label": "5"
+          },
+          {
+            "value": "6",
+            "label": "6"
+          }
+        ],
+        "default": "5"
+      }
+	],
+	"presets": [
+      {
+        "name": "Featured Products",
+        "category": "Product"
+      }
+    ]
+  }
+{% endschema %}
+
+

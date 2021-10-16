@@ -1,0 +1,120 @@
+{% if block_style == "style_1" %}
+<div class="col-1{% if banner_first_style != blank or banner_second_style != blank %} col-xs-12 col-sm-9{% else %} col-xs-12{% endif %}">
+{% elsif block_style == "style_2" or block_style == "style_3" %}
+<div class="col-1{% if banner_first_style != blank or banner_second_style != blank or banner_third_style != blank or featured_product != blank %} col-xs-12 col-sm-7{% else %} col-xs-12{% endif %}">
+{% elsif block_style == "style_4" %}
+  <div class="col-1 col-xs-12">
+{% endif %}
+  {% for l in linklists[link_child].links %}
+  <div class="inner col-xs-12{% if banner_first_style != blank or banner_second_style != blank or banner_third_style or featured_product %} col-sm-4{% else %} col{% endif %}">
+    <!-- Menu level 2 -->
+    <a  href="{{ l.url }}" class="current">
+      {% render 'multilang' with l.title %}
+      {% if block_style == "style_4" %}
+        {% for collection in collections %}
+          {% if collection.handle ==  l.handle %}
+       		{% if collection.image.src != blank %}
+          	{{ collection.image.src | collection_img_url: 'medium' | img_tag: collection_title }}
+      		{% else %} 	
+               {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    </a>
+    {% if  linklists[l.handle] != empty %}
+    <ul class="dropdown">
+      {% for child_l in linklists[l.handle].links %}
+      <!-- Menu level 3 -->
+      <li>
+        <a href="{{ child_l.url }}" {% if child_l.active %}class="current"{% endif %}>
+          {% render 'multilang' with child_l.title %}
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </div>
+  {% endfor %}
+{% if block_style == "style_1" or block_style == "style_2" or block_style == "style_3" or block_style == "style_3" %}
+</div>
+{% endif %}
+  
+{% if block_style == "style_1" %}
+  {% if banner_first_style != blank or banner_second_style != blank %}
+  <div class="col-2 col-sm-3">
+    {% if banner_first_style != blank %}
+    <p class="first">
+      <a href="{{ link_banner_first_style }}" title="">
+        <img src="{{ banner_first_style | img_url : "2000x" }}" alt="" />
+      </a>
+    </p>
+    {% endif %}
+    {% if banner_second_style != blank %}
+    <p class="second">
+      <a href="{{ link_banner_second_style }}" title="">
+        <img src="{{ banner_second_style | img_url : "2000x" }}" alt="" />
+      </a>
+    </p>
+    {% endif %}
+  </div>
+  {% endif %}
+{% elsif block_style == "style_2" %}
+  {% if banner_first_style != blank or banner_second_style != blank or banner_third_style != blank %}
+  <div class="col-2 col-sm-5">
+    {% if banner_second_style != blank or banner_third_style != blank %}
+    	<div class="col-left col-sm-6">
+          	<a href="{{ link_banner_second_style }}" title="">
+              <img src="{{ banner_second_style | img_url : "2000x" }}" alt="" />
+          </a>
+            <a href="{{ link_banner_thrid_style }}" title="">
+              <img src="{{ banner_third_style | img_url : "2000x" }}" alt="" />
+          </a>
+    	</div>
+    {% endif %}
+    {% if banner_first_style != blank %}
+    <div class="col-right col-sm-6">
+      <a href="{{ link_banner_first_style }}" title="">
+      <img src="{{ banner_first_style | img_url : "2000x" }}" alt="" />
+      </a>
+    </div>
+    {% endif %}    
+    
+  </div>
+  {% endif %}
+{% elsif block_style == "style_3" %}
+  {% if banner_first_style != blank or featured_product != blank %}
+  <div class="col-2 col-sm-5">
+    <div class="row">
+     
+      <div class="col-xs-12 col-sm-6">
+         {% capture menu_featured_product_collection %}menu_{{ indexOf }}_featured_product_collection{% endcapture %}
+      <div class="widget-featured-product">
+        {% if title_featured_product != blank %}
+        <h3 class="title">{% render 'multilang' with title_featured_product %}</h3>
+        {% endif %}
+        <div class="products-grid">
+          {% comment %}
+          Loop through products in your Frontpage collection.
+          This collection is created by default, but you must add products to it.
+          {% endcomment %}
+          {% capture index %}{{ 'now' | date: '%S' | times: collections[featured_collection].products.size | divided_by: 60 }}{% endcapture %}
+          {% for product in collections[featured_collection].products offset:index limit:1 %}
+          {%- assign image_size = '160x' -%}
+          {% render 'mega-menu-product-grid' , grid_image_width: image_size %}	  
+          {% endfor %}
+        </div>
+      </div>
+      </div>
+      {% endif %}
+      {% if banner_first_style != blank %}
+      <div class="col-xs-12 col-sm-6 img-right">
+        <a href="{{ link_banner_first_style }}" title="">
+        <img src="{{ banner_first_style | img_url : "2000x" }}" alt="" />
+        </a>
+      </div>
+   
+    </div>
+  </div>
+  {% endif %}
+{% endif %}

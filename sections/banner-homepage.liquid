@@ -1,0 +1,362 @@
+{% if section.settings.enable %}
+<div class="banner-home-top">
+  {% for block in section.blocks %}
+  {% case block.type %}
+  {% when 'banner_1' %}
+  <ul class="banner-1" id="two">
+    <li class="col-xs-12  wow fadeInUp " data-wow-delay="{{ settings.time_lazy_load }}ms">
+      <div class="zi-banner">
+          <div class="zi-banner-image">
+            {% if block.settings.banner_image_1 != blank %}
+            {%- assign banner_img_url_1 = block.settings.banner_image_1 | img_url: '2000x' -%}
+            <div style="background-image: url({{ banner_img_url_1 }});background-size:cover" alt="{{ block.settings.image.alt }}"></div>
+            {% else %} 	
+            {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+            {% endif %}
+          </div>
+          <div class="des-banner" style=" color: {{ block.settings.banner_heading_color_1 }};">
+            {% if block.settings.heading_title != blank %}
+            <div class="heading_top" style="font-size:{{block.settings.heading_top_size}}px; ">
+              {% render 'multilang' with block.settings.heading_title %}
+            </div>
+            {% endif %}
+            {% if block.settings.banner_heading_banner_1 != blank %}
+            <h2 style=" font-size: {{ block.settings.banner_heading_size_1 }}px;">
+              {% render 'multilang' with block.settings.banner_heading_banner_1 %}
+            </h2>
+            {% endif %}
+            {% if block.settings.banner_des_1 != blank %}
+            <div class="banner-text" style="font-size: {{ block.settings.banner_des_size_1 }}px;">
+              {% render 'multilang' with block.settings.banner_des_1 %}
+            </div>
+            {% endif %}
+            {% if block.settings.banner_button_1 != blank %}
+            <a class="banner-bt" style="border-bottom:2px solid {{ block.settings.banner_heading_color_1 }};
+                      font-size: {{ block.settings.banner_button_size_1 }}px;
+                      color: {{ block.settings.banner_heading_color_1 }};"
+               href="{{ block.settings.banner_link_1 }}">                   
+              {% render 'multilang' with block.settings.banner_button_1 %}
+            </a>
+            {% endif %}
+          </div>
+         
+      </div>
+    </li>
+    <a href="#three" class="goto-next scrolly">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" zoomAndPan="disable" x="0px" y="0px" viewBox="0 0 36 18" style="enable-background:new 0 0 36 18;" xml:space="preserve">
+        <style type="text/css">
+          .st0{fill:none;stroke:#fff;stroke-width:1.5;}
+        </style>
+        <line class="st0" x1="36" y1="0" x2="18" y2="18"/>
+        <line class="st0" x1="0" y1="0" x2="18" y2="18"/>
+        <head xmlns=""/></svg>
+    </a>
+  </ul>
+  {% when 'banner_2' %}
+  <ul class="banner-2" id="one" >
+    <li class="col-xs-6 wow fadeInUp " data-wow-delay="{{ settings.time_lazy_load }}ms">
+      <div class="zi-banner">
+          <div class="zi-banner-image">
+            {% if block.settings.banner_2_image_1 != blank %}
+            {%- assign banner_2_img_url_1 = block.settings.banner_2_image_1 | img_url: '960x' -%}
+            <div style="background-image: url({{ banner_2_img_url_1 }});background-size:cover" alt="{{ block.settings.image.alt }}"></div>
+            {% else %} 	
+            {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+            {% endif %}
+          </div>
+          <div class="des-banner" style="color: {{ block.settings.banner_2_heading_color_1 }};">
+             {% if block.settings.banner_2_heading_banner_1 != blank %}
+            <h2 style="font-size: {{ block.settings.banner_2_heading_size_1 }}px;">
+              {% render 'multilang' with block.settings.banner_2_heading_banner_1 %}
+            </h2>
+             {% endif %}
+            {% if block.settings.banner_2_des_1 != blank %}
+            <div class="banner-text" style="font-size: {{ block.settings.banner_2_des_size_1 }}px;">
+              {% render 'multilang' with block.settings.banner_2_des_1 %}
+            </div>
+             {% endif %}
+            {% if block.settings.banner_2_button_1 != blank %}
+            <a class="banner-bt" style="border-bottom:2px solid {{block.banner_2_heading_color_1}};
+                      font-size: {{ block.settings.banner_2_button_size_1 }}px;
+                      color: {{ block.settings.banner_2_heading_color_1 }};"
+               href="{{ block.settings.banner_2_link_1 }}">                   
+              {% render 'multilang' with block.settings.banner_2_button_1 %}
+            </a>
+             {% endif %}
+          </div>
+      </div>
+    </li>
+    <li class="col-xs-6 wow fadeInUp " data-wow-delay="{{ settings.time_lazy_load }}ms">
+      <div class="zi-banner">
+          <div class="zi-banner-image">
+            {% if block.settings.banner_2_image_2 != blank %}
+            {%- assign banner_2_img_url_2 = block.settings.banner_2_image_2 | img_url: '960x' -%}
+            <div style="background-image: url({{ banner_2_img_url_2 }});background-size:cover" alt="{{ block.settings.image.alt }}"></div>
+            {% else %} 	
+            {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+            {% endif %}
+          </div>
+          <div class="des-banner" style="color: {{  block.settings.banner_2_heading_color_2 }}">
+            {% if block.settings.banner_2_heading_banner_2 != blank %}
+            <h2 style="font-size: {{ block.settings.banner_2_heading_size_2 }}px;">
+              {% render 'multilang' with block.settings.banner_2_heading_banner_2 %}
+            </h2>
+            {% endif %}
+             {% if block.settings.banner_2_des_2 != blank %}
+            <div class="banner-text"  style="font-size: {{ block.settings.banner_2_des_size_2 }}px;">
+              {% render 'multilang' with block.settings.banner_2_des_2 %}
+            </div>
+            {% endif %}
+             {% if block.settings.banner_2_button_2 != blank %}
+            <a class="banner-bt" style="border-bottom:2px solid {{block.banner_2_heading_color_2}};
+                      font-size: {{ block.settings.banner_2_button_size_2 }}px;
+                      color: {{  block.settings.banner_2_heading_color_2 }}"
+               href="{{ block.settings.banner_2_link_2 }}">                   
+              {% render 'multilang' with block.settings.banner_2_button_2 %}
+            </a>
+            {% endif %}
+          </div>
+      </div>
+    </li>
+    <a href="#two" class="goto-next scrolly">
+        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" zoomAndPan="disable" x="0px" y="0px" viewBox="0 0 36 18" style="enable-background:new 0 0 36 18;" xml:space="preserve">
+          <style type="text/css">
+            .st0{fill:none;stroke:#fff;stroke-width:1.5;}
+          </style>
+          <line class="st0" x1="36" y1="0" x2="18" y2="18"/>
+          <line class="st0" x1="0" y1="0" x2="18" y2="18"/>
+          <head xmlns=""/></svg>
+      </a>
+  </ul>
+  {% endcase %}
+  {% endfor %}
+</div>
+{% endif %}
+{% schema %}
+  {
+    "name": "Banner Homepage ",
+    "class": "index-section index-section--flush match-nav",
+    "settings": [
+       {
+        "type": "checkbox",
+        "id": "enable",
+        "label": "Enable",
+        "default": true
+      }
+    ],
+	"blocks": [
+      {
+        "type": "banner_1",
+        "name": "1 Banner",
+        "settings": [
+          {
+          "type": "image_picker",
+          "id": "banner_image_1",
+          "label": "BANNER #1",
+          "info": "1920px wide by 900px high recommended"
+          },
+		{
+            "type": "color",
+            "id": "banner_heading_color_1",
+            "label": "Banner Text Color",
+            "default": "#fff",
+            "info": "Default Value: #fff"
+          },
+		{
+			"type" : "text",
+			"id" : "heading_title",
+			"label" : "Heading top"
+		  },
+		{
+			"type" : "text",
+			"id" : "heading_top_size",
+			"label" : "Heading top size",
+			"default": "16",
+			 "info": "Default Value: 16"
+		  },
+		 {
+            "type": "text",
+            "id": "banner_heading_banner_1",
+            "label": "Heading Banner",
+            "default": "#Trending Now"
+          },
+          {
+            "type": "text",
+            "id": "banner_heading_size_1",
+            "label": "Heading Banner Size",
+            "default": "42",
+            "info": "Default Value: 42"
+          },
+		  {
+            "type": "richtext",
+            "id": "banner_des_1",
+            "label": "Subheading"
+	      },
+          {
+            "type": "text",
+            "id": "banner_des_size_1",
+            "label": "SubHeading Font Size",
+            "default": "12",
+            "info": "Default Value: 12"
+          },
+	      {
+            "type": "text",
+            "id": "banner_button_1",
+            "label": "Banner Button",
+	       "default" : "Shop Now"
+          },
+	      {
+            "type": "text",
+            "id": "banner_button_size_1",
+            "label": "Buton Font Size",
+            "default": "12",
+            "info": "Default Value: 12"
+          },
+          {
+            "type": "url",
+            "id": "banner_link_1",
+            "label": "Link",
+            "info": "Optional"
+          }
+		  
+        ]
+      },
+	  {
+        "type": "banner_2",
+        "name": "2 Banners",
+        "settings": [
+          {
+          "type": "image_picker",
+          "id": "banner_2_image_1",
+          "label": "BANNER #1",
+          "info": "960px wide by 900px high recommended"
+          },
+ 		  {
+            "type": "color",
+            "id": "banner_2_heading_color_1",
+            "label": "Banner Text Color",
+            "default": "#fff",
+            "info": "Default Value: #fff"
+          },
+		 {
+            "type": "text",
+            "id": "banner_2_heading_banner_1",
+            "label": "Heading Banner",
+            "default": "Shop For Her"
+          },
+          {
+            "type": "text",
+            "id": "banner_2_heading_size_1",
+            "label": "Heading Banner Size",
+            "default": "42",
+            "info": "Default Value: 42"
+          }, 
+		  {
+            "type": "richtext",
+            "id": "banner_2_des_1",
+            "label": "Subheading"
+	  	  },
+          {
+            "type": "text",
+            "id": "banner_2_des_size_1",
+            "label": "SubHeading Font Size",
+            "default": "12",
+            "info": "Default Value: 12"
+          },
+	      {
+            "type": "text",
+            "id": "banner_2_button_1",
+            "label": "Banner Button",
+	       "default" : "Shop Now"
+          },
+	      {
+            "type": "text",
+            "id": "banner_2_button_size_1",
+            "label": "Buton Font Size",
+            "default": "12",
+            "info": "Default Value: 12"
+          },
+          {
+            "type": "url",
+            "id": "banner_2_link_1",
+            "label": "Buton Link",
+            "info": "Optional"
+          },
+		  {
+          "type": "image_picker",
+          "id": "banner_2_image_2",
+          "label": "BANNER #2",
+          "info": "960px wide by 900px high recommended"
+          },
+		   {
+            "type": "color",
+            "id": "banner_2_heading_color_2",
+            "label": "Banner Text Color",
+            "default": "#fff",
+            "info": "Default Value: #fff"
+          },
+		 {
+            "type": "text",
+            "id": "banner_2_heading_banner_2",
+            "label": "Heading Banner",
+            "default": "Shop For Him"
+          },
+         
+          {
+            "type": "text",
+            "id": "banner_2_heading_size_2",
+            "label": "Heading Banner Size",
+            "default": "42",
+            "info": "Default Value: 42"
+          },      
+          {
+            "type": "richtext",
+            "id": "banner_2_des_2",
+            "label": "Subheading"
+	  	  },
+          {
+            "type": "text",
+            "id": "banner_2_des_size_2",
+            "label": "SubHeading Font Size",
+            "default": "12",
+            "info": "Default Value: 12"
+          },
+	      {
+            "type": "text",
+            "id": "banner_2_button_2",
+            "label": "Banner Button",
+	       "default" : "Shop Now"
+          },
+	      {
+            "type": "text",
+            "id": "banner_2_button_size_2",
+            "label": "Buton Font Size",
+            "default": "12",
+            "info": "Default Value: 12"
+          },
+          {
+            "type": "url",
+            "id": "banner_2_link_2",
+            "label": "Buton Link",
+            "info": "Optional"
+          }
+		 
+        ]
+      }	
+	],
+	"presets": [
+		{
+        "name": "Banner Hompage",
+        "category": "Iamge",
+        "blocks": [
+          {
+            "type": "banner_1"
+          },
+		  {
+            "type": "banner_2"
+          }
+        ]
+      }
+	]
+  }
+{% endschema %}

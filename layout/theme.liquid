@@ -1,0 +1,181 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]><html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if IE 9 ]><html class="ie9 no-js"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+
+  <!-- Basic page needs ================================================== -->
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <!-- Title and description ================================================== -->
+  <title>
+    {{ page_title }}{% if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif %}{% if current_page != 1 %} &ndash; Page {{ current_page }}{% endif %}{% unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless %}
+  </title>
+
+  {% if page_description %}
+  <meta name="description" content="{{ page_description | escape | split: '[/countdown]' | last | strip_html }}">
+  {% endif %}
+
+  <!-- Product meta ================================================== -->
+  {% render 'fb-open-graph-tags' %}
+  {% render 'twitter-card' %}
+
+  <!-- Helpers ================================================== -->
+  <link rel="canonical" href="{{ canonical_url }}">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <!-- Favicon -->
+  {% if settings.favicon != blank %}
+  <link rel="shortcut icon" href="{{ settings.favicon | img_url: '32x32' }}" type="image/png">
+  {% endif %}
+
+  <!-- fonts -->
+  {% render 'head_fonts' %}
+
+  <!-- Styles -->
+  {% render 'head_styles' %}
+
+  <!-- Scripts -->
+  {% render 'head_scripts' %}
+
+  <!-- Header hook for plugins ================================================== -->
+  {{ content_for_header }}
+
+  <!--[if lt IE 9]>
+{{ '//html5shiv.googlecode.com/svn/trunk/html5.js' | script_tag }}
+<![endif]-->
+
+  {% comment %}
+  If you store has customers disabled, you can remove the following JS file
+  {% endcomment %}
+  {% if template contains 'customers' %}
+  {{ 'shopify_common.js' | shopify_asset_url | script_tag }}
+  {{ 'customer_area.js'  | shopify_asset_url | script_tag }}
+  {% endif %}
+
+</head>
+{% render 'search-autocomplete' %}
+{% comment %}
+Add the page template as a class for easy page or template specific styling.
+{% endcomment %}
+<body id="{{ page_title | handle }}" class="main-content1 {% if customer %}customer-logged-in {% endif %}template-{{ template | replace: '.', ' ' | truncatewords: 1, '' | handle }}" >
+  {% render 'scheme' %}
+  <nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s1">
+    <div class="gf-menu-device-wrapper">
+      <div class="gf-menu-device-container"></div>
+
+    </div>   
+
+  </nav>
+  <div class="wrapper-container">	
+    {% section 'header' %}
+    {% if template contains 'index' %}
+    {% endif%}
+    <div class="quick-view"></div>
+
+    <main class="main-content {% if template contains 'index' %}{% else %}container-fluid{% endif %}" role="main">
+      <div class="row">
+        <div class=" pull-left">
+          {% section 'navigation' %}
+          {%if template contains 'collection' or template contains 'product' %}
+          {% unless template contains 'list-collection' %}
+          {% section 'sidebar' %}
+          {% endunless %}
+          {% endif %}
+          {%if template contains 'blog'  or template contains 'article'%}
+          {% section 'sidebar-blog' %}
+          {% endif %}
+        </div>
+        <div class="{% unless template contains 'index' %} main-product pull-container {% endunless %}">
+          {% if template contains 'index' %}
+          <div class="navigation_scroll">
+            <ul>
+            </ul>
+          </div>
+          {% endif %}
+          {{ content_for_layout }}
+        </div>
+        {% unless template contains 'index' %}
+        <div class="pull-right">
+          {% if template contains 'product' or template == 'collection' %}
+          {% if template contains 'product' %}
+          {% section 'recently-viewed-products' %}	
+          {% endif %}
+          {%if template contains 'collection' %}
+          {% unless template contains 'list-collection' %}
+          {% section 'recently-viewed-products' %}
+          {% endunless %}
+          {% endif %}
+          {% endif %}
+        </div>
+        {% endunless %}
+      </div>
+    </main>
+    {% section 'footer' %}
+    {% if settings.enable_quick_view %}
+    {% render 'quick-view-template' %}
+    {% endif %}
+    {% section 'product-notification' %}
+    {% section 'cookie_popup' %}
+    {% render 'footer_scripts' %}
+    {% if template contains 'index' %}
+    {% render 'newsletter' %}
+    {% endif %}
+    {% if settings.enable_backtotop %}
+    <div id="back-top" style="display: none;"><a class="nav_up" href="#top">Back to top</a></div>
+    {% endif %}
+  </div>
+  <div 	id="mm-blocker" class="mm-slideout"></div>
+  {% if settings.display_recently_viewed_products %}
+  <!-- Begin Recently Viewed Products -->
+  {{ '//ajax.aspnetcdn.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js' | script_tag }}
+  {{ 'jquery.products.min.js' | asset_url | script_tag }}
+  {% if template contains 'product' %}
+  <script>
+    Shopify.Products.recordRecentlyViewed();
+  </script>
+  {% endif %}
+  <!-- End Recently Viewed Products -->
+  {% endif %}
+  {% render 'sweettooth-widgets' %}
+  <style>
+    {% if template contains 'index' %}
+    @media (min-width: 1025px) {
+      .navigation{
+        width:224px;
+        padding:5px 0px;    
+        position: absolute;
+        top: 136px;
+        z-index: 111;
+        left:40px;
+      }
+      .navigation .container-fluid{
+        padding:0px;
+      }
+      .header-bottom { 
+        -webkit-animation-duration: 0.8s; 
+        -moz-animation-duration: 0.8s;
+        -o-animation-duration: 0.8s;
+        animation-duration: 0.8s; 
+        position: absolute;
+        z-index: 1;
+        width: 100%;
+      }
+    }
+    {% else %}
+    .nav-bar .container-fluid{
+      padding:0px;
+    }
+    {% endif %}
+  </style>
+  <div class="close-mu">
+    <svg viewBox="0 90 98.5 96.5" id="icon-close" width="0px" height="0px">
+      <polygon points="93.372,98.579 88.293,93.5 48.936,132.857 9.579,93.5 4.5,98.579 43.857,137.936 4.5,177.293 9.579,182.372 
+                       48.936,143.014 88.293,182.372 93.372,177.293 54.014,137.936 "></polygon>
+    </svg>
+  </div>
+</body>
+</html>

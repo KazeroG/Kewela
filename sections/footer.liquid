@@ -1,0 +1,365 @@
+<footer class="site-footer">
+  <div class="container">
+   {% if section.settings.footer_newsletter_enable %}
+   <div class="footer-newsletter wow fadeIn col-lg-12" data-wow-delay="{{ settings.time_lazy_load }}ms">
+     <h3 >{% render 'multilang' with section.settings.footer_newsletter_text %}</h3>
+     <div class="des">{% render 'multilang' with  section.settings.des_newsletter %}</div>
+     {% render 'homepage-block-newsletter' %}
+   </div>
+   {% endif %}
+    <div class="footer-top">
+        <div class="row">
+          <div class="column-all">
+          <div class="col-1 wow fadeIn" data-wow-delay="{{ settings.time_lazy_load }}ms">
+            {% if section.settings.footer_title_1 != blank %}
+              <h3>{% render 'multilang' with section.settings.footer_title_1 %}</h3>
+            {% endif %}
+            {%- assign footer_linklist = section.settings.footer_linklist -%}
+            {% if linklists[footer_linklist].links.size > 0 %}
+              <ul>
+                {% for link in linklists[footer_linklist].links %}
+                  <li><a href="{{ link.url}}">{% render 'multilang' with link.title %}</a></li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          </div>
+
+          <div class="col-2 wow fadeIn" data-wow-delay="{{ settings.time_lazy_load | times: 2 }}ms">
+            {% if section.settings.footer_title_2 != blank %}
+              <h3>{% render 'multilang' with section.settings.footer_title_2 %}</h3>
+            {% endif %}
+            {%- assign footer_linklist_2 = section.settings.footer_linklist_2 -%}
+            {% if linklists[footer_linklist_2].links.size > 0 %}
+              <ul>
+                {% for link in linklists[footer_linklist_2].links %}
+                  <li><a href="{{ link.url}}">{% render 'multilang' with link.title %}</a></li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          </div>
+
+          <div class="col-3 wow fadeIn" data-wow-delay="{{ settings.time_lazy_load | times: 3 }}ms">
+            {% if section.settings.footer_title_3 != blank %}
+              <h3>{% render 'multilang' with section.settings.footer_title_3 %}</h3>
+            {% endif %}
+            {%- assign footer_linklist_3 = section.settings.footer_linklist_3 -%}
+            {% if linklists[footer_linklist_3].links.size > 0 %}
+              <ul>
+                {% for link in linklists[footer_linklist_3].links %}
+                  <li><a href="{{ link.url}}">{% render 'multilang' with link.title %}</a></li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          </div>
+          <div class="col-5 wow fadeIn" data-wow-delay="{{ settings.time_lazy_load | times: 3 }}ms">
+            {% if section.settings.footer_title_3 != blank %}
+              <h3>{% render 'multilang' with section.settings.footer_title_4 %}</h3>
+            {% endif %}
+            {%- assign footer_linklist_4 = section.settings.footer_linklist_4 -%}
+            {% if linklists[footer_linklist_4].links.size > 0 %}
+              <ul>
+                {% for link in linklists[footer_linklist_4].links %}
+                  <li><a href="{{ link.url}}">{% render 'multilang' with link.title %}</a></li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          </div>
+          </div>
+          <div class="col-4 wow fadeIn last" data-wow-delay="{{ settings.time_lazy_load | times: 5 }}ms">
+            {% if section.settings.footer_social_enable %}
+            <div class="footer-social">
+              {% if section.settings.footer_social_title != blank %}
+              <h3>{% render 'multilang' with section.settings.footer_social_title %}</h3>
+               {% endif %}
+              {% render 'social-media' %}
+            </div>
+            {% endif %}
+          </div>       
+
+        </div>
+    </div>
+
+    {%- assign footerLink = section.settings.footer_link -%}
+    {% if section.settings.footer_address_code != blank or linklists[footerLink].links.size > 0 %}
+    <div class="footer-bottom  wow fadeIn" data-wow-delay="{{ settings.time_lazy_load | times: 5 }}ms">
+          {% if section.settings.footer_address_code != blank %}
+            <address>
+              {% if settings.enable_multilang %}
+              <div class="lang1">{{ section.settings.footer_address_code | split: '[lang2]' | first }}</div>
+              <div class="lang2">{{ section.settings.footer_address_code | split: '[lang2]' | last }}</div>
+              {% else %}
+              {{ section.settings.footer_address_code | split: '|' | first }}
+              {% endif %}
+            </address>
+          {% endif %}
+        
+        {% if section.settings.display_paypal or section.settings.one_paypal != blank  %}
+         <div class="one_paypal">
+           {%if section.settings.one_paypal != blank %}
+           <img src="{{ section.settings.one_paypal | img_url: '700x700' }}" alt="{{ method }}">
+              {% endif %}
+      </div>
+        {% endif %}
+      
+        {% if section.settings.show_payment_icons %}
+           {% if section.settings.show_payment_icons %}
+     
+          <div class="payment-methods col-right">
+            <div class="footer-payment-icons">
+              {% if section.settings.payment_display_paypal %}
+              <span class="ips icon-card-paypal"></span>
+              {% endif %}
+              {% if section.settings.payment_display_visa %}
+              <span class="ips icon-card-visa"></span>
+              {% endif %}
+               {% if section.settings.payment_display_master %}
+              <span class="ips icon-card-mastercard"></span>
+              {% endif %}
+              {% if section.settings.payment_display_american_express %}
+              <span class="ips icon-card-amex-square"></span>
+              {% endif %}
+              {% if section.settings.payment_display_discover %}
+              <span class="ips icon-card-discover"></span>             
+              {% endif %}
+              {% if section.settings.payment_display_maestro %}
+              <span class="ips icon-card-maestro"></span>
+              {% endif %}
+              
+              {% if section.settings.payment_google_wallet %}
+              <span class="ips icon-card-google-wallet"></span>
+              {% endif %}
+              
+              
+            </div>
+          </div>
+      {% endif %}
+        {% endif %}
+    </div>
+    {% endif %}
+  </div>
+</footer>
+{% render 'message-modal' %}
+{% schema %}
+  {
+    "name": "Footer",
+    "settings": [
+	{
+        "type": "header",
+        "content": "Footer Background"
+      },
+      {
+        "type": "color",
+        "id": "bg_footer_color",
+        "label": "Background color",
+        "default": "#141414"
+      },
+      
+      {
+        "type": "header",
+        "content": "Text Color"
+      },
+      {
+        "type": "color",
+        "id": "footer_title_color",
+        "label": "Footer Title",
+        "default": "#fff"
+      },
+      {
+        "type": "color",
+        "id": "footer_link_color",
+        "label": "Footer Text",
+        "default": "#969696"
+      },
+      {
+        "type": "header",
+        "content": "Footer Column"
+      },
+      {
+        "type": "text",
+        "id": "footer_title_1",
+        "label": "Footer 1 Title"
+      },
+      {
+        "type": "link_list",
+        "id": "footer_linklist",
+        "label": "Footer Column 1",
+        "default": "footer"
+      },
+      {
+        "type": "text",
+        "id": "footer_title_2",
+        "label": "Footer 2 Title"
+      },
+      {
+        "type": "link_list",
+        "id": "footer_linklist_2",
+        "label": "Footer Column 2"
+      },
+      {
+        "type": "text",
+        "id": "footer_title_3",
+        "label": "Footer 3 Title"
+      },
+      {
+        "type": "link_list",
+        "id": "footer_linklist_3",
+        "label": "Footer Column 3"
+      },
+      {
+        "type": "text",
+        "id": "footer_title_4",
+        "label": "Footer 4 Title"
+      },
+      {
+        "type": "link_list",
+        "id": "footer_linklist_4",
+        "label": "Footer Column 4"
+      },
+	  {
+        "type": "header",
+        "content": "Social"
+      },
+      {
+        "type": "checkbox",
+        "id": "footer_social_enable",
+        "label": "Show social media links?",
+        "default": false
+      },
+	  {
+        "type": "text",
+        "id": "footer_social_title",
+        "label": "Footer Social Title"
+      },
+	{
+        "type": "textarea",
+        "id": "fb_like_code",
+        "label": "Facebook Like Code"
+      },
+	  {
+        "type": "header",
+        "content": "Newsletter"
+      },
+      {
+        "type": "checkbox",
+        "id": "footer_newsletter_enable",
+        "label": "Show newsletter signup?",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "footer_newsletter_text",
+        "label": "Footer Newsletter Text"
+      },
+	  {
+		"type" : "textarea",
+		"id" : "des_newsletter",
+		"label" : "Description newsletter"
+	  },
+      {
+        "type": "header",
+        "content": "Footer Address"
+      },
+      {
+        "type": "richtext",
+        "id": "footer_address_code",
+        "label": "Footer Address Code"
+      },
+      
+       {
+        "type": "header",
+        "content": "Footer Payment"
+      },
+		 {
+        "type": "checkbox",
+        "id": "show_payment_icons",
+        "label": "Show payment icons",
+        "default": false
+      },
+ 	 {
+        "type": "checkbox",
+        "id": "payment_display_visa",
+        "label": "Visa"
+      },
+		{
+        "type": "checkbox",
+        "id": "payment_display_american_express",
+        "label": "American Express"
+      },
+ 		{
+        "type": "checkbox",
+        "id": "payment_display_master",
+        "label": "Master"
+      },
+		{
+        "type": "checkbox",
+        "id": "payment_display_paypal",
+        "label": "Paypal"
+      },
+      {
+        "type": "checkbox",
+        "id": "payment_display_maestro",
+        "label": "Maestro"
+      },
+	  {
+        "type": "checkbox",
+        "id": "payment_display_discover",
+        "label": "Discover"
+      },
+	  {
+        "type": "checkbox",
+        "id": "payment_google_wallet",
+        "label": "Google Wallet"
+      }
+    ]
+  }
+{% endschema %}
+<style>
+.site-footer {
+   {% if section.settings.bg_footer_color != '' %}
+    background: {{ section.settings.bg_footer_color }};
+  {% endif %}
+	{% if section.settings.bg_footer_img == 'bg-footer' %}
+		background: url({{ section.settings.bg-footer-img | img_url: '2048x' }});;
+	{% elsif settings.bg_footer_img != 'none' %}
+		background: url({{ section.settings.bg_footer_img | asset_url }});
+	{% endif %}
+	background-position: {{ section.settings.bg_footer_position_x }} {{ section.settings.bg_footer_position_y }};
+	background-repeat: {{ section.settings.bg_footer_repeat }};
+	background-attachment: {{ section.settings.bg_footer_attachment }};
+}
+  .footer-top .footer-social ul.social-icons li a,
+.site-footer .text span,
+.footer-top h3 { color: {{ section.settings.footer_title_color }}; }
+  .newsletter .input-group-btn > .btn .fa,
+.site-footer a,
+.footer-bottom address {color: {{ section.settings.footer_link_color }};}
+.site-footer a:hover { color: {{ section.settings.footer_title_color }}; }
+.site-footer .col-1 a:hover,
+.site-footer .col-2 a:hover,
+.site-footer .col-3 a:hover, .site-footer .col-5 a:hover { border-bottom: 1px dotted {{ section.settings.footer_title_color }}; }
+  ::-webkit-input-placeholder { 
+  	color: {{ section.settings.footer_title_color }};
+  }
+  ::-moz-placeholder { 
+    color: {{ section.settings.footer_title_color }};
+  }
+
+  :-moz-placeholder { 
+    color: {{ section.settings.footer_title_color }};
+  }
+  .newsletter .input-group-field, .footer-newsletter .des, .footer-newsletter h3{
+    color: {{ section.settings.footer_title_color }};
+  }
+  .footer-newsletter .input-group-field::placeholder{
+  color:{{ section.settings.footer_link_color}}!important;
+  }
+  .newsletter .input-group-btn > .btn{
+  border:2px solid {{ section.settings.footer_link_color }};
+      border-left: none;
+  }
+  .footer-newsletter .newsletter .input-group-field{
+ border:2px solid {{ section.settings.footer_link_color }};
+    border-right: none;
+    color:{{ section.settings.footer_link_color }};
+  }
+  </style>

@@ -1,0 +1,467 @@
+/*  General
+/*-------------------------- */
+html,
+body { font-size: 12px; color: #000000; }
+body { font-size: 100%; font-weight: 400 }
+
+a { color:#000000; }
+.blog-detail .user-tags li  { color:#000000; }
+
+.page-header h2, .page-header h1 { color:#000000;}
+
+.breadcrumb a, 
+.breadcrumb span {color:#282828;  text-transform:capitalize;}
+
+
+.dropdown-cart .text-cart a{
+color:#282828; 
+}
+/*  Background
+/*-------------------------- */
+.site-header.on,
+body {
+  
+    background: #ffffff;
+  
+  
+  background-position: left top;
+  background-repeat: repeat;
+  background-attachment: scroll;
+}
+
+/* Product Name */
+.product-title { text-transform: none; }
+
+/* Border product item */
+.products-grid .grid-item-border .product-image,
+.grid-item-border.product-img-box .product-photo-container { border-color: #c3c3c3;}
+
+/*  Button
+/*-------------------------- */
+
+.btn, .btn-secondary, 
+.text-continue a, 
+.spr-summary-actions a, 
+#get-rates-submit, 
+.infinite-scrolling a, 
+.infinite-scrolling-homepage a { font-size: 12px; }
+.blog-detail .action-btn span,
+.top-header-panel .text-continue a:hover,
+.btn,
+.btn-secondary,
+.product-item .btn,
+.widget-featured-product .btn,
+.text-continue a:hover,
+.list-category .view:hover,
+.collection-title a.btn:hover,
+.list-category .grid-item:hover .collection-title a.btn,
+#mc_embed_signup .input-group-btn .btn:hover,
+.btn.spr-button:hover,
+#get-rates-submit:hover,
+#create_customer .action-btn input,
+.template-customers-addresses .grid .large--right a,
+.content-blog .list-blog .button a:hover,
+.quick-view .product-shop .btn,
+.template-customers-account .grid .grid-item p > a,
+.ajax-success-modal .btn-secondary:hover,
+.infinite-scrolling a:hover,
+.infinite-scrolling-homepage a:hover { 
+  background-color: #000000; 
+  color: #ffffff;
+  border-color: #000000;
+}
+
+.blog-detail .action-btn span a{
+color: #ffffff;
+}
+
+.header-panel-top .dropdown-cart .actions .btn{background-color: #000000!important;}
+.header-panel-top .dropdown-cart .actions .btn:hover{ background-color: #ff7677!important;}
+.top-header-panel .text-continue a,
+.blog-detail .action-btn span:hover,
+.btn:hover,
+.template-customers-account .grid .grid-item p > a:hover,
+.btn-secondary:hover,
+.product-item .btn:hover,
+.text-continue a,
+.list-category .view,
+.collection-title a.btn,
+#mc_embed_signup .input-group-btn .btn,
+.spr-summary-actions a:hover,
+.spr-form-actions .btn:hover,
+.btn.spr-button,
+#get-rates-submit,
+#create_customer .action-btn input:hover,
+.template-customers-addresses .grid .large--right a:hover,
+.ajax-success-modal .btn-secondary,
+.infinite-scrolling a,
+.infinite-scrolling-homepage a { 
+  background-color: #ffffff;
+  color: #000000;
+  border-color: #000000;
+}
+
+.blog-detail .action-btn span:hover a{
+ color: #000000;
+}
+.btn span.arrow { border-left-color: #ffffff; }
+.btn:hover span.arrow { border-left-color: #000000; }
+
+.spr-form-actions .btn,
+.spr-summary-actions a {
+  background-color: #000000; 
+  color: #ffffff;
+  border-color: #000000;
+}
+
+
+.content-blog .list-blog .button a { border-color:#000000; background-color: #ffffff; color: #000000; }
+
+.quick-view .product-shop .btn:hover,
+.product-shop #add-to-cart-form .btn:hover,
+.dropdown-cart .actions .btn:hover { border-color:#ff7677; background-color: #ff7677; color: #ffffff; }
+
+/* Title Color */
+label,
+.spr-icon,
+.widget-title fieldset.box-title legend,
+.home-instagram .widget-title h3,
+.sidebar .widget-title,
+.recently-viewed-products h2,
+.refined-widgets > span,
+.tab-content h4,
+.tab-content .spr-form-title,
+.tab-content .spr-review .spr-review-header-title,
+.tab-content .spr-review .spr-review-header-byline,
+#email-modal .window-window .window-content .title,
+#email-modal .window-window .window-content .message,
+.cart-list .price,
+#shipping-calculator h3,
+#add-comment-title, 
+.title-comment,
+.lookbook-slideshow { color:#000000; }
+
+/* Body Color */
+.product-shop .product-infor label { color: #000000; }
+
+/*  Font Size
+/*-------------------------- */
+blockquote,
+small,
+.header-mobile .dropdown-menu,
+
+.tab-content .spr-review-content-body,
+.toolbar.toolbar-bottom .page-total,
+.dropdown-menu > li > a,
+.site-footer .social-icons .text,
+.panel-group .panel-body h4,
+.tab-content h4,
+.price-box em,
+.tab-content .spr-form-label,
+.tab-content .spr-review .spr-review-header-byline { font-size: 12px; }
+
+.dropdown-cart .text-cart a,
+.product-label strong,
+.cart-row label.add-comments span:first-child { font-size: 10px; }
+
+.quickview-button a,
+.widget-tags li a,
+.dropdown-cart .summary .label,
+.newsletter .input-group-btn > .btn,
+.site-nav .widget-featured-product .btn,
+.spr-summary-actions a,
+.toolbar,
+.cart-title h2,
+.cart-list input.update,
+.cart-list a.remove,
+.cart-row .total-price h3,
+.toolbar.toolbar-bottom,
+.swatch label,
+.hl-right-top .fa,
+.hl-right-top .nav-search.on .btn-search .fa-search,
+.site-nav > li > a,
+.top-header-panel,
+#email-modal .window-window .window-content .message { font-size: 12px; }
+
+.free-shipping h3,
+.cart-list .price { font-size: 13px; }
+.site-header .logo-title{font-size: 32px; }
+.refined-widgets > span,
+.widget-title h3,
+.cart-row .btn:hover,
+.contact-form .location h4,
+.product-shop .total-price > span,
+.related-products h2,
+.grid-item h3,
+.tab-content .spr-form-title { font-size: 15px; }
+
+.dropdown-cart .summary .price { font-size: 16px; }
+
+
+.related-products h2,
+.page-header h2,
+.page-header h1,
+#contactFormWrapper h2,
+.content-blog .list-blog h3,
+#add-comment-title,
+.title-comment,
+#customer_login .page-header h1
+.widget-title fieldset.box-title legend{ font-size: 22px; }
+
+
+
+.product-shop .prices .compare-price,
+#email-modal .window-window .window-content .title{ font-size: 20px; }
+
+.tab-content .spr-review .spr-review-header-title{
+font-size: 14px;
+
+}
+/*  Fonts
+/*-------------------------- */
+.refined-widgets > span,
+.site-nav > li > a,
+.header-top,
+.dropdown-cart .summary .label,
+.dropdown-cart .text-cart a,
+.page-header h2,
+.page-header h1,
+.banner h2,
+.banner-home-bottom .des h4,
+.widget-title h3,
+.free-shipping h3,
+.newsletter .block-title h3 span,
+#email-modal .window-window .window-content .title,
+.widget-new-product .widget-title h2,
+.slider-brand-wrapper h2,
+.collection-title a,
+.related-products h2,
+.recently-viewed-products h2,
+#shipping-calculator h3,
+#add-comment-title,
+.title-comment,
+.banner-home-top h4 span,
+.slide-heading,
+.footer-top h3,
+#contactFormWrapper h2,
+.contact-form .location h4,
+.content-blog .list-blog .button a,
+.widget-title fieldset.box-title legend,
+.product-label strong,
+.collection-title h3.h5,
+.nav-tabs,
+.tab-content .spr-form-title,
+.spr-summary-actions a,
+.cart-title h2,
+.site-header .logo-title,
+.header-top .selectize-control div.option,
+.cart-row .total-price h3,
+.cart-row label.add-comments span:first-child,
+.loading-modal,
+table.wishlist-product thead th,
+.template-customers-account .page-header h4,
+.template-customers-account .grid .grid-item p > a,
+.template-customers-addresses .grid .grid-item > p.button > a,
+.lookbook-slideshow .slide-des p:first-child,
+.btn,
+.btn-secondary,
+.three-block ul li,
+.text-continue a,
+#get-rates-submit,
+.infinite-scrolling a,
+.infinite-scrolling-homepage a,
+.template-customers-account .grid .grid-item > h5,
+.template-customers-account .grid  p,
+.template-customers-account .grid  span,
+.header-acc,
+.panel-group .panel-title,
+.site-footer .social-icons .text,
+.page-width .widget-title h2  { font-family: Poppins; }
+
+body,
+table th,
+.toolbar button,
+.sidebar-custom .widget-title h3,
+.site-nav .widget-featured-product .widget-title h3,
+.site-nav .widget-featured-product .btn,
+.blog-detail .page-header h1 { font-family: Poppins; }
+
+.quickview-button a { font-family: Poppins; }
+
+.site-nav-dropdown .col-1 ul.dropdown li a { font-family: Poppins; }
+
+
+
+.quick-view .selector-wrapper { display: none; }
+
+
+
+.products-grid .product-des { bottom: 0; }
+
+
+.banner h2 { color: #000000; }
+.banner p.line { background: #000000; }
+.banner p { color: #2d2d2d; }
+
+/* Settings Currency */
+@media (max-width: 1024px) {
+  
+    .header-mobile { width: 100%; }
+    .header-bottom .top-header { width: 25%; }
+  	.header-bottom .dropdown-cart { width: 100%; max-width:450px }
+  
+}
+
+
+/* Enable opacity when hover image */
+
+/*   img:hover { opacity:0.5; filter:alpha(opacity=50); } */
+  .product-img-box .more-view-wrapper img:hover { opacity: 0.3; }
+  /*.grid-item:hover .hover { opacity:0.9; filter:alpha(opacity=90); }*/
+
+
+
+  .grid-item .inner-top:hover .hover { opacity:0.7; filter:alpha(opacity=90); }
+  .list-category .grid-item:hover .hover { opacity: 0.8; filter: alpha(opacity=80); }
+
+
+.countdown .quickview-clock,
+.countdown #clock { font-family: Poppins; font-size: 16px; }
+
+/**/
+
+
+/* Show sidebar on the left, right */
+
+
+.widget-title fieldset.box-title legend{
+   font-size:28px; 
+}
+.widget-title fieldset.box-title{
+  border-top:3px solid #000000
+}
+.count_down {
+    width: 100%;
+    height: 25px;
+    line-height: 25px;
+  	color: #fff;
+ 	background:#e95144;
+    text-transform: uppercase;
+    position: absolute;
+    z-index: 9;
+    font-size:11px;
+    bottom: 0;
+    opacity: 0.9;
+    font-weight: 500;
+    letter-spacing: 1px;
+  	left:0px
+}
+.sidebar-tag .widget-title h3{
+    text-transform: uppercase;
+}
+.panel-group .panel-title > a:before{
+    content: "\f106";
+    font-family:FontAwesome;
+    font-size:18px;
+    float:right
+}
+.panel-group .panel-title> a.collapsed:before{
+    content: "\f107";
+  opacity: .5;
+}
+.panel-group .panel-title > a{
+	display:block
+}
+
+ .quickview-button a{
+ font-size: 10px; 
+ }
+
+
+
+/* Font-size: 11px */
+.product-shop .short-description h4,
+.instagram-des,
+.header-top p,
+.site-nav .products-grid .product-item .btn,
+ .currency,.lang-block,
+.product-shop .product-infor label,
+.recently-viewed-products .products-grid .product-item .btn,
+.size-chart-open-popup{
+	font-size: 11px; 
+}
+
+/* ================================================================== */
+
+/* Font-size: 13px */
+.grid-item .product-vendor, .sidebar-tag .widget-title h3, 
+.sidebar-links .widget-content > ul > li > a,
+
+#customer_login .action-btn input,
+ .ajax-success-modal .btn-secondary, .cart-title h2, 
+.cart-row .total-price h3{
+	font-size: 13px;
+}
+/* Font-size: 14px */
+.site-nav-dropdown .col-1 .inner > a,
+.site-nav-dropdown.style_3 .widget-featured-product h3,
+#email-modal .window-window .window-content .sub-title,
+.sample-vendor a,
+.vendor-top,
+.price-box,
+.footer-top h3,
+.home-slideshow .slick-active .slide-button{
+  font-size: 14px; 
+}
+/* =================================================================== */
+/* Font-size: 22px */
+.home-instagram .widget-title h3,
+.footer-newsletter h3,
+.slider-brand-wrapper h2,
+.widget-new-product .widget-title h2,
+.page-width .widget-title h2 {
+font-size: 22px;
+}
+/* Font-size: 16px */
+.recently-viewed-products h2, .sidebar-cms-custom .widget-title h3,#add-comment-title,   .product-list .price-box, .title-comment, .contact-form .location h4{
+  	font-size: 16px;
+}
+/* =================================================================== */
+
+/* Font-size: 17px */
+
+/* =================================================================== */
+
+/* Font-size: 18px */
+.article-title a,  .blog-detail .page-header h1{
+   	font-size: 18px;
+}
+/* Font-size: 12px */
+.nav-tabs > li > a,
+.site-nav  .grid-item .product-vendor,
+ #get-rates-submit,
+ .panel-group .panel-title,
+.dropdown-cart .text-cart a{
+  font-size: 12px; 
+}
+/* Font-size: 40px */
+.site-nav .menu-title{
+  font-size: 40px; 
+}
+
+#shipping-calculator h3{
+ font-size: 15px; 
+}
+
+.product-list .grid-item  .product-title{
+ font-size: 14px; 
+}
+
+.product-shop .price{
+ font-size: 24px;
+}
+@media (max-width: 1441px) {
+.recently-viewed-products h2
+{ font-size: 22px; }
+}
+

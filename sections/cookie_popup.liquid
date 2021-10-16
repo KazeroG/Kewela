@@ -1,0 +1,95 @@
+
+{% if section.settings.display_gdpr %}
+<div id="accept-cookies" class="cookieMessage" >
+  
+  <div class="block-cookies">
+    <div class="des">
+       {% render 'multilang' with section.settings.content %}
+    </div>
+    {% if section.settings.text_url != blank  %}
+    <button class="btn">
+    	{% render 'multilang' with section.settings.text_url %}
+    </button>
+    {% endif %}
+  </div>
+  
+  <a href="javascript:void(0)" class="close">
+    <svg class="icon-close" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="357px" height="357px" viewBox="0 0 357 357" style="enable-background:new 0 0 357 357;" xml:space="preserve"><g><g><polygon points="357,35.7 321.3,0 178.5,142.8 35.7,0 0,35.7 142.8,178.5 0,321.3 35.7,357 178.5,214.2 321.3,357 357,321.3 214.2,178.5"></polygon></g></g></svg>
+  </a>
+  
+</div>
+<style>
+  #accept-cookies .close{
+  	fill:{{section.settings.text_color}};
+  }
+  #accept-cookies .block-cookies{
+    color:{{section.settings.text_color}};
+  }
+  #accept-cookies{
+    background: {{section.settings.bg_color | color_modify: 'alpha', 0.8 }};
+  }
+  @media (min-width: 768px) {
+    #accept-cookies{
+      {% if section.settings.show_gdp == 'right' %}
+      right: 6vh;
+      {% else %}
+      left: 6vh;
+      {% endif %}
+    }
+  }
+  
+</style>
+{% endif %}
+{% schema %}
+  {
+    "name": "GDPR Cookie Popup",
+    "settings": [
+		{
+        "type": "checkbox",
+        "id": "display_gdpr",
+        "label": "Enable",
+        "default": true
+      },
+      {
+      "type": "radio",
+      "id": "show_gdp",
+      "label": "Show GDPR Cookie Popup on the",
+      "options": [
+      {
+      "value": "left",
+      "label": "Left"
+      },
+      {
+      "value": "right",
+      "label": "Right"
+      }
+      ],
+      "default": "right"
+      },
+    {
+        "type": "color",
+        "id": "bg_color",
+        "label": "Background Color"
+      },
+	  {
+        "type": "color",
+        "id": "text_color",
+        "label": "Text Color"
+      },
+		{
+        "type": "textarea",
+        "id": "content",
+        "label": "Description text"
+      },
+	  {
+        "type": "text",
+        "id": "text_url",
+        "label": "URL of your Privacy Policy"
+      }
+	  
+	   
+	]
+  }
+{% endschema %}
+
+

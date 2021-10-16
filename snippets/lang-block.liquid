@@ -1,0 +1,11 @@
+<div class="lang-block">
+  <select class="lang-switcher ss">
+    <option value="1">{{ settings.lange_1 }}</option>
+    <option value="2">{{ settings.lange_2 }}</option>
+  </select>
+</div>
+
+<style>        
+  .selectize-control div[data-value~="1"] {background: url({{ "i-lang-1.png" | asset_url }}) no-repeat;}        
+  .selectize-control div[data-value~="2"] {background: url({{ "i-lang-2.png" | asset_url }}) no-repeat;}        
+</style>
