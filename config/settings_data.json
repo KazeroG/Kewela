@@ -1764,28 +1764,28 @@
           "1506523206723-0": {
             "type": "text",
             "settings": {
-              "text": "<p>Free Shipping Worldwide. No Minimum<\/p>",
+              "text": "<p><a href=\"https:\/\/www.facebook.com\/kawelabeachtowels\/\" title=\"KAWELÄ sur Facebook\">Like us on Facebook<\/a><\/p>",
               "text_size": "11",
               "text_bg": "#f7f7fb",
-              "text_color": "#000000"
+              "text_color": "#1d61d2"
             }
           },
           "1506523206723-1": {
             "type": "text",
             "settings": {
-              "text": "<p>20% Off Your First Order<\/p>",
+              "text": "<p><a href=\"https:\/\/www.instagram.com\/kawela.ca\/?hl=en\" title=\"KAWELÄ sur Instagram\">Like us on Instagram<\/a><\/p>",
               "text_size": "11",
               "text_bg": "#f7f7fb",
-              "text_color": "#e95144"
+              "text_color": "#e374b1"
             }
           },
           "1506523206723-2": {
             "type": "text",
             "settings": {
-              "text": "<p>Secure Checkout Guarantee<\/p>",
+              "text": "<p><a href=\"https:\/\/www.youtube.com\/channel\/UCqAsO_vwMmzLyuFOyksH5ng\" title=\"KAWELÄ sur YouTube\">Watch us on Youtube<\/a><\/p>",
               "text_size": "11",
               "text_bg": "#f7f7fb",
-              "text_color": "#000000"
+              "text_color": "#ca2121"
             }
           }
         },
@@ -1973,16 +1973,67 @@
           "content": "",
           "text_url": ""
         }
+      },
+      "1634366323df265354": {
+        "type": "feature-row",
+        "settings": {
+          "layout": "left",
+          "title": "Image avec du texte",
+          "text": "<p>Ajoutez une image à un long texte pour mettre l'accent sur un produit de votre choix, une collection, ou un article de blog. Ajoutez des détails sur la disponibilité, le style, ou mettez un commentaire client en avant.<\/p>",
+          "button_label": "",
+          "button_link": ""
+        }
+      },
+      "1634366339ffa30964": {
+        "type": "three_block",
+        "blocks": {
+          "1634366339ffa30964-0": {
+            "type": "text",
+            "settings": {
+              "text": "",
+              "text_size": "",
+              "text_bg": "",
+              "text_color": ""
+            }
+          },
+          "1634366339ffa30964-1": {
+            "type": "text",
+            "settings": {
+              "text": "",
+              "text_size": "",
+              "text_bg": "",
+              "text_color": ""
+            }
+          },
+          "1634366339ffa30964-2": {
+            "type": "text",
+            "settings": {
+              "text": "",
+              "text_size": "",
+              "text_bg": "",
+              "text_color": ""
+            }
+          }
+        },
+        "block_order": [
+          "1634366339ffa30964-0",
+          "1634366339ffa30964-1",
+          "1634366339ffa30964-2"
+        ],
+        "settings": {
+        }
       }
     },
     "content_for_index": [
       "1490716464547",
+      "1506523206723",
       "1510050654981",
       "1510050864385",
-      "1506523206723",
       "1506524986454",
       "1489249304429",
-      "1506528432153"
+      "1506528432153",
+      "1634366323df265354",
+      "1634366339ffa30964"
     ]
   },
   "presets": {
