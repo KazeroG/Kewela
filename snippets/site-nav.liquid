@@ -1,171 +1,208 @@
 {% comment %}
-  List out your main-menu linklist (default)
-  More info on linklists:
-    - http://docs.shopify.com/themes/liquid-variables/linklists
+    Renders a list of menu items
+    Accepts:
+    - linklist: {Object} Linklist Liquid object (required)
+    - wrapper_class: {String} CSS wrapper class for the navigation (optional)
+
+    Usage:
+    {% include 'site-nav', linklist: section.settings.main_linklist, wrapper_class: 'site-nav--centered' %}
 {% endcomment %}
-
-<ul class="site-nav">
-    {% if section.settings.horizontal_linklist != blank %}
-    {% assign menu = linklists[section.settings.horizontal_linklist].links %}
-    {% else %}
-    {% assign menu = linklists.main-menu.links %}
-    {% endif %}
-    {% for link in menu %}
-  	{% assign i = forloop.index | downcase %}
-    {% assign cat = link.title | downcase %}
-  
-  	{% if section.settings.display_megamenu %}
-      
-      	{% assign is_megamenu = false %}
-        {% for block in section.blocks %}
-      	  {% for i in (1..4) %}
-  
-          {% capture cap_megamenu_item %}megamenu_items_{{ i }}{% endcapture %}  
-          {% capture cap_banner_first_style %}banner_first_style_{{ i }}{% endcapture %}
-          {% capture cap_banner_second_style %}banner_second_style_{{ i }}{% endcapture %}
-          {% capture cap_banner_third_style %}banner_third_style_{{ i }}{% endcapture %}
-  
-          {% capture cap_link_banner_first_style %}link_banner_first_style_{{ i }}{% endcapture %}
-  		  {% capture cap_link_banner_second_style %}link_banner_second_style_{{ i }}{% endcapture %}
-  		  {% capture cap_link_banner_third_style %}link_banner_third_style_{{ i }}{% endcapture %}
-  
-           {% capture cap_featured_product %}featured_product_{{ i }}{% endcapture %}
-          {% capture cap_title_featured_product %}title_featured_product_{{ i }}{% endcapture %}
-        {% comment %}  {% capture cap_main_linklist %}main_linklist_{{ i }}{% endcapture %}{% endcomment %}
-  
-  		  {% comment %}
-            For style 4
-          {% endcomment %}
-          {% capture cap_banner_four_style %}banner_four_style_{{ i }}{% endcapture %}
-  
-          {% if block.settings[cap_megamenu_item] != blank %}
-
-            {% assign megamenu_item = block.settings[cap_megamenu_item] | downcase %}
-            {% if megamenu_item == cat %}
-              {% assign is_megamenu = true %}
-              {% assign block_style = block.type %}
-  
-  			  {% assign banner_first_style = block.settings[cap_banner_first_style] %}
-  			  {% assign banner_second_style = block.settings[cap_banner_second_style] %}
-  			  {% assign banner_third_style = block.settings[cap_banner_third_style] %}
-  			  
-  			  {% assign link_banner_first_style = block.settings[cap_link_banner_first_style] %}
-  			  {% assign link_banner_second_style = block.settings[cap_link_banner_second_style] %}
-  			  {% assign link_banner_third_style = block.settings[cap_link_banner_third_style] %}
-  
-  			  {% assign featured_product = block.settings[cap_featured_product] %}
-  			  {% assign title_featured_product = block.settings[cap_title_featured_product] %}  			  
-  			  {%- assign product = all_products[featured_product] -%}
-  				
-  			  {% assign text_under_menu = block.settings.text_under_menu %}
-              {% assign color_under_text = block.settings.color_under_text %}
-              {% assign font_size_under = block.settings.font_size_under %}
-              {% assign background_text = block.settings.background_text %}
-  {% assign featured_collection = block.settings.collection %}
-  			  {% comment %}
-  				For style 4
-  			  {% endcomment %}
-  			  {% assign banner_four_style = block.settings[cap_banner_four_style] %}	
-  			  
-  
-  
-  			  {% assign main_linklist = block.settings[cap_main_linklist] %}
-  
-  
-            {% endif %}
-          {% endif %}
-  		  
-  		  {% case block.settings.width %}
-        	{% when 'small' %}
-  			{%- assign width_product = '120x160' -%}
-        	{% when 'medium' %}
-  			{%- assign width_product = '180x220' -%}
-        	{% when 'large' %}
-  			{%- assign width_product = '220x260' -%}
-  		  {% endcase %}
-  
-  
-          {% endfor %}
-        {% endfor %}
-  
-  	{% endif %}  
-  	{% if section.settings.enable_new %}
-	{% assign items_list_new = section.settings.megamenu_items_new | split:"," | strip | downcase %}
-	{% endif %}
-  	{% assign new = link.title | downcase %}
-    <li class="item{% if is_megamenu %} dropdown mega-menu{% else %}{% if linklists[link.handle] != empty %} dropdown{% endif %}{% endif %}{% if section.settings.enable_new and items_list_new contains new %} icon_new{% endif %}">
-      <a class="{% if link.active %}current{% endif %} {%if linklists[link.handle] != empty %}menu__moblie {% endif %}" href="{{ link.url }}">
-        <span>
-          {% if settings.enable_multilang %}
-          <span class="lang1">{{ link.title | split: '|' | first }}</span>
-          <span class="lang2">{{ link.title | split: '|' | last }}</span>
-          {% else %}
-          {{ link.title | split: '|' | first }}
-          {% endif %}
-        </span>
-        {% if linklists[link.handle] != empty and section.settings.show_dropdown_arrow %}
-        <span class="icon-dropdown">
-        <i class="fa fa-angle-right" aria-hidden="true"></i>
-        </span>
-        {% endif %}
-      </a> 	
-    
-      {% comment %}
-      Check if menu item is Mega menu
-      {% endcomment %}
-      
-      {% assign link_child = link.handle %}
-      {% if section.settings.display_megamenu %}  
-      
-      	{% if is_megamenu %}
-          <div class="site-nav-dropdown {% if is_megamenu %} mega-menu-dropdown{% endif %} shadow {{ block_style }}">
-            <div class="close_mega">
-              <a href="javascript:void(0)">
-                <span></span>
-              </a>
+{% assign megamenu_number = 1 %}
+{% if is_mainmenu == nil %}{% assign is_mainmenu = true %}{% endif %}
+<nav class="{% if custom_class != blank %}{{ custom_class }}{% else %}main-nav{% endif%}{% if wrapper_class != blank %} {{ wrapper_class }}{% endif %}">
+  <ul class="menu{% if menu_wrapper_class != blank %} {{ menu_wrapper_class }}{% endif %}">
+    {% for link in linklists[linklist].links %}
+    <li class="{% if link.active %}active{% endif %}{% if link.title contains '|megamenu' or link.title contains '| megamenu' %} megamenu-wrapper{% endif %}">
+        {% assign item_title = link.title | remove: '|megamenu' | remove: '| megamenu' | split: '|' | first | escape %}
+        <a href="{{ link.url }}">{{ item_title }}</a>
+        {% if link.title contains '|megamenu' or link.title contains '| megamenu' %}
+        {% assign linklist_width_settings_name = 'megamenu_linklist_width_' | append: megamenu_number %}
+        {% assign linklist_cols_settings_name = 'megamenu_linklist_cols_' | append: megamenu_number %}
+        {% assign bg_image_name = 'megamenu_bg_image_' | append: megamenu_number %}
+        
+        {% assign linklist_width = settings[linklist_width_settings_name] %}
+        {% assign linklist_cols = settings[linklist_cols_settings_name] | plus: 0 %}
+        {% assign bg_image = settings[bg_image_name] %}
+        <div class="megamenu flex-wrap pl-0 pr-0 pb-0"{% if bg_image != blank %} style="background-image:url({{ bg_image | img_url: 'master' }})"{% endif %}>
+            <div class="w-100 pb-6">
+                <div class="container">
+                    <div class="row">
+                        {% for childlink in link.links %}
+                        {% assign _order = forloop.index %}
+                        <div class="col-6 col-sm-4 col-md-3 col-lg-{{ linklist_width }} pl-0" style="order:{{ _order }}">
+                            <h4 class="menu-title pl-0 text-grey text-normal font-weight-normal"><a class="pt=0 pl-0 pb-0" href="{{ childlink.url }}">{{ childlink.title | split: '|' | first | escape }}</a></h4>
+                            {% if childlink.links != blank %}
+                            {% assign _limit = childlink.links.size | divided_by: linklist_cols %}
+                            {% assign _mod = childlink.links.size | modulo: linklist_cols %}
+                            {% if _mod > 0 %}{% assign _limit = _limit | plus: 1 %}{% endif %}
+                            <div class="row pl-0">
+                                {% assign _col_suffix_arrs = '0,12,6,4' | split: ',' %}
+                                {% assign _col_suffix_val = _col_suffix_arrs[linklist_cols] %}
+                                {% assign _offset = 0 %}
+                                {% for i in (1..linklist_cols) %}
+                                <div class="col-{{ _col_suffix_val }} pl-0">
+                                    <ul class="widget-body">
+                                        {% for grandchildlink in childlink.links offset: _offset limit: _limit %}
+                                        <li><a href="{{ grandchildlink.url }}">{{ grandchildlink.title | split: '|' | first | escape }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                                {% assign _offset = _offset | plus: _limit %}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                        {% for block in section.blocks %}
+                            {% assign _title = item_title | downcase | strip %}
+                            {% assign _hook = block.settings.hook | downcase | strip %}
+                            {% if _title == _hook %}
+                                {% case block.type %}
+                                    {% when 'banner1' %}
+                                    <div class="col-lg-{{ block.settings.width_destop}}" style="order:{{ block.settings.order | minus: 1 }}">
+                                        <div class="rt-banner banner-fixed banner_1 hover-gloom ani-wrapper-fadeInRight">
+                                            <a class="d-block pt-0 pr-0 pb-0 pl-0" href="{{ block.settings.button_url | default: "javascript:void(0);"}}">
+                                                {% if block.settings.image != blank %}
+                                                {% assign _container_width = 1220 %}
+                                                {% case block.settings.width_destop %}
+                                                    {% when '3' %}
+                                                    {% assign _img_width = _container_width | divided_by: 4 %}
+                                                    {% when '4' %}
+                                                    {% assign _img_width = _container_width | divided_by: 3 %}
+                                                    {% when '6' %}
+                                                    {% assign _img_width = _container_width | divided_by: 2 %}
+                                                    {% when '8' %}
+                                                    {% assign _img_width = _container_width | divided_by: 3 | plus: 2 %}
+                                                    {% when '12' %}
+                                                    {% assign _img_width = _container_width %}
+                                                {% endcase %}
+                                                {% assign _img_height = _img_width | divided_by: block.settings.image.aspect_ratio | round %}
+                                                {% assign _img_url = _img_width | append: 'x' | append: _img_height %}
+                                                <figure>
+                                                    <img src="{{ block.settings.image | img_url: _img_url, scale: 2 }}" alt="banner" width="{{ _img_width }}" height="{{ _img_height }}"/>
+                                                </figure>
+                                                {% else %}
+                                                <figure style="background-color:#ccc;height:240px"></figure>
+                                                {% endif %}
+                                            </a>
+                                            <div class="banner-content {{ block.settings.content_hori_align }} {{ block.settings.content_vert_align }} pe-none">
+                                                {% if block.settings.sub_title %}
+                                                <h4 class="banner-subtitle text-{{ block.settings.color_text }} font-weight-light fs-{{ block.settings.fs_subtitle | replace: '.', 'p' }} mb-2">{{ block.settings.sub_title }}</h4>
+                                                {% endif %}
+                                                {% if block.settings.title %}
+                                                <h3 class="banner-title ls-m mb-1 lh-1p3 text-{{ block.settings.color_text }} font-weight-normal fs-{{ block.settings.fs_title | replace: '.', 'p' }}">{{ block.settings.title }}</h3>
+                                                {% endif %}
+                                                <a href="{{ block.settings.button_url | default: "javascript:void(0);"}}" class="text-{{ block.settings.color_text }} btn-arrow ani-el pl-0 mt-2">
+                                                    {% render 'icon-arrow-right' %}
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% when 'product' %}
+                                    <div class="col-lg-{{ block.settings.width_destop}}" style="order:{{ block.settings.order | minus: 1 }}">
+                                        {% assign _product = all_products[block.settings.product] %}
+                                        {% if _product != blank %}
+                                        {% render 'product-item', product:_product, sign: section.id %}
+                                        {% else %}
+                                        {% render 'product-item-dummy' %}
+                                        {% endif %}
+                                    </div>
+                                    {% when 'circle_collection' %}
+                                    <div class="col-lg-{{ block.settings.width_destop}}" style="order:{{ block.settings.order | minus: 1 }}">
+                                        {% assign _collection = collections[block.settings.collection] %}
+                                        {% if _collection != blank %}
+                                        <div class="category category-circled pl-2 pr-2" {{ block.shopify_attributes }}>
+                                            <a href="{{ _collection.url }}">
+                                                {% if block.settings.bk_image == blank and _collection.image == blank %}
+                                                <figure class="category-media" style="background-color: transparent;">
+                                                    COLLECTION IMAGE
+                                                </figure>
+                                                {% else %}
+                                                {% if block.settings.bk_image %}
+                                                {% assign _image = block.settings.bk_image %}
+                                                {% else %}
+                                                {% assign _image = _collection.image %}
+                                                {% endif %}
+                                                <figure class="category-media">
+                                                    <img alt="category" height="196" src="{{ _image | img_url: '196x196', scale: 2 }}" width="196"/>
+                                                </figure>
+                                                {% endif %}
+                                            </a>
+                                            <div class="category-content">
+                                                <h4 class="category-name text-normal fs-1p7 font-weight-normal"><a href="{{ _collection.url }}">{% if block.settings.bk_title != blank %}{{ block.settings.bk_title }}{% else %}{{ _collection.title }}{% endif %}</a></h4>
+                                            </div>
+                                        </div>
+                                        {% else %}
+                                        <div class="category category-circled  pl-2 pr-2">
+                                            <a href="#">
+                                                <figure class="category-media" style="background-color: transparent;">
+                                                    COLLECTION IMAGE
+                                                </figure>
+                                            </a>
+                                            <div class="category-content">
+                                                <h4 class="category-name"><a href="javascript:void(0);">Collection Name</a></h4>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                {% endcase %}
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
-            <div class="container">
-               <a href="{{ link.url }}"class="menu-title text-center">
-               {% render 'multilang' with  link.title %}
-      			</a> 
-              <div class="row">{% render 'mega-menu',
-              						link_child: link_child,
-                                    megamenu_item: megamenu_item,
-                                    is_megamenu: is_megamenu,
-                                    block_style: block_style,
-                                    banner_first_style: banner_first_style,
-                                    banner_second_style: banner_second_style,
-                                    banner_third_style: banner_third_style,
-                                    link_banner_first_style: link_banner_first_style,
-                                    link_banner_second_style: link_banner_second_style,
-                                    link_banner_third_style: link_banner_third_style,
-                                    featured_product: featured_product,
-                                    title_featured_product: title_featured_product,
-                                    product: product,
-                                    text_under_menu: text_under_menu,
-                                    color_under_text: color_under_text,
-                                    font_size_under: font_size_under,
-                                    background_text: background_text,
-                                    featured_collection: featured_collection,
-                                    banner_four_style: banner_four_style,
-                                    main_linklist: main_linklist
-                				%}</div>
+            <div class="w-100">
+                {% for block in section.blocks %}
+                {% assign _title = item_title | downcase | strip %}
+                {% assign _hook = block.settings.hook | downcase | strip %}
+                {% if _title == _hook %}
+                {% case block.type %}
+                {% when 'banner2' %}
+                <div class="col-lg-12 banner-mass">
+                    <div class="rt-banner banner-fixed banner_2 content-{{ block.settings.content_hori_align }} hover-gloom">
+                        {% if block.settings.image != blank %}
+                        <figure class="d-flex">
+                            <img src="{{ block.settings.image | img_url: 'master' }}" alt="banner" />
+                        </figure>
+                        {% else %}
+                        <figure style="min-height:400px;background-color:#ccc;"></figure>
+                        {% endif %}
+                        <div class="banner-content {{ block.settings.content_vert_align }}">
+                            <div>
+                                <h3 class="banner-title font-weight-slight-bold ls-m text-{{ block.settings.color_text }} fs-{{ block.settings.fs_title | replace: '.', 'p' }}">{{ block.settings.title }}</h3>
+                                <p class="text-{{ block.settings.color_text }} fs-{{ block.settings.fs_description | replace: '.', 'p' }}">{{ block.settings.description }}</p>
+                                {% if block.settings.button_text != blank %}
+                                <a href="{{ block.settings.button_url | default: 'javascript:void(0);' }}" class="btn btn-primary btn-shadow-lg btn-ellipse text-normal pt-2 pb-2 pl-4 pr-4 font-weight-slight-bold">{{ block.settings.button_text }}</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endcase %}
+                {% endif %}
+                {% endfor %}
             </div>
-          </div>
+        </div>
+        {% if is_mainmenu == true %}{% assign megamenu_number = megamenu_number | plus: 1 %}{% endif %}
         {% else %}
-          {% if linklists[link.handle] != empty %}
-            {% render 'dropdown-menu',
-            	link_child: link_child
-      		%}
-          {% endif %}
+        {% if link.links.size > 0 %}
+        <ul>
+            {% for childlink in link.links %}
+            <li>
+            <a href="{{ childlink.url }}">{{ childlink.title | split: '|' | first | escape }}</a>
+            {% if childlink.links != blank %}
+            <ul>
+                {% for grandchildlink in childlink.links %}
+                <li><a href="{{ grandchildlink.url }}">{{ grandchildlink.title | split: '|' | first | escape }}</a></li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
         {% endif %}
-      
-      {% else %}
-        {% if linklists[link.handle] != empty %}
-          {% render 'dropdown-menu', link_child: link_child %}
         {% endif %}
-      {% endif %}
-      
     </li>
-  {% endfor %}
-</ul>
+    {% endfor %}
+  </ul>
+</nav>

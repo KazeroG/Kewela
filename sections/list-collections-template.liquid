@@ -1,163 +1,168 @@
-<div class="page-width page-content collections-list">
-
-  {% include 'breadcrumbs' %}
-
-  {% if section.settings.title_enable %}
-    <header class="section-header">
-      <h1 class="section-header__title">{{ 'collections.general.catalog_title' | t }}</h1>
-    </header>
-  {% endif %}
-
-  {%- assign blocks = section.blocks | sort: 'collection.all_products_count' -%}
-
-  {% case section.settings.grid %}
-    {% when '1' %}
-      {%- assign grid_item_width = 'collection--square-small' -%}
-      {%- assign image_size = '1300x' -%}
-    {% when '2' %}
-      {%- assign grid_item_width = 'medium-up--one-half collection--square-small' -%}
-      {%- assign image_size = '530x' -%}
-    {% when '3' %}
-      {%- assign grid_item_width = 'small--one-half medium-up--one-third collection--square-small' -%}
-      {%- assign image_size = '350x' -%}
-    {% when '4' %}
-      {%- assign grid_item_width = 'small--one-half medium-up--one-quarter collection--square-small' -%}
-      {%- assign image_size = '250x' -%}
-    {% when '5' %}
-      {%- assign grid_item_width = 'small--one-half medium-up--one-fifth collection--square-small' -%}
-      {%- assign image_size = '225x' -%}
-  {% endcase %}
-
-  <div class="grid grid--uniform skrim-grid">
-    {% if section.settings.display_type == 'all' %}
-      {% case section.settings.sort %}
-        {% when 'products_high' or 'products_low' %}
-          {%- assign collections = collections | sort: 'all_products_count' -%}
-        {% when 'date' or 'date_reversed' %}
-          {%- assign collections = collections | sort: 'published_at' -%}
-      {% endcase %}
-      {% if section.settings.sort == 'products_low' or section.settings.sort == 'date' or section.settings.sort == 'alphabetical' %}
-        {% for collection in collections %}
-          {% include 'collection-grid-item' %}
-        {% endfor %}
-      {% else %}
-        {% for collection in collections reversed %}
-          {% include 'collection-grid-item' %}
-        {% endfor %}
-      {% endif %}
-    {% else %}
-      {% for block in section.blocks %}
-        {%- assign collection = collections[block.settings.collection] -%}
-        {% include 'collection-grid-item' %}
-      {% endfor %}
-    {% endif %}
+<section class="grey-section pt-10 pb-10 appear-animate" id="{{ section.id }}" data-section-id="{{ section.id }}" data-section-type="categories-list-section" data-animation-options="{
+  'delay': '.3s'
+}">
+<div class="{% if section.settings.has_container %} container{% endif %} pt-3">
+<h2 class="title">{{ page_title }}</h2>
+{% if section.blocks.size > 0 %}
+{% assign _items_per_row = 12 | divided_by: section.settings.items_per_row %}
+<div class="row">
+  {% for block in section.blocks %}
+  {% assign _collection = collections[block.settings.collection] %}
+  {% if _collection != blank %}
+  <div class="col-md-{{ _items_per_row }} col-6 mb-4" {{ block.shopify_attributes }}>
+      <div class="category category-default category-absolute hover-gloom hover-zoom">
+          <a href="{{ _collection.url }}">
+              {% if block.settings.bk_image == blank and _collection.image == blank %}
+              {% assign _image = _collection.products[0].featured_image %}
+              <figure class="category-media">
+                <img alt="category" height="280" src="{{ _image | img_url: '280x280', scale: 2 }}" width="280"/>
+              </figure>
+              {% else %}
+              {% if block.settings.bk_image %}
+              {% assign _image = block.settings.bk_image %}
+              {% else %}
+              {% assign _image = _collection.image %}
+              {% endif %}
+              <figure class="category-media">
+                  <img alt="category" height="280" src="{{ _image | img_url: '280x280', scale: 2 }}" width="280"/>
+              </figure>
+              {% endif %}
+          </a>
+          <div class="category-content">
+              <h4 class="category-name">
+                  <a href="{{ _collection.url }}">{% if block.settings.bk_title != blank %}{{ block.settings.bk_title }}{% else %}{{ _collection.title }}{% endif %}</a>
+              </h4>
+              <span class="category-count">
+                  {% if block.settings.bk_count != blank %}
+                  {{ 'collections.general.items_with_count' | t: count: block.settings.bk_count }}
+                  {% else %}
+                  {{ 'collections.general.items_with_count' | t: count: _collection.all_products_count }}
+                  {% endif %}
+              </span>
+          </div>
+      </div>
   </div>
+  {% else %}
+  <div class="col-md-{{ _items_per_row }} col-6 mb-4">
+      <div class="category category-default category-absolute hover-gloom hover-zoom">
+          <a href="javascript:void(0);">
+              <figure class="category-media">
+                  {{ 'collection-1' | placeholder_svg_tag }}
+              </figure>
+          </a>
+          <div class="category-content">
+              <h4 class="category-name">
+                  <a href="javascript:void(0);">Collection</a>
+              </h4>
+              <span class="category-count">
+                  {{ 'collections.general.items_with_count' | t: count: 20 }}
+              </span>
+          </div>
+      </div>
+  </div>
+  {% endif %}
+  {% endfor %}
 </div>
+{% else %}
+{% assign _items_per_row = 12 | divided_by: section.settings.items_per_row %}
+<div class="row">
+  {% for _collection in collections %}
+  <div class="col-md-{{ _items_per_row }} col-6 mb-4" {{ block.shopify_attributes }}>
+      <div class="category category-default category-absolute hover-gloom hover-zoom" style="--aspect-ratio:1">
+          <a href="{{ _collection.url }}">
+              {% if block.settings.bk_image == blank and _collection.image == blank %}
+              {% assign _image = _collection.products[0].featured_image %}
+              <figure class="category-media">
+                <img alt="category" height="280" src="{{ _image | img_url: '280x280', scale: 2 }}" width="280"/>
+              </figure>
+              {% else %}
+              {% if block.settings.bk_image %}
+              {% assign _image = block.settings.bk_image %}
+              {% else %}
+              {% assign _image = _collection.image %}
+              {% endif %}
+              <figure class="category-media">
+                  <img alt="category" height="280" src="{{ _image | img_url: '280x280', scale: 2 }}" width="280"/>
+              </figure>
+              {% endif %}
+          </a>
+          <div class="category-content">
+              <h4 class="category-name">
+                  <a href="{{ _collection.url }}">{% if block.settings.bk_title != blank %}{{ block.settings.bk_title }}{% else %}{{ _collection.title }}{% endif %}</a>
+              </h4>
+              <span class="category-count">
+                  {% if block.settings.bk_count != blank %}
+                  {{ 'collections.general.items_with_count' | t: count: block.settings.bk_count }}
+                  {% else %}
+                  {{ 'collections.general.items_with_count' | t: count: _collection.all_products_count }}
+                  {% endif %}
+              </span>
+          </div>
+      </div>
+  </div>
+  {% endfor %}
+ </div>
+
+{% endif %}
+</div>
+</section>
 
 {% schema %}
-  {
-    "name": "Collections list page",
-    "settings": [
-      {
-        "type": "checkbox",
-        "id": "title_enable",
-        "label": "Show title",
-        "default": true
-      },
-      {
-        "type": "paragraph",
-        "content": "All of your collections are listed by default. To customize your list, choose 'Selected' and add collections."
-      },
-      {
-        "type": "radio",
-        "id": "display_type",
-        "label": "Select collections to show",
-        "default": "all",
-        "options": [
+
+{
+  "name": "Categories List",
+  "class": "index-section index-section--categories-list",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "has_container",
+      "label": "Within container",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "items_per_row",
+      "label": "Items per row",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 4
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "settings": [
           {
-            "value": "all",
-            "label": "All"
+              "type": "collection",
+              "id": "collection",
+              "label": "Your collection"
           },
           {
-            "value": "selected",
-            "label": "Selected"
+              "type": "header",
+              "content": "Backup info",
+              "info": "In general, the info is obtained from the collection. However, you can also set it manually if you want"
+          },
+          {
+              "type": "image_picker",
+              "id": "bk_image",
+              "label": "Image"
+          },
+          {
+              "type": "text",
+              "id": "bk_title",
+              "label": "Title"
+          },
+          {
+              "type": "text",
+              "id": "bk_count",
+              "label": "Products count",
+              "info": "Please enter a number only"
           }
-        ]
-      },
-      {
-        "type": "select",
-        "id": "sort",
-        "label": "Sort collections by:",
-        "info": "Sorting only applies when 'All' is selected",
-        "default": "alphabetical",
-        "options": [
-          {
-            "value": "products_high",
-            "label": "Product count, high to low"
-          },
-          {
-            "value": "products_low",
-            "label": "Product count, low to high"
-          },
-          {
-            "value": "alphabetical",
-            "label": "Alphabetically, A-Z"
-          },
-          {
-            "value": "alphabetical_reversed",
-            "label": "Alphabetically, Z-A"
-          },
-          {
-            "value": "date",
-            "label": "Date, old to new"
-          },
-          {
-            "value": "date_reversed",
-            "label": "Date, new to old"
-          }
-        ]
-      },
-      {
-        "type": "select",
-        "id": "grid",
-        "label": "Collections per row",
-        "default": "3",
-        "options": [
-          {
-            "value": "1",
-            "label": "1"
-          },
-          {
-            "value": "2",
-            "label": "2"
-          },
-          {
-            "value": "3",
-            "label": "3"
-          },
-          {
-            "value": "4",
-            "label": "4"
-          },
-          {
-            "value": "5",
-            "label": "5"
-          }
-        ]
-      }
-    ],
-    "blocks": [
-      {
-        "type": "collection",
-        "name": "Collection",
-        "settings": [
-          {
-            "label": "Collection",
-            "id": "collection",
-            "type": "collection"
-          }
-        ]
-      }
-    ]
-  }
+      ]
+    }
+  ]
+}
+
 {% endschema %}

@@ -1,0 +1,20 @@
+
+{%- if product.metafields.info.label != blank or settings.product_sale_badge != "" -%}
+<div class="product-label-group">
+  {%- if product.metafields.info.label != blank -%}
+  <label class="product-label label-new text-black bg-white">
+  {{- product.metafields.info.label -}}
+  </label>
+  {% endif %}
+  {%- if settings.product_sale_badge != "" and current_variant.compare_at_price > current_variant.price-%}
+    <label class="product-label label-sale text-black bg-white">
+      {%- if settings.product_sale_badge == "text" -%}
+      {{- "products.labels.sale" | t -}}
+      {%- else -%}
+      {%- assign sale_percent = current_variant.compare_at_price | minus:current_variant.price | times:100.0 | divided_by:current_variant.compare_at_price | ceil -%}
+      {{- "products.labels.sale_off" | t : percent : sale_percent -}}
+      {%- endif -%}
+    </label>
+  {%- endif -%}
+</div>
+{%- endif -%}

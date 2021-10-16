@@ -1,48 +1,29 @@
-{% comment %}
+<main class="main account-page">
+  {%- include "page-header" -%}
+  <!-- End PageHeader -->
+  <div class="page-content mt-10 mb-10">
+    <div class="container pt-1">
+      <h3 class="title title-simple text-left">{{ 'customer.activate_account.title' | t }}</h3>
+      <p>{{ 'customer.activate_account.subtext' | t }}</p>
+      <div class="form-content">
+        {% form 'activate_customer_password' %}
 
-  This template will be automatically generated for you if the file doesn't exist,
-  but where's the fun in having no control? Define your layout below.
+          {%- if form.errors -%}
+            <div class="form-message form-message--error">
+              {{ form.errors | default_errors }}
+            </div>
+          {%- endif -%}
 
-  The 'layout settings.customer_layout' line is inserted at the top of every customer account template.
-  Your theme's settings determine to use the 'default' or 'theme' customer templates.
-  More info:
-    - http://www.tetchi.ca/shopify-theme-from-scratch-part-11/
+          <label for="CustomerPassword" class="label--hidden">{{ 'customer.activate_account.password' | t }}</label>
+          <input type="password" value="" name="customer[password]" id="CustomerPassword" placeholder="{{ 'customer.activate_account.password' | t }}">
 
-  Template note:
-    - All IDs on this template are required to make the form(s) submit properly
+          <label for="CustomerPasswordConfirmation" class="label--hidden">{{ 'customer.activate_account.password_confirm' | t }}</label>
+          <input type="password" value="" name="customer[password_confirmation]" id="CustomerPasswordConfirmation" placeholder="{{ 'customer.activate_account.password_confirm' | t }}">
 
-{% endcomment %}
-
-{% layout settings.customer_layout %}
-
-<div class="grid">
-  <div class="grid-item large--one-third push--large--one-third">
-    
-    <header class="page-header">
-      <h1 {% if settings.enable_multilang %}data-translate="customer.activate_account.title"{%endif%}>{{ 'customer.activate_account.title' | t }}</h1>
-    </header>
-    <p {% if settings.enable_multilang %}data-translate="customer.activate_account.subtext"{%endif%}>{{ 'customer.activate_account.subtext' | t }}</p>
-
-    {% comment %}
-      This form must use 'activate_customer_password'
-    {% endcomment %}
-    
-    {% form 'activate_customer_password' %}
-
-      {{ form.errors | default_errors }}
-
-      <label for="customer_password" {% if settings.enable_multilang %}data-translate="customer.activate_account.password"{%endif%}>{{ 'customer.activate_account.password' | t }}</label>
-      <input type="password" value="" name="customer[password]" id="customer_password">
-
-      <label for="customer_password_confirmation" {% if settings.enable_multilang %}data-translate="customer.activate_account.password_confirm"{%endif%}>{{ 'customer.activate_account.password_confirm' | t }}</label>
-      <input type="password" value="" name="customer[password_confirmation]" id="customer_password_confirmation">
-
-      <div class="text-center">
-        <p>
-          <input type="submit" class="btn" {% if settings.enable_multilang %}data-translate="customer.activate_account.submit"{%endif%} value="{{ 'customer.activate_account.submit' | t }}">
-        </p>
-        <input type="submit" class="btn--secondary" name="decline" {% if settings.enable_multilang %}data-translate="customer.activate_account.cancel"{%endif%} value="{{ 'customer.activate_account.cancel' | t }}">
+          <input type="submit" class="btn" value="{{ 'customer.activate_account.submit' | t }}">
+          <div><input type="submit" name="decline" value="{{ 'customer.activate_account.cancel' | t }}"></div>
+        {% endform %}
       </div>
-    {% endform %}
+    </div>
   </div>
-</div>
+</main>

@@ -1,23 +1,18 @@
-{% comment %}
+<!-- /snippets/comment.liquid -->
+<div class="comment w-100">
+  <figure class="comment-media d-none">
+      <a href="javascript:void(0);" style="height: 50px;" class="d-flex align-items-center justify-content-center">
+        <i class="user-icon"></i>
+      </a>
+  </figure>
 
-  This snippet generates the structure of a comment.
-  It is used to show not only recent comments, but also comments that were
-  just published but not yet approved.
-
-  More information:
-   - http://docs.shopify.com/themes/liquid-variables/comment
-
-{% endcomment %}
-<div class="comment-head">  
-  {% capture date %}
-  	<time datetime='{{ article.published_at | date: '%Y-%m-%d' }}'>
-      {{ article.published_at | date: '%b %d, %Y' }}
-  	</time>
-  {% endcapture %}
-  {% capture author %}{{ comment.author }}{% endcapture %}
-  {{ 'blogs.article.author_on_date_html' | t: date: date, author: author }}
-</div>
-
-<div class="comment-content">
-  {{ comment.content }}
+  <div class="comment-body pt-0 pl-0 d-flex justify-content-between row">
+      <div class="comment-user d-flex col-12 col-md-3">
+          <p><a href="javascript:void(0);" class="font-weight-slight-bold">{{ comment.author }}</a></p>
+          <p class="ml-4">{{ comment.created_at | time_tag: format: 'date' }}</p>
+      </div>
+      <div class="comment-content col-12 col-md-9">
+          {{ comment.content }}
+      </div>
+  </div>
 </div>

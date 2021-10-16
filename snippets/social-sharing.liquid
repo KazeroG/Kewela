@@ -1,22 +1,25 @@
-<div class="share">
+<!-- /snippets/social-sharing.liquid -->
+<!-- /snippets/social-sharing.liquid -->
+<div class="social-links {{class}}">
+
   {% if settings.share_facebook %}
-    <a class="share__icon" target="_blank" href="//www.facebook.com/sharer.php?u={{ shop.url | append: share_permalink }}">
-      {% render 'icon-facebook' %}
-      <span class="visually-hidden">{{ 'general.social.alt_text.share_on_facebook' | t }}</span>
-    </a>
+  <a target="_blank" href="//www.facebook.com/sharer.php?u={{ shop.url | append: share_permalink }}" class="social-link social-facebook fab fa-facebook-f">
+  </a>
   {% endif %}
 
   {% if settings.share_twitter %}
-    <a class="share__icon" target="_blank" href="//twitter.com/share?text={{ share_title | url_param_escape }}&amp;url={{ shop.url | append: share_permalink }}">
-      {% render 'icon-twitter' %}
-      <span class="visually-hidden">{{ 'general.social.alt_text.share_on_twitter' | t }}</span>
-    </a>
+  <a target="_blank" href="//twitter.com/share?text={{ share_title | url_param_escape }}&amp;url={{ shop.url | append: share_permalink }}" class="social-link social-twitter fab fa-twitter">
+  </a>
   {% endif %}
 
   {% if settings.share_pinterest %}
-    <a class="share__icon" target="_blank" href="//pinterest.com/pin/create/button/?url={{ shop.url | append: share_permalink }}&amp;media={{ share_image | img_url: '1024x1024' }}&amp;description={{ share_title | url_param_escape }}">
-      {% render 'icon-pinterest' %}
-      <span class="visually-hidden">{{ 'general.social.alt_text.share_on_pinterest' | t }}</span>
-    </a>
+  <a target="_blank" href="//pinterest.com/pin/create/button/?url={{ shop.url | append: share_permalink }}&amp;media={{ share_image | img_url: '1024x1024' }}&amp;description={{ share_title | url_param_escape }}" class="social-link social-pinterest fab fa-pinterest">
+  </a>
   {% endif %}
+
+  {% if settings.share_vimeo %}
+  <a target="_blank" href="//vimeo.com/share?text={{ share_title | url_param_escape }}&amp;url={{ shop.url | append: share_permalink }}" class="social-link social-vimeo fab fa-vimeo-v">
+  </a>
+  {% endif %}
+  
 </div>

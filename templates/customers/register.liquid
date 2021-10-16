@@ -1,55 +1,80 @@
-{% comment %}
-  This template will be automatically generated for you if the file doesn't exist,
-  but where's the fun in having no control? Define your layout below.
+<main class="main account-page">
+{%- include "page-header" -%}
+<!-- End PageHeader -->
+<div class="page-content mt-10 mb-10">
+  <div class="container pt-1">
+    <div class="login-popup">
+    <div class="form-box">
+        <h3 id="RecoverHeading" class="title title-simple text-left">{{ 'customer.register.register' | t }}</h3>
+          {%- assign formId = 'RegisterForm' -%}
+          {% form 'create_customer', id: formId, novalidate: 'novalidate' %}
+          {% include 'form-status', form: form, form_id: formId %}
 
-  The 'layout settings.customer_layout' line is inserted at the top of every customer account template.
-  Your theme's settings determine to use the 'default' or 'theme' customer templates.
-  More info:
-    - http://www.tetchi.ca/shopify-theme-from-scratch-part-11/
-{% endcomment %}
+          <div class="form-group">
+              <label for="{{ formId }}-FirstName">{{ 'customer.register.first_name' | t }}</label>
+              <input class="form-control" type="text" name="customer[first_name]" id="{{ formId }}-FirstName" {% if form.first_name %}value="{{ form.first_name }}"{% endif %} autocomplete="given-name">
+          </div>
+          <div class="form-group">
+              <label for="{{ formId }}-LastName">{{ 'customer.register.last_name' | t }}</label>
+              <input class="form-control" type="text" name="customer[last_name]" id="{{ formId }}-LastName" {% if form.last_name %}value="{{ form.last_name }}"{% endif %} autocomplete="family-name">    
+          </div>
 
-{% layout settings.customer_layout %}
-<div class="row">
-   {% render 'breadcrumb' %}
-<div class="create-an-account">
-  <header class="page-header">
-    <h1 {% if settings.enable_multilang %}data-translate="customer.register.title"{%endif%}>{{ 'customer.register.title' | t }}</h1>
-  </header>
-  {% if settings.enable_multilang %}
-  <p class="title lang1">{{ settings.register_text_desc | split: '|' | first }}</p>
-  <p class="title lang2">{{ settings.register_text_desc | split: '|' | last }}</p>
-  {% else %}
-  <p class="title">{{ settings.register_text_desc | split: '|' | first }}</p>
-  {% endif %}
+          <div class="form-group">
+              <label for="{{ formId }}-email">{{ 'customer.register.email' | t }}</label>
+              <input
+                  type="email"
+                  name="customer[email]"
+                  id="{{ formId }}-email"
+                  class="form-control{% if form.errors contains 'email' %} input--error{% endif %}"
+                  {% if form.email %} value="{{ form.email }}"{% endif %}
+                  autocorrect="off"
+                  autocapitalize="off"
+                  autocomplete="email"
+                  aria-required="true"
+                  {%- if form.errors contains 'email' -%}
+                  class="input--error"
+                  aria-invalid="true"
+                  aria-describedby="{{ formId }}-email-error"
+                  {%- endif -%}
+              >
+              {%- if form.errors contains 'email' -%}
+                  <span>{{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}.</span>
+              {%- endif -%}
+          </div>
 
-  {% comment %}
-    This form must use 'create_customer'
-  {% endcomment %}
-  {% form 'create_customer' %}
-  {% render 'form-errors-custom', form: form %}
-  <div id="first_name">
-    <label for="first_name"><span {% if settings.enable_multilang %}data-translate="customer.register.first_name"{%endif%}>{{ 'customer.register.first_name' | t }}</span></label>
-    <input type="text" value="" name="customer[first_name]" id="first_name" {% if form.errors contains "first_name" %}class="error"{% endif %} >
+          <div class="form-group">
+              <label for="{{ formId }}-password">{{ 'customer.register.password' | t }}</label>
+              <input
+                  type="password"
+                  name="customer[password]"
+                  id="{{ formId }}-password"
+                  class="form-control{% if form.errors contains 'password' %} input--error{% endif %}"
+                  aria-required="true"
+                  {%- if form.errors contains 'password' -%}
+                  class="input--error"
+                  aria-invalid="true"
+                  aria-describedby="{{ formId }}-password-error"
+                  {%- endif -%}
+              >
+              {%- if form.errors contains 'password' -%}
+                  <span>{{ form.errors.translated_fields['password'] | capitalize }} {{ form.errors.messages['password'] }}.</span>
+              {%- endif -%}
+          </div>
+
+          <div class="form-footer">
+              <div class="form-checkbox">
+                  <input type="checkbox" class="custom-checkbox" id="register-agree" name="register-agree" required />
+                  <label class="form-control-label font-secondary" for="register-agree">
+                      {{- "customer.register.terms" | t -}}
+                  </label>
+              </div>
+          </div>
+
+          <button class="btn btn-primary btn-block btn-disabled btn-signup" type="submit">{{ 'customer.register.submit' | t }}</button>
+
+          {% endform %}
+    </div>
+    </div>
   </div>
-  
-  <div id="last_name">
-    <label for="last_name"><span {% if settings.enable_multilang %}data-translate="customer.register.last_name"{%endif%}>{{ 'customer.register.last_name' | t }}</span></label>
-    <input type="text" value="" name="customer[last_name]" id="last_name" {% if form.errors contains "last_name" %}class="error"{% endif %} >
-  </div>
-  
-  <div id="email">
-    <label for="email"><span {% if settings.enable_multilang %}data-translate="customer.register.email"{%endif%}>{{ 'customer.register.email' | t }}</span><em>*</em></label>
-    <input type="email" value="" name="customer[email]" id="email" {% if form.errors contains "email" %}class="error"{% endif %}  >
-  </div>
-  
-  <div id="create_password">
-    <label for="password"><span {% if settings.enable_multilang %}data-translate="customer.register.password"{%endif%}>{{ 'customer.register.password' | t }}</span><em>*</em></label>
-    <input type="password" value="" name="customer[password]" id="create_password" {% if form.errors contains "password" %}class="error"{% endif %}>
-  </div>
-  
-  <div class="action-btn">
-    <p><input type="submit" {% if settings.enable_multilang %}data-translate="customer.register.submit"{%endif%} value="{{ 'customer.register.submit' | t }}" class="btn"></p>
-  </div>
-  {% endform %}
 </div>
-</div>
+</main>

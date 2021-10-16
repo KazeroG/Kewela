@@ -1,150 +1,133 @@
-{% if section.settings.blog_post != blank %}
-  {% assign limit = section.settings.blog_post %}
-{% else %}
-  {% assign limit = 3 %}
-{% endif %}
+<div class="mt-4"  id="{{ section.id }}" data-section-id="{{ section.id }}" data-section-type="blog-template">
+  {% paginate blog.articles by section.settings.item_per_page %}
+    <div class="mt-6">
+      <div class="container">
+        {%- include "breadcrumb" -%}
 
-{% paginate blog.articles by limit %}
-
-
-<div class="content-blog">
-  <ul class="list-blog {% if section.settings.layout == 'list' %}blog-list{% else %}blog-grid row{% endif %}">
-    
-    {% if section.settings.layout == 'grid' %}
-      {% assign blog_grid = 12 | divided_by: section.settings.grid %}
-    {% endif %}
-    
-    {% for article in blog.articles %}
-    <li{% if section.settings.layout == 'grid' %} class="col-xs-12 col-sm-{{ blog_grid }}"{% endif %}>
-      <h3 class="article-title"><a href="{{ article.url }}">{% render 'multilang' with article.title %}</a></h3>
-
-      <p class="blog_author">
-            {% comment %}
-            Don't be fooled, the ? in comments_enabled? is part of the liquid tag.
-            {% endcomment %}
-            {% if blog.comments_enabled? %}
-            <a href="{{ article.url }}#comments" {% if settings.enable_multilang %}data-translate="blogs.comments.comments_with_count|count:{{article.comments_count}}"{%endif%}>
-              {{ 'blogs.comments.comments_with_count' | t: count: article.comments_count }}
-            </a>
-            {% endif %}
-
-            {% if section.settings.blog_show_date %}
-            <span class="article__date">
-              {{ article.published_at | time_tag: format: 'month_day_year' }}
-            </span>
-            {% endif %}
-            
-            {% if section.settings.blog_show_author %}
-            <span class="article__author">Post by {{article.author}}</span>
-            {% endif %}
-          </p> 
-
-      <div class="article-details">
-        {% if article.image %}
-          {% assign image_alt = article.title | escape %}
-          <p class="article-img">{{ article | img_url: '1024x1024' | img_tag: image_alt, 'article__image' | link_to: article.url }}</p>
-        {% endif %}
-
-        <div class="rte article-excerpt">
-          <div class="desc">
-            {% if settings.enable_multilang %}
-            <div class="lang1">{{ article.excerpt_or_content | strip_html | truncatewords: 80 | split:"[lang2]" | first | split:"|" |first}}</div>
-            <div class="lang2">{{ article.excerpt_or_content | strip_html | truncatewords: 80 | split:"[lang2]" | last | split:"|" |last }}</div>
-            {% else %}
-            {{ article.excerpt_or_content | strip_html | truncatewords: 80  | split:"[lang2]" | first | split:"|" |first}}
-            {% endif %}
+          <div class="row gutter-lg">
+              <div class="col-lg-12">
+                  <div class="blog-heading mt-4 border-bottom pb-4">
+                    <h2 class="fs-4 font-weight-slight-bold">{{ blog.title}}</h2>
+                    {% if section.settings.blog_show_tag %}
+                    <div class="blog-tag-filter d-flex">
+                      {% for tag in blog.all_tags %}
+                        <a href="{{ blog.url }}/tagged/{{ tag | handleize }}" {% if current_tags contains tag %} class="selected font-weight-slight-bold"{% endif %}>{{ tag }}</a>
+                      {% endfor %}
+                    </div>
+                    {% endif %}
+                  </div>
+                  <div class="articles row mt-8">
+                    {% for article in blog.articles %}
+                      <article class="col-sm-6 article article-lg mb-9{% if article.metafields.info.video != blank %} article-video{% endif %}">
+                          <figure class="article-visual">
+                              {% if article.tags.size > 0 %}
+                              <div class="article-tags tags-list d-flex">
+                                {% for tag in article.tags limit:2 %}<a href="{{ blog.url }}/tagged/{{ tag | handle }}">{{ tag }}</a>{% endfor %} 
+                              </div>
+                              {% endif %}
+                              <a href="{{ article.url }}">
+                                  <img src="{{ article.image | img_url: "600x338", scale: 2, crop: "top" }}" width="600" height="338" alt="article" />
+                              </a>
+                              {% if article.metafields.info.video != blank %}
+                              <span class="video-play"></span>
+                              <video width="380">
+                                  <source src="{{ article.metafields.info.video }}" type="video/mp4">
+                              </video>
+                              {% endif %}
+                          </figure>
+                          <div class="article-details text-center">
+                              <div class="article-title"><a href="{{ article.url }}">{{ article.title }}</a></div>
+                              <div class="article-meta">
+                                {% if section.settings.blog_show_date %}
+                                <a href="{{ article.url }}" class="article-date">{{ article.published_at | time_tag: format: 'date' }}</a>
+                                {% endif %}
+                              </div>
+                          </div>
+                      </article>
+                    {% endfor %}
+                  </div>
+                  {%- if paginate.pages > 1 -%}
+                  <ul class="pagination mb-10 pb-4 mt-10">
+                    {% unless paginate.previous.is_link %}
+                    <li class="page-item disabled">
+                      <a class="page-link page-link-prev" href="javascript:void(0);" aria-label="Previous" tabindex="-1"
+                        aria-disabled="true">
+                        <i class="icon-angle-left"></i>
+                      </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item">
+                      <a class="page-link page-link-prev" href="{{ paginate.previous.url }}{{ url_suffix }}" aria-label="Previous">
+                        <i class="icon-angle-left"></i>
+                      </a>
+                    </li>
+                    {% endunless %}
+                
+                    {% assign dot_pos = -1 %}
+                    {% for part in paginate.parts %}
+                      {% if part.is_link %}
+                        {% if forloop.index0 == dot_pos %}
+                        <li class="page-item page-item-dots"><a class="page-link" href="{{ part.url }}{{ url_suffix }}">{{ part.title }}</a></li>
+                        {% else %}
+                        <li class="page-item"><a class="page-link" href="{{ part.url }}{{ url_suffix }}">{{ part.title }}</a></li>
+                        {% endif %}
+                      {% else %}
+                        {% if part.title == '&hellip;' %}
+                        {% assign dot_pos = forloop.index %}
+                        {% else %}
+                        <li class="page-item active" aria-current="page"><a class="page-link" href="javascript:void(0);">{{ part.title }}</a></li>
+                        {% endif %}
+                      {% endif %}
+                    {% endfor %}
+                
+                    {% unless paginate.next.is_link %}
+                    <li class="page-item disabled">
+                      <a class="page-link page-link-next" href="javascript:void(0);" aria-label="Next" tabindex="-1"
+                      aria-disabled="true">
+                        <i class="icon-angle-right"></i>
+                      </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item">
+                      <a class="page-link page-link-next" href="{{ paginate.next.url }}{{ url_suffix }}" aria-label="Next">
+                        <i class="icon-angle-right"></i>
+                      </a>
+                    </li>
+                    {% endunless %}
+                  </ul>
+                  {%- endif -%}
+              </div>
           </div>
-		  <p class="button">
-          	<a href="{{ article.url }}" class="btn-secondary" {% if settings.enable_multilang %}data-translate="blogs.article.read_more"{% endif %}>{{ 'blogs.article.read_more' | t }}</a>
-          </p>
-        </div>
       </div>
-	{% comment %}
-      {% if article.tags.size > 0 %}
-      <div class="article-tags">
-        <label>
-          <span {% if settings.enable_multilang %}data-translate="blogs.article.tags"{% endif %}>
-            {{ 'blogs.article.tags' | t }}
-          </span>:
-        </label>
-        <ul>
-        {% for tag in article.tags %}
-          <li><a href="{{ blog.url }}/tagged/{{ tag | handle }}">{{ tag }}</a></li>
-        {% endfor %}
-        </ul>
-      </div>
-      {% endif %}
-	{% endcomment %}
-    </li>
-
-    {% endfor %}
-  </ul>
-
-  {% if paginate.pages > 1 %}
-    {% render 'pagination', paginate: paginate %}
-  {% endif %}
+    </div>
+  {% endpaginate %}
 </div>
-{% endpaginate %}
 
 {% schema %}
-  {
-    "name": "Blog pages",
-    "class": "col-main",
-    "settings": [
-      {
-        "type": "select",
-        "id": "layout",
-        "label": "Layout",
-        "default": "list",
-        "options": [
-          {
-            "value": "grid",
-            "label": "Grid"
-          },
-          {
-            "value": "list",
-            "label": "List"
-          }
-        ]
-      },
-      {
-        "type": "text",
-        "id": "blog_post",
-        "label": "Blog post per page",
-        "default": "3"
-      },
-      {
-        "type": "select",
-        "id": "grid",
-        "label": "Blog post per row (grid only)",
-        "default": "2",
-        "options": [
-          {
-            "value": "2",
-            "label": "2"
-          },
-          {
-            "value": "3",
-            "label": "3"
-          },
-          {
-            "value": "4",
-            "label": "4"
-          }
-        ]
-      },
-      {
-        "type": "checkbox",
-        "id": "blog_show_author",
-        "label": "Show author",
-        "default": true
-      },
-      {
-        "type": "checkbox",
-        "id": "blog_show_date",
-        "label": "Show date",
-        "default": true
-      }
-    ]
-  }
+{
+  "name": "Blog Page - Default",
+  "settings": [
+    {
+      "type": "range",
+      "id": "item_per_page",
+      "label": "Items per page",
+      "default": 6,
+      "min": 1,
+      "max": 12,
+      "step": 1
+    },
+    {
+      "type": "checkbox",
+      "id": "blog_show_date",
+      "label": "Show date",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "blog_show_tag",
+      "label": "Show tags",
+      "default": true
+    }
+  ]
+}
 {% endschema %}
