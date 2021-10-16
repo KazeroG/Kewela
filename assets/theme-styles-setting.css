@@ -307,7 +307,7 @@ table th,
 @media (max-width: 1024px) {
   
     .header-mobile { width: 100%; }
-    .header-bottom .top-header { width: 25%; }
+    .header-bottom .top-header { width: 33.34%; }
   	.header-bottom .dropdown-cart { width: 100%; max-width:450px }
   
 }
