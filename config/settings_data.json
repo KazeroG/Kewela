@@ -1533,10 +1533,29 @@
               "background_button": "rgba(0,0,0,0)",
               "border_button": "#ffffff"
             }
+          },
+          "b7f86c5b-0de8-4fec-9116-acd817c73c42": {
+            "type": "image",
+            "settings": {
+              "image": "shopify:\/\/shop_images\/IMG_4115_163009b5-4e7d-45df-815d-ade128e3d409.jpg",
+              "alignment": "center",
+              "title1": "COLLECTION MEXICO DISPONIBLE.",
+              "heading_color": "#000",
+              "heading_size": "40",
+              "subheading": "<p>CODE : MEXICO20                         <\/p>",
+              "subheading_color": "#000",
+              "subheading_size": "55",
+              "button": "Shop Now",
+              "link": "",
+              "color_button": "",
+              "background_button": "",
+              "border_button": "#fff"
+            }
           }
         },
         "block_order": [
-          "1490716464547-0"
+          "1490716464547-0",
+          "b7f86c5b-0de8-4fec-9116-acd817c73c42"
         ],
         "settings": {
           "slideshow_speed": "1000000",
