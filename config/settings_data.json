@@ -1807,8 +1807,8 @@
             "settings": {
               "hb_enable_image": true,
               "hb_image": "shopify:\/\/shop_images\/2.png",
-              "hb_title": "Ajouter un titre ou un slogan",
-              "hb_text": "<p>Partagez des articles de blog, des produits ou des promotions avec vos clients. Utilisez ce texte pour décrire vos produits, partager des détails sur leur disponibilité ou leur style, ou encore pour afficher des FAQ et avis récents.<\/p>",
+              "hb_title": "Sans Sable",
+              "hb_text": "",
               "hb_button_label": "",
               "hb_button_link": ""
             }
@@ -1818,8 +1818,8 @@
             "settings": {
               "hb_enable_image": true,
               "hb_image": "shopify:\/\/shop_images\/5.png",
-              "hb_title": "Ajouter un titre ou un slogan",
-              "hb_text": "<p>Partagez des articles de blog, des produits ou des promotions avec vos clients. Utilisez ce texte pour décrire vos produits, partager des détails sur leur disponibilité ou leur style, ou encore pour afficher des FAQ et avis récents.<\/p>",
+              "hb_title": "Compacte",
+              "hb_text": "",
               "hb_button_label": "",
               "hb_button_link": ""
             }
@@ -1828,8 +1828,28 @@
             "type": "text_block",
             "settings": {
               "hb_enable_image": true,
-              "hb_title": "Ajouter un titre ou un slogan",
-              "hb_text": "<p>Partagez des articles de blog, des produits ou des promotions avec vos clients. Utilisez ce texte pour décrire vos produits, partager des détails sur leur disponibilité ou leur style, ou encore pour afficher des FAQ et avis récents.<\/p>",
+              "hb_title": "Absorbante",
+              "hb_text": "",
+              "hb_button_label": "",
+              "hb_button_link": ""
+            }
+          },
+          "1dc29c9c-e2c2-4153-965f-cbda34f98289": {
+            "type": "text_block",
+            "settings": {
+              "hb_enable_image": true,
+              "hb_title": "Sèche Rapidement",
+              "hb_text": "",
+              "hb_button_label": "",
+              "hb_button_link": ""
+            }
+          },
+          "d00292fe-cdfe-4ebd-9017-4438d730f99a": {
+            "type": "text_block",
+            "settings": {
+              "hb_enable_image": true,
+              "hb_title": "Dessinée à la Main",
+              "hb_text": "",
               "hb_button_label": "",
               "hb_button_link": ""
             }
@@ -1838,13 +1858,15 @@
         "block_order": [
           "16343686294627fb2b-0",
           "16343686294627fb2b-1",
-          "16343686294627fb2b-2"
+          "16343686294627fb2b-2",
+          "1dc29c9c-e2c2-4153-965f-cbda34f98289",
+          "d00292fe-cdfe-4ebd-9017-4438d730f99a"
         ],
         "settings": {
-          "hb_title": "Colonnes de texte avec images",
+          "hb_title": "KAWELÄ RÉINVENTE LA SERVIETTE DE PLAGE.",
           "hb_align_text": "center",
-          "hb_sec_button_label": "",
-          "hb_sec_button_link": ""
+          "hb_sec_button_label": "À PROPOS",
+          "hb_sec_button_link": "shopify:\/\/pages\/a-propos"
         }
       }
     },
