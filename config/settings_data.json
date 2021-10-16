@@ -1016,7 +1016,7 @@
         "type": "header",
         "settings": {
           "brand_type": "image",
-          "brand_text": "The Bagratica.",
+          "brand_text": "Kawelä Towels",
           "logo": "shopify:\/\/shop_images\/PNG_siteweb_-_Kawela_a9d0af82-caf6-4ba6-8eed-0f5e9b093e17.png",
           "logo_page": "shopify:\/\/shop_images\/PNG_siteweb_-_Kawela_a9d0af82-caf6-4ba6-8eed-0f5e9b093e17.png",
           "min_height_logo_pc": "34",
@@ -1041,48 +1041,6 @@
       },
       "navigation": {
         "type": "navigation",
-        "blocks": {
-          "1506962228368": {
-            "type": "style_2",
-            "settings": {
-              "megamenu_items_2": "Shop",
-              "banner_second_style_2": "shopify:\/\/shop_images\/IMG_5633.jpg",
-              "link_banner_second_style_2": "",
-              "banner_third_style_2": "shopify:\/\/shop_images\/IMG_4115_163009b5-4e7d-45df-815d-ade128e3d409.jpg",
-              "link_banner_third_style_2": "",
-              "banner_first_style_2": "shopify:\/\/shop_images\/IMG_4068.jpg",
-              "link_banner_first_style_2": ""
-            }
-          },
-          "1507044542185": {
-            "type": "style_3",
-            "settings": {
-              "megamenu_items_3": "Lookbook",
-              "title_featured_product_3": "Featured Products",
-              "collection": "comos-de-milano",
-              "link_banner_first_style_3": ""
-            }
-          },
-          "1507045340489": {
-            "type": "style_4",
-            "settings": {
-              "megamenu_items_4": "Collections"
-            }
-          },
-          "1507045675204": {
-            "type": "style_1",
-            "settings": {
-              "megamenu_items_1": "SS2017",
-              "link_banner_first_style_1": "shopify:\/\/products\/damus-id-ullamcorper-neque"
-            }
-          }
-        },
-        "block_order": [
-          "1506962228368",
-          "1507044542185",
-          "1507045340489",
-          "1507045675204"
-        ],
         "settings": {
           "display_fixtop_menu": true,
           "horizontal_linklist": "main-menu",
@@ -1213,45 +1171,25 @@
               "enable": true,
               "title": "Color | Farbe",
               "color_text_1": "Beige",
-              "color_img_1": "shopify:\/\/shop_images\/color-1_small_34x34_188c312b-f9b8-4ebf-9a37-8b8957122b7d.png",
               "color_text_2": "Red",
-              "color_img_2": "shopify:\/\/shop_images\/red_34x34_8b796560-8e56-4c15-a58f-e959404a82e2.png",
               "color_text_3": "White",
-              "color_img_3": "",
               "color_text_4": "Pink",
-              "color_img_4": "shopify:\/\/shop_images\/color-4_small_34x34_f9ce81ed-6983-4479-9707-3f215bcaf541.png",
               "color_text_5": "Silver",
-              "color_img_5": "shopify:\/\/shop_images\/color-5_small_34x34_c1909084-b3f6-41da-af4f-9dd407012960.png",
               "color_text_6": "Blue",
-              "color_img_6": "shopify:\/\/shop_images\/color-6_small_34x34_e7b24009-06af-4043-8bda-4b795e8ac594.png",
               "color_text_7": "Gray",
-              "color_img_7": "shopify:\/\/shop_images\/color-7_small_34x34_926a4238-e7ba-4aad-bc3c-569f37cbc155.png",
               "color_text_8": "Black",
-              "color_img_8": "shopify:\/\/shop_images\/color-8_small_34x34_204f67a1-84a6-4baf-877f-68d6096a7ce9.png",
               "color_text_9": "Green",
-              "color_img_9": "shopify:\/\/shop_images\/color-9_small_34x34_7bc7538a-12d3-435d-8336-97fcb5e7f4a3.png",
               "color_text_10": "",
-              "color_img_10": "",
               "color_text_11": "",
-              "color_img_11": "",
               "color_text_12": "",
-              "color_img_12": "",
               "color_text_13": "",
-              "color_img_13": "",
               "color_text_14": "",
-              "color_img_14": "",
               "color_text_15": "",
-              "color_img_15": "",
               "color_text_16": "",
-              "color_img_16": "",
               "color_text_17": "",
-              "color_img_17": "",
               "color_text_18": "",
-              "color_img_18": "",
               "color_text_19": "",
-              "color_img_19": "",
-              "color_text_20": "",
-              "color_img_20": ""
+              "color_text_20": ""
             }
           },
           "1489916260508": {
@@ -1299,7 +1237,6 @@
             "type": "image",
             "settings": {
               "enable": true,
-              "image": "shopify:\/\/shop_images\/image-banner-1.png",
               "link": "shopify:\/\/collections\/lorem-de-dorumor"
             }
           },
@@ -1328,8 +1265,7 @@
       "collection-header": {
         "type": "collection-header",
         "settings": {
-          "display_image_cat": true,
-          "img_cat": "shopify:\/\/shop_images\/image-banner_300af886-f156-4a28-b46e-7baefaa90202.png"
+          "display_image_cat": true
         }
       },
       "collection-template": {
@@ -1582,17 +1518,19 @@
           "1490716464547-0": {
             "type": "image",
             "settings": {
+              "image": "shopify:\/\/shop_images\/IMG_5633.jpg",
+              "image_mb": "shopify:\/\/shop_images\/IMG_5633.jpg",
               "alignment": "center",
-              "title1": "Spring Summer",
+              "title1": "VOTRE ULTIME PARTENAIRE D'ENTRAÎNEMENT.",
               "heading_color": "#ffffff",
               "heading_size": "42",
-              "subheading": "<p>Dosuere an morci lobortis scelerisque blandit cosmopolis de metropolitan.<\/p>",
+              "subheading": "<p>CODE : ACTIVE20<br\/><br\/><br\/><\/p>",
               "subheading_color": "#ffffff",
               "subheading_size": "13",
-              "button": "Shop The Collection",
+              "button": "Magasiner Maintenant",
               "link": "shopify:\/\/collections",
               "color_button": "#ffffff",
-              "background_button": "",
+              "background_button": "rgba(0,0,0,0)",
               "border_button": "#ffffff"
             }
           }
@@ -1603,7 +1541,7 @@
         "settings": {
           "slideshow_speed": "1000000",
           "slideshow_transition": "true",
-          "navigation_color": "#959da5",
+          "navigation_color": "#e374b1",
           "bg_video": "#866965",
           "bg_overlay_opacity": 40,
           "video_height": "41.7%",
