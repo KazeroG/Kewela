@@ -1798,12 +1798,83 @@
           "images_per_row": "3",
           "resolution_images": "thumbnail"
         }
+      },
+      "16343686294627fb2b": {
+        "type": "hb-feature-columns",
+        "blocks": {
+          "16343686294627fb2b-0": {
+            "type": "text_block",
+            "settings": {
+              "hb_enable_image": true,
+              "hb_image": "shopify:\/\/shop_images\/2.png",
+              "hb_title": "Sans Sable",
+              "hb_text": "",
+              "hb_button_label": "",
+              "hb_button_link": ""
+            }
+          },
+          "16343686294627fb2b-1": {
+            "type": "text_block",
+            "settings": {
+              "hb_enable_image": true,
+              "hb_image": "shopify:\/\/shop_images\/5.png",
+              "hb_title": "Compacte",
+              "hb_text": "",
+              "hb_button_label": "",
+              "hb_button_link": ""
+            }
+          },
+          "16343686294627fb2b-2": {
+            "type": "text_block",
+            "settings": {
+              "hb_enable_image": true,
+              "hb_title": "Absorbante",
+              "hb_text": "",
+              "hb_button_label": "",
+              "hb_button_link": ""
+            }
+          },
+          "1dc29c9c-e2c2-4153-965f-cbda34f98289": {
+            "type": "text_block",
+            "settings": {
+              "hb_enable_image": true,
+              "hb_title": "Sèche Rapidement",
+              "hb_text": "",
+              "hb_button_label": "",
+              "hb_button_link": ""
+            }
+          },
+          "d00292fe-cdfe-4ebd-9017-4438d730f99a": {
+            "type": "text_block",
+            "settings": {
+              "hb_enable_image": true,
+              "hb_title": "Dessinée à la Main",
+              "hb_text": "",
+              "hb_button_label": "",
+              "hb_button_link": ""
+            }
+          }
+        },
+        "block_order": [
+          "16343686294627fb2b-0",
+          "16343686294627fb2b-1",
+          "16343686294627fb2b-2",
+          "1dc29c9c-e2c2-4153-965f-cbda34f98289",
+          "d00292fe-cdfe-4ebd-9017-4438d730f99a"
+        ],
+        "settings": {
+          "hb_title": "KAWELÄ RÉINVENTE LA SERVIETTE DE PLAGE.",
+          "hb_align_text": "center",
+          "hb_sec_button_label": "À PROPOS",
+          "hb_sec_button_link": "shopify:\/\/pages\/a-propos"
+        }
       }
     },
     "content_for_index": [
       "1490716464547",
       "1506523206723",
-      "1634367025316d9493"
+      "1634367025316d9493",
+      "16343686294627fb2b"
     ]
   },
   "presets": {

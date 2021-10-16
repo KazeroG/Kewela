@@ -313,7 +313,7 @@ $grid-breakpoints: (
 
 // Button colors
 
-$colorBtnPrimary: #111111;
+$colorBtnPrimary: #000;
 
 $colorBtnPrimaryText: #fff;
 
@@ -321,35 +321,35 @@ $colorCartDot: #ff4f33;
 
 // Text link colors
 
-$colorLink: #000000;
+$colorLink: #1c1d1d;
 
 // Text colors
 
-$colorTextBody: #000000;
+$colorTextBody: #1c1d1d;
 
 // Backgrounds
 
-$colorBody: #ffffff;
+$colorBody: #fff;
 
-$colorInputBg: #ffffff;
+$colorInputBg: #1c1d1d;
 
 // Footer
 
-$colorFooter: #111111;
+$colorFooter: #111;
 
 $colorFooterText: #fff;
 
 // Border colors
 
-$colorBorder: #e8e8e1;
+$colorBorder: #1c1d1d;
 
 // Nav and dropdown link background
 
-$colorNav: #000000;
+$colorNav: #fff;
 
-$colorNavText: #ffffff;
+$colorNavText: #000;
 
-$colorAnnouncement: #e374b1;
+$colorAnnouncement: #1c1d1d;
 
 $colorAnnouncementText: #fff;
 
@@ -357,7 +357,7 @@ $colorStickyNavLinks: #fff;
 
 // Hero text color
 
-$colorHeroText: #ffffff;
+$colorHeroText: #fff;
 
 // Helper colors
 
@@ -399,17 +399,17 @@ $colorModalText: #fff;
 
 // Image overlays
 
-$colorImage1: #000000;
+$colorImage1: #000;
 
-$colorImage1Opacity: 0.8;
+$colorImage1Opacity: 0.0;
 
-$colorImage2: #000000;
+$colorImage2: #fffed9;
 
 $colorImage2Opacity: 0.0;
 
-$colorSmallImageBg: #fff;
+$colorSmallImageBg: #eee;
 
-$colorLargeImageBg: #111111;
+$colorLargeImageBg: #1c1d1d;
 
 // Icon sizes
 
@@ -449,69 +449,69 @@ $z-index-header-search: 28;
 
 // Font-face header styles
 
-$type_header_family: "Century Gothic";
+$type_header_family: ;
 
-$type_header_fallback: sans-serif;
+$type_header_fallback: ;
 
 $type_header_stack: #{"'" + $type_header_family + "', " + $type_header_fallback};
 
-$type_header_weight: 700;
+$type_header_weight: ;
 
 // Non font-face header styles
 
-$type_header_line_height: 1.2;
+$type_header_line_height: 1.4;
 
-$type_header_accent_transform: true;
+$type_header_accent_transform: false;
 
 $type_header_text_alignment: false;
 
-$type_header_base_size: 35px;
+$type_header_base_size: 32px;
 
-$type_header_spacing: 0.0em;
+$type_header_spacing: 0.025em;
 
 // Font-face base styles
 
-$type_base_family: "Century Gothic";
+$type_base_family: ;
 
-$type_base_fallback: sans-serif;
+$type_base_fallback: ;
 
 $type_base_stack: #{"'" + $type_base_family + "', " + $type_base_fallback};
 
-$type_base_weight: 400;
+$type_base_weight: ;
 
 // Non font-face base styles
 
-$type_base_spacing: 0.025em;
+$type_base_spacing: 0.05em;
 
-$type_base_line_height: 1.6;
+$type_base_line_height: 1.4;
 
-$type_base_size: 17px;
+$type_base_size: 16px;
 
-$type_base_accent_transform: true;
+$type_base_accent_transform: false;
 
-$icon_weight: 4px;
+$icon_weight: 5px;
 
-$icon_linecaps: round;
+$icon_linecaps: miter;
 
 /*================ Animations ================*/
 
-$animate_page_transitions: false;
+$animate_page_transitions: ;
 
-$animate_page_transition_style: page-slow-fade;
+$animate_page_transition_style: ;
 
-$animate_sections: true;
+$animate_sections: ;
 
-$animate_sections_background_style: zoom-fade;
+$animate_sections_background_style: ;
 
-$animate_sections_text_style: rise-up;
+$animate_sections_text_style: ;
 
-$animate_images: true;
+$animate_images: ;
 
-$animate_images_style: zoom-fade;
+$animate_images_style: ;
 
-$animate_buttons: true;
+$animate_buttons: ;
 
-$animate_underlines: false;
+$animate_underlines: ;
 
 /*================ Drawers ================*/
 
@@ -531,15 +531,15 @@ $drawerCartFooterHeight: 130px;
 
 // default, overwritten by JS
 
-$colorDrawers: #000000;
+$colorDrawers: #1c1d1d;
 
-$colorDrawerBorder: #e8e8e1;
+$colorDrawerBorder: #343535;
 
-$colorDrawerText: #ffffff;
+$colorDrawerText: #fff;
 
-$colorDrawerButton: #111111;
+$colorDrawerButton: #a26b25;
 
-$colorDrawerButtonText: #ffffff;
+$colorDrawerButtonText: #fff;
 
 $fixedHeightLimit: 600px;
 
@@ -1767,7 +1767,7 @@ html input[disabled] {
 
 @if ($animate_buttons) {
   .btn:not(.btn--no-animate):not(.btn--tertiary) {
-    background: $colorBtnPrimary url(//cdn.shopify.com/s/files/1/0075/5227/0402/t/20/assets/button-arrow.png) no-repeat $btnBackgroundPosition;
+    background: $colorBtnPrimary url(//cdn.shopify.com/s/files/1/0075/5227/0402/t/23/assets/button-arrow.png) no-repeat $btnBackgroundPosition;
     background-size: 29px;
 
     @media
@@ -1778,7 +1778,7 @@ html input[disabled] {
     only screen and ( min-resolution: 200dpi),
     only screen and ( -webkit-min-device-pixel-ratio: 1.25),
     only screen and ( min-resolution: 1.25dppx) {
-      background-image: url(//cdn.shopify.com/s/files/1/0075/5227/0402/t/20/assets/button-arrow-2x.png);
+      background-image: url(//cdn.shopify.com/s/files/1/0075/5227/0402/t/23/assets/button-arrow-2x.png);
     }
 
     &:hover {
@@ -2202,7 +2202,7 @@ select {
           appearance: none;
   background-position: right center;
   background: {
-    image: url(//cdn.shopify.com/s/files/1/0075/5227/0402/t/20/assets/ico-select.svg);
+    image: url(//cdn.shopify.com/s/files/1/0075/5227/0402/t/23/assets/ico-select.svg);
     repeat: no-repeat;
     position: right 10px center;
     color: transparent;
@@ -5792,13 +5792,13 @@ $color-blankstate-background: #f4f4f4;
   background-color: transparent;
   border: none;
   width: auto;
-  background-image: url(//cdn.shopify.com/s/files/1/0075/5227/0402/t/20/assets/ico-select.svg);
+  background-image: url(//cdn.shopify.com/s/files/1/0075/5227/0402/t/23/assets/ico-select.svg);
   background-size: 12px;
   font-style: normal;
 
   .is-light & {
     color: $colorStickyNavLinks;
-    background-image: url(//cdn.shopify.com/s/files/1/0075/5227/0402/t/20/assets/ico-select-white.svg);
+    background-image: url(//cdn.shopify.com/s/files/1/0075/5227/0402/t/23/assets/ico-select-white.svg);
   }
 
   &:hover,
@@ -5808,18 +5808,18 @@ $color-blankstate-background: #f4f4f4;
 
   .header-item & {
     color: $colorNavText;
-    background-image: url(//cdn.shopify.com/s/files/1/0075/5227/0402/t/20/assets/ico-select-menu.svg);
+    background-image: url(//cdn.shopify.com/s/files/1/0075/5227/0402/t/23/assets/ico-select-menu.svg);
   }
 
   .is-light .header-item & {
     color: $colorStickyNavLinks;
-    background-image: url(//cdn.shopify.com/s/files/1/0075/5227/0402/t/20/assets/ico-select-white.svg);
+    background-image: url(//cdn.shopify.com/s/files/1/0075/5227/0402/t/23/assets/ico-select-white.svg);
   }
 
   .currency-picker--drawer & {
     padding-top: 5px;
     padding-bottom: 5px;
-    background-image: url(//cdn.shopify.com/s/files/1/0075/5227/0402/t/20/assets/ico-select-drawer.svg);
+    background-image: url(//cdn.shopify.com/s/files/1/0075/5227/0402/t/23/assets/ico-select-drawer.svg);
     border: 1px solid $colorDrawerBorder;
   }
 }
