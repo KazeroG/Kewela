@@ -1,0 +1,500 @@
+<div class="holder {{ section.settings.outer_margin }} {% if section.settings.enable_bg %}holder-with-bg {{ section.settings.padding-t }} {{ section.settings.padding-b }}  bg-cover lazyload" data-expand="-500"
+     {%- if section.settings.bg_image != blank -%}data-bgset="{% include 'bgset', image: section.settings.bg_image %}" data-sizes="auto"{%- endif -%}
+     {%- if section.settings.bg_color != blank and section.settings.bg_color != 'rgba(0,0,0,0)' -%}style="background-color: {{ section.settings.bg_color }}"{% endif %}
+        {%- else -%}"{%- endif -%}>
+<div class="{% if section.settings.block_width == "boxed" %}container{% else %}container-fluid px-0{% endif %}">
+    {% include 'section-headings' %}
+    <div class="row grid vert-margin-small">
+        <div class="col-{{ section.settings.col_first }} col-md-{{ section.settings.col_md_first }} {% if section.settings.hide_first_mob %}d-none d-md-block{% endif %}">
+            {%- for block in section.blocks -%}
+            {%- if block.settings.image1 == blank -%}
+                <div class="collection-image-swatch js-collection-image-swatch{% if forloop.first %} active{% endif %}" data-id="{{ block.id }}">
+                {% include 'image-placeholder-aspect-ratio' width: '273' height: '410' %}
+                </div>
+            {%- else -%}
+                {%- assign aspect_ratio = 1 | divided_by: block.settings.image1.aspect_ratio -%}
+                <div class="image-container collection-image-swatch js-collection-image-swatch{% if forloop.first %} active{% endif %}" data-id="{{ block.id }}" style="padding-bottom: {{ aspect_ratio | times: 100 }}%">
+                    <img class="fade-up lazyload w-100" data-src="{{ block.settings.image1 | img_url: 'master' }}" alt="">
+                </div>
+            {%- endif -%}
+            {%- endfor -%}
+        </div>
+        <div class="col-{{ section.settings.col_list }} col-md-{{ section.settings.col_md_list }} col-bnr-categories-list">
+            <div class="fade-up bg-cover w-100 h-100 lazyload"
+                 {%- if section.settings.bg_image_list != blank -%}data-bgset="{% include 'bgset', image: section.settings.bg_image_list %}" data-sizes="auto"{%- endif -%}
+                    {%- if section.settings.bg_color_list != blank and section.settings.bg_color_list != 'rgba(0,0,0,0)' -%}style="background-color: {{ section.settings.bg_color_list }}"{% endif %}>
+                <div class="bnr-categories d-flex align-items-center {% if section.settings.font %}heading-font{% endif %}">
+                    <ul class="bnr-categories-list">
+                    {%- for block in section.blocks -%}
+                        {% if block.settings.link_name != blank %}
+                              <li class="{% if forloop.first %}active{% endif %}"><a href="{{ block.settings.url }}" class="js-collection-link-swatch" title="{{ block.settings.link_name }}" data-image="{{ block.id }}">{{ block.settings.link_name }}</a></li>
+                        {%- endif -%}
+                    {%- endfor -%}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-{{ section.settings.col_second }} col-md-{{ section.settings.col_md_second }} {% if section.settings.hide_second_mob %}d-none d-md-block{% endif %}">
+            {%- for block in section.blocks -%}
+                {%- if block.settings.image2 == blank -%}
+                    <div class="collection-image-swatch js-collection-image-swatch{% if forloop.first %} active{% endif %}" data-id="{{ block.id }}">
+                    {% include 'image-placeholder-aspect-ratio' width: '578' height: '410' %}
+                    </div>
+                {%- else -%}
+                    {%- assign aspect_ratio = 1 | divided_by: block.settings.image2.aspect_ratio -%}
+                    <div class="image-container collection-image-swatch js-collection-image-swatch{% if forloop.first %} active{% endif %}" data-id="{{ block.id }}" style="padding-bottom: {{ aspect_ratio | times: 100 }}%">
+                        <img class="fade-up lazyload w-100" data-src="{{ block.settings.image2 | img_url: 'master' }}" alt="">
+                    </div>
+                {%- endif -%}
+            {%- endfor -%}
+        </div>
+    </div>
+</div>
+</div>
+<style>
+    .collection-image-swatch {
+        width: 100%;
+        transition: opacity .2s ease;
+    }
+    .collection-image-swatch:not(.active) {
+        position: absolute;
+        width: calc(100% - 30px);
+        left: 15px;
+        right: 15px;
+        top: 0;
+        opacity: 0;
+        pointer-events: none;
+    }
+    .collection-image-swatch.active {
+        position: relative;
+        opacity: 1;
+    }
+    .bnr-categories-list li a {
+        transition: none;
+    }
+    #shopify-section-{{ section.id }} .bnr-categories {
+        padding: 35px 30px;
+    }
+    #shopify-section-{{ section.id }} .bnr-categories-list li {
+        font-size: {{ section.settings.text_size }}px;
+    }
+    {% if section.settings.color != blank and section.settings.color != 'rgba(0,0,0,0)' %}
+        #shopify-section-{{ section.id }} .bnr-categories, #shopify-section-{{ section.id }} .bnr-categories-title {
+            color: {{ section.settings.color }};
+        }
+    {%- endif -%}
+    {% if section.settings.link_color != blank and section.settings.link_color != 'rgba(0,0,0,0)' %}
+    #shopify-section-{{ section.id }} .bnr-categories a {
+        color: {{ section.settings.link_color }};
+    }
+    {%- endif -%}
+    {% if section.settings.link_bg != blank and section.settings.link_bg != 'rgba(0,0,0,0)' %}
+    #shopify-section-{{ section.id }} .bnr-categories-list li {
+        background: {{ section.settings.link_bg }};
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+    {%- endif -%}
+    {% if section.settings.link_hover_color != blank and section.settings.link_hover_color != 'rgba(0,0,0,0)' %}
+    #shopify-section-{{ section.id }} .bnr-categories-list li {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+    #shopify-section-{{ section.id }} .bnr-categories-list li + li {
+        margin-top: 5px;
+    }
+    #shopify-section-{{ section.id }} .bnr-categories a:hover, #shopify-section-{{ section.id }} .bnr-categories a.active {
+        color: {{ section.settings.link_hover_color }};
+    }
+    {%- endif -%}
+    {% if section.settings.link_hover_bg != blank and section.settings.link_hover_bg != 'rgba(0,0,0,0)' %}
+    #shopify-section-{{ section.id }} .bnr-categories-list li:hover, #shopify-section-{{ section.id }} .bnr-categories-list li.active {
+        background: {{ section.settings.link_hover_bg }};
+    }
+    {% if section.settings.link_hover_color != blank and section.settings.link_hover_color != 'rgba(0,0,0,0)' %}
+    #shopify-section-{{ section.id }} .bnr-categories-list li:hover a, #shopify-section-{{ section.id }} .bnr-categories-list li.active a {
+        color: {{ section.settings.link_hover_color }};
+    }
+    {%- endif -%}
+    {%- endif -%}
+    {% if section.settings.list_style == 'nomarker' %}
+    .bnr-categories-list li:before {
+        display: none;
+    }
+    {%- endif -%}
+</style>
+<script>
+	jQuery(document).ready(function () {
+		$('.js-collection-link-swatch').on('mouseenter', function (e) {
+			var $this = $(this),
+			    $parent = $this.closest('.holder');
+			if ($this.hasClass('active')) return false;
+			$parent.find('.js-collection-image-swatch').removeClass('active');
+			$parent.find('.js-collection-link-swatch').parent('li').removeClass('active');
+			$parent.find('[data-id="'+ $this.data('image') +'"]').addClass('active');
+			$this.parent('li').addClass('active');
+			e.preventDefault();
+		});
+	})
+</script>
+{% schema %}
+{
+"name":"List + Switching Images",
+"settings":[
+{
+"type":"header",
+"content":"Layout"
+},
+{
+"type":"select",
+"id":"block_width",
+"label":"Width",
+"options":[
+{"value":"boxed","label":"Boxed"},
+{"value":"fullwidth","label":"Fullwidth"}
+],
+"default":"boxed"
+},
+{
+"type":"select",
+"id":"outer_margin",
+"label":"Outer top margin",
+"options":[
+{"value":"mt-0","label":"None"},
+{"value":"holder-mt-xsmall","label":"XSmall"},
+{"value":"holder-mt-small","label":"Small"},
+{"value":"holder-mt-medium","label":"Medium (default)"},
+{"value":"holder-mt-large","label":"Large"}
+],
+"default": "holder-mt-medium"
+},
+{
+"type": "checkbox",
+"id": "enable_bg",
+"label": "Add background",
+"default": false
+},
+{
+"type": "select",
+"id": "padding-t",
+"label": "Top Padding",
+"options":[
+{"value":"pt-0","label":"None"},
+{"value":"holder-pt-xsmall","label":"XSmall"},
+{"value":"holder-pt-small","label":"Small"},
+{"value":"holder-pt-medium","label":"Medium (default)"},
+{"value":"holder-pt-large","label":"Large"}
+],
+"default": "holder-pt-medium"
+},
+{
+"type": "select",
+"id": "padding-b",
+"label": "Bottom Padding",
+"options":[
+{"value":"pb-0","label":"None"},
+{"value":"holder-pb-xsmall","label":"XSmall"},
+{"value":"holder-pb-small","label":"Small"},
+{"value":"holder-pb-medium","label":"Medium (default)"},
+{"value":"holder-pb-large","label":"Large"}
+],
+"default": "holder-pb-medium"
+},
+{
+"type":"color",
+"id":"bg_color",
+"label":"Section Background Color",
+"default":"#f8f8f8"
+},
+{
+"type":"checkbox",
+"id":"nopads",
+"label":"Remove padding between banners",
+"default":false
+},
+{
+"type": "header",
+"content": "Heading"
+},
+{
+"type": "checkbox",
+"id": "enable_text",
+"label": "Enable",
+"default": true
+},
+{
+"type": "text",
+"id": "title",
+"label": "Title",
+"default":"Heading"
+},
+{
+"type": "select",
+"id": "title_size",
+"label": "Title Font Size",
+"default": "h2-style",
+"options": [
+{ "value": "h-lg-style", "label": "Large" },
+{ "value": "h1-style", "label": "Normal" },
+{ "value": "h2-style", "label": "Small" }
+]
+},
+{
+"type": "select",
+"id": "text_alignment",
+"label": "Text Alignment",
+"default": "center",
+"options": [
+{ "value": "left", "label": "Left" },
+{ "value": "center", "label": "Center" },
+{ "value": "right", "label": "Right" }
+]
+},
+{
+"type": "text",
+"id": "subtitle",
+"label": "Sub Heading",
+"default": "Sub Heading"
+},
+{
+"type": "text",
+"id": "bgtitle",
+"label": "Background Heading"
+},
+{
+"type": "header",
+"content": "First Image"
+},
+{
+"type": "checkbox",
+"id": "enable_first",
+"label": "Enable",
+"default": true
+},
+{
+"type":"checkbox",
+"id":"hide_first_mob",
+"label":"Hide for Mobile",
+"default":false
+},
+{
+"type":"select",
+"id":"col_first",
+"label":"Column for Mobile",
+"options":[
+{"value":"xs-quarter","label":"1/4"},
+{"value":"6","label":"1/3"},
+{"value":"9","label":"1/2"},
+{"value":"12","label":"2/3"},
+{"value":"18","label":"1"}
+],
+"default":"18"
+},
+{
+"type":"select",
+"id":"col_md_first",
+"label":"Column for Desktop",
+"options":[
+{"value":"2","label":"1/9"},
+{"value":"3","label":"1/6"},
+{"value":"up-quarter","label":"1/4"},
+{"value":"6","label":"1/3"},
+{"value":"9","label":"1/2"},
+{"value":"12","label":"2/3"},
+{"value":"18","label":"1"}
+],
+"default":"up-quarter"
+},
+{
+"type": "header",
+"content": "Second Image"
+},
+{
+"type": "checkbox",
+"id": "enable_second",
+"label": "Enable",
+"default": true
+},
+{
+"type":"checkbox",
+"id":"hide_second_mob",
+"label":"Hide for Mobile",
+"default":false
+},
+{
+"type":"select",
+"id":"col_second",
+"label":"Column for Mobile",
+"options":[
+{"value":"xs-quarter","label":"1/4"},
+{"value":"6","label":"1/3"},
+{"value":"9","label":"1/2"},
+{"value":"12","label":"2/3"},
+{"value":"18","label":"1"}
+],
+"default":"18"
+},
+{
+"type":"select",
+"id":"col_md_second",
+"label":"Column for Desktop",
+"options":[
+{"value":"2","label":"1/9"},
+{"value":"3","label":"1/6"},
+{"value":"up-quarter","label":"1/4"},
+{"value":"6","label":"1/3"},
+{"value":"9","label":"1/2"},
+{"value":"12","label":"2/3"},
+{"value":"18","label":"1"}
+],
+"default":"9"
+},
+{
+"type": "header",
+"content": "Collection List"
+},
+{
+"type": "checkbox",
+"id": "enable_list",
+"label": "Enable",
+"default": true
+},
+{
+"type":"select",
+"id":"col_list",
+"label":"Column for Mobile",
+"options":[
+{"value":"xs-quarter","label":"1/4"},
+{"value":"6","label":"1/3"},
+{"value":"9","label":"1/2"},
+{"value":"12","label":"2/3"},
+{"value":"18","label":"1"}
+],
+"default":"18"
+},
+{
+"type":"select",
+"id":"col_md_list",
+"label":"Column for Desktop",
+"options":[
+{"value":"2","label":"1/9"},
+{"value":"3","label":"1/6"},
+{"value":"up-quarter","label":"1/4"},
+{"value":"6","label":"1/3"},
+{"value":"9","label":"1/2"},
+{"value":"12","label":"2/3"},
+{"value":"18","label":"1"}
+],
+"default":"up-quarter"
+},
+{
+"type":"image_picker",
+"id":"bg_image_list",
+"label":"Image Background"
+},
+{
+"type":"color",
+"id":"bg_color_list",
+"label":"Background Color"
+},
+{
+"type":"color",
+"id":"link_color",
+"label":"Link Color"
+},
+{
+"type":"color",
+"id":"link_bg",
+"label":"Link Background"
+},
+{
+"type":"color",
+"id":"link_hover_color",
+"label":"Link Hover Color"
+},
+{
+"type":"color",
+"id":"link_hover_bg",
+"label":"Link Hover Background"
+},
+{
+"type": "select",
+"id": "list_style",
+"label": "Style",
+"default": "marker",
+"options": [
+{ "value": "marker", "label": "Marked with bullets" },
+{ "value": "nomarker", "label": "Not Marked" }
+]
+},
+{
+"type":"range",
+"id":"text_size",
+"min":14,
+"max":28,
+"step":1,
+"label":"Font Size",
+"unit":"px",
+"default": 17
+},
+{
+"type": "checkbox",
+"id": "font",
+"label": "Use Headings Font",
+"default": false
+}
+],
+"blocks":[
+{
+"type":"item",
+"name":"Link + Images",
+"settings":[
+{
+"type":"checkbox",
+"id":"enable",
+"label":"Enable",
+"default":true
+},
+{
+"type": "text",
+"id": "link_name",
+"label": "Category Name",
+"default": "Category Name"
+},
+{
+"type": "url",
+"id":"url",
+"label":"Link"
+},
+{
+"type":"image_picker",
+"id":"image1",
+"label":"First Image"
+},
+{
+"type":"image_picker",
+"id":"image2",
+"label":"Second Image"
+}
+]
+}
+],
+"presets":[
+{
+"name":"List + Switching Images",
+"category":"Collection",
+"blocks":[
+{
+"type":"item"
+},
+{
+"type":"item"
+},
+{
+"type":"item"
+}
+]
+}
+]
+}
+{% endschema %}

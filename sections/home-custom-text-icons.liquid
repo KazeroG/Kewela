@@ -1,0 +1,905 @@
+{%- if section.settings.enable -%}
+    <div class="holder {{ section.settings.outer_margin }} {{ section.settings.block_width }} {% if section.settings.block_width == 'fullwidth' %}full-nopad{% endif %}  {%- if section.settings.enable_bg -%}holder-with-bg {{ section.settings.padding-t }} {{ section.settings.padding-b }}  bg-cover lazyload"
+        {% if section.settings.bg_image != blank %}data-bgset="{% include 'bgset', image: section.settings.bg_image %}" data-sizes="auto"{% endif %}
+        {% if section.settings.bg_color != blank and section.settings.bg_color != 'rgba(0,0,0,0)' %}style="background-color: {{ section.settings.bg_color }}"{% endif %}
+        {%- else -%}"{%- endif -%}>
+    {%- assign outside = false -%}
+    {%- assign icons = false -%}
+    {%- assign numbers = false -%}
+    {%- assign numbers2 = false -%}
+    {%- assign headings = true -%}
+    {%- for block in section.blocks -%}
+        {%- case block.type -%}
+        {%- when 'image' -%}
+        {%- if block.settings.image_outside and block.settings.enable -%}{%- assign outside = true -%}{%- endif -%}
+        {%- when 'icons' -%}
+        {%- if block.settings.enable -%}{%- assign icons = true -%}{%- endif -%}
+        {%- endcase -%}
+    {%- endfor -%}
+    <div class="{% if outside %}container-fluid px-0{% else %}container{% endif %}" {% if section.settings.block_width == 'boxed' and  section.settings.maxwidth_yes %}style="max-width:{{ section.settings.maxwidth }}px"{% endif %}>
+        {%- unless section.settings.title_inside -%}
+        {% include 'section-headings' %}
+        {%- endunless -%}
+        <div class="row justify-content-md-{{ section.settings.alignment }}">
+            {%- for block in section.blocks -%}
+                {%- if block.settings.enable -%}
+                    {%- case block.type -%}
+                    {%- when 'image' -%}
+                    <div {{ block.shopify_attributes }} id="shopify-block-{{ block.id }}" class="d-flex align-items-center {% if outside %}{% if forloop.index == 1 %}justify-content-start{% else %}justify-content-end{% endif %}{% else %}justify-content-center{% endif %} {% if block.settings.image_parallax %}overflow-hidden{% endif %} col-{{ block.settings.col }} col-md-{{ block.settings.col_md }} {% if forloop.index != 1 %}mt-3 mt-md-0{% endif %} text-center bg-center-all lazyload"
+                            {% if block.settings.bg_image != blank %}data-bgset="{% include 'bgset', image: block.settings.bg_image %}" data-sizes="auto"{% endif %}>
+                        {%- if block.settings.image -%}
+                            <img class="{% if block.settings.image_parallax %}parallaxed{% endif %} lazyload fade-up"
+                                 src="{{ block.settings.image | img_url: '100x' }}"
+                                 data-src="{{ block.settings.image | img_url: '800x' }}"
+                                 alt="{{ block.settings.image.alt }}"/>
+                        {%- else -%}
+                            {%- render 'image-placeholder-aspect-ratio', width: 100, height: 50, text: 'image' -%}
+                        {%- endif -%}
+                    </div>
+                    {%- when 'icons' -%}
+                    <div {{ block.shopify_attributes }} id="shopify-block-{{ block.id }}" class="col-{{ block.settings.col }} col-md-{{ block.settings.col_md }} {% if forloop.index != 1 %}mt-3 mt-md-0{% endif %} text-{{ block.settings.text_alignment }} {{ block.settings.text_alignment_v }} py-3">
+                        {%- if outside -%}
+                        <div class="d-flex justify-content-center {% if forloop.index == 1 %}justify-content-md-end{% else %}justify-content-md-start{% endif %}">
+                            <div class="outside-text">
+                                {%- endif -%}
+                                {%- if section.settings.title_inside and headings -%}
+                                    {% include 'section-headings' %}
+                                    {%- assign headings = false -%}
+                                {%- endif -%}
+                                {%- if block.settings.text != blank -%}
+                                    <p class="text-center mb-3">{{ block.settings.text }}</p>
+                                {%- endif -%}
+                                <div class="row vert-margin-small {% if block.settings.text != blank %}pt-2{% endif %}">
+                                    {%- assign icons_count = 0 -%}
+                                    {%- for i in (1..4) -%}
+                                        {%- capture enable -%}enable_{{ i }}{%- endcapture -%}
+                                        {%- if block.settings[enable] -%}
+                                            {%- capture icons_count -%}{{ icons_count | plus: 1 }}{%- endcapture -%}
+                                        {%- endif -%}
+                                    {%- endfor -%}
+                                    {%- for i in (1..4) -%}
+                                        {% capture enable %}enable_{{ i }}{% endcapture %}
+                                        {% capture icon_type %}icon_type_{{ i }}{% endcapture %}
+                                        {% capture svg %}svg_{{ i }}{% endcapture %}
+                                        {% capture icon %}icon_{{ i }}{% endcapture %}
+                                        {% capture text1 %}text1_{{ i }}{% endcapture %}
+                                        {% capture text2 %}text2_{{ i }}{% endcapture %}
+                                        {% if block.settings[enable] %}
+                                            <div class="{% if icons_count == '3' %}col-6{% else %}col-9{% endif %}">
+                                                <div class="custom-text-icn-block">
+                                                    <div class="icn custom-color">
+                                                        {%- if block.settings[icon_type] == 'svg' -%}
+                                                            {{ block.settings[svg] }}
+                                                        {%- else -%}
+                                                            <i class="{% if block.settings[icon_type] == 'theme' %}{{ block.settings[icon] }}{% else %}{{ block.settings[icon_name] }}{% endif %}"></i>
+                                                        {%- endif -%}
+                                                    </div>
+                                                    <div class="text">
+                                                        <h4 class="theme-font custom-color">{{ block.settings[text1] }}</h4>
+                                                        {{ block.settings[text2] }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {%- endif -%}
+                                    {%- endfor -%}
+                                </div>
+                                {%- if outside -%}
+                            </div>
+                        </div>
+                        {%- endif -%}
+                    </div>
+                    {%- endcase -%}
+                {%- endif -%}
+            {%- endfor -%}
+        </div>
+    </div>
+    </div>
+{%- endif -%}
+
+<style>
+    {%- if icons -%}
+    {%- if outside -%}
+    @media (max-width: 767px) {
+        #shopify-section-{{ section.id }} [class*='col'] > .d-flex {
+            padding-left: 15px !important;
+            padding-right: 15px !important;
+        }
+    }
+    {%- endif -%}
+    .custom-text-icn-block .icn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        margin: 0 auto;
+        text-align: center;
+        {% if icons_count == '3' %}
+        width: 80px;
+        height: 80px;
+        font-size: 45px;
+        {%- else -%}
+        width: 104px;
+        height: 104px;
+        font-size: 60px;
+        {%- endif -%}
+        border: 1px solid #f0f0f0;
+        border-radius: 50%;
+    }
+
+    .custom-text-icn-block .text {
+        font-size: 18px;
+        line-height: 24px;
+        padding: 10px 0 0 0;
+        text-align: center;
+    }
+
+    @media (max-width: 575px) {
+        .custom-text-icn-block .text {
+            font-size: 16px;
+            line-height: 22px;
+        }
+    }
+
+    .custom-text-icn-block h4 {
+        font-size: 18px;
+        line-height: 24px;
+        margin-bottom: 0;
+    }
+
+    @media (max-width: 575px) {
+        .custom-text-icn-block h4 {
+            font-size: 16px;
+            line-height: 22px;
+        }
+    }
+    {%- endif -%}
+
+    {%- for block in section.blocks -%}
+    {%- unless block.settings.text_color == '' or block.settings.text_color contains 'rgba(0,0,0,0)' -%}
+    #shopify-block-{{ block.id }}, #shopify-block-{{ block.id }} p, #shopify-block-{{ block.id }} a, #shopify-block-{{ block.id }} a:hover {
+        color: {{ block.settings.text_color }};
+    }
+    {%- endunless -%}
+    {%- unless block.settings.title_color == '' or block.settings.title_color contains 'rgba(0,0,0,0)' -%}
+    #shopify-block-{{ block.id }} h2, #shopify-block-{{ block.id }} h3 {
+        color: {{ block.settings.title_color }};
+    }
+    {%- endunless -%}
+
+    {%- case block.type -%}
+    {%- when 'icons' -%}
+    #shopify-block-{{ block.id }} .custom-text-icn-block svg {
+    {% if icons_count == '3' %}
+        max-width: 45px;
+        max-height: 45px;
+    {%- else -%}
+        max-width: 60px;
+        max-height: 60px;
+    {%- endif -%}
+    }
+    #shopify-block-{{ block.id }} .custom-text-icn-block path:not([class*='cv']), #shopify-block-{{ block.id }} .custom-text-icn-block path:not([class*='cv']) polygon  {
+        fill: currentcolor;
+    }
+    {%- unless block.settings.text2_color == '' or block.settings.text2_color contains 'rgba(0,0,0,0)' -%}
+    #shopify-block-{{ block.id }} .custom-text-icn-block .text {
+        color: {{ block.settings.text2_color }};
+    }
+    {%- endunless -%}
+    {%- unless block.settings.text1_color == '' or block.settings.text1_color contains 'rgba(0,0,0,0)' -%}
+    #shopify-block-{{ block.id }} .custom-text-icn-block h4 {
+        color: {{ block.settings.text1_color }};
+    }
+    {%- endunless -%}
+    {%- unless block.settings.icn_bg_color == '' or block.settings.icn_bg_color contains 'rgba(0,0,0,0)' -%}
+    #shopify-block-{{ block.id }} .custom-text-icn-block .icn {
+        background-color: {{ block.settings.icn_bg_color }};
+    }
+    {%- endunless -%}
+    {%- unless block.settings.icn_color == '' or block.settings.icn_color contains 'rgba(0,0,0,0)' -%}
+    #shopify-block-{{ block.id }} .custom-text-icn-block .icn {
+        color: {{ block.settings.icn_color }};
+    }
+    {%- endunless -%}
+    {%- unless block.settings.icn_border_color == '' or block.settings.icn_border_color contains 'rgba(0,0,0,0)' -%}
+    #shopify-block-{{ block.id }} .custom-text-icn-block .icn {
+        border-color: {{ block.settings.icn_border_color }};
+    }
+    {%- endunless -%}
+    {%- endcase -%}
+    {%- endfor -%}
+
+    @media (min-width: 768px) {
+    {%- if outside -%}
+    {%- for block in section.blocks -%}
+        #shopify-block-{{ block.id }} .outside-text {
+            max-width: {{ settings.maxwidth | divided_by: 18 | times: block.settings.col_md | minus: 26 }}px;
+        }
+
+    {%- endfor -%}
+    {%- endif -%}
+    {%- for block in section.blocks -%}
+    {%- case block.type -%}
+    {%- when 'image' -%}
+    {%- if block.settings.margin_top != 0 or block.settings.margin_bottom != 0 -%}
+        #shopify-block-{{ block.id }} img {
+            margin-top: -{{ block.settings.margin_top }}%;
+            margin-bottom: -{{ block.settings.margin_bottom }}%;
+            z-index: 1;
+        }
+
+    {%- endif -%}
+    {%- endcase -%}
+    {%- endfor -%}
+    }
+</style>
+{% schema %}
+{
+"name": "Custom Text + Image",
+"class": "index-section",
+"settings": [
+{
+"type": "checkbox",
+"id": "enable",
+"label": "Enable",
+"default": true
+},
+{
+"type": "header",
+"content": "Layout"
+},
+{
+"type":"select",
+"id":"block_width",
+"label":"Width",
+"options":[
+{"value":"boxed","label":"Boxed"},
+{"value":"fullwidth","label":"Fullwidth"}
+],
+"default":"boxed"
+},
+{
+"type": "checkbox",
+"id": "maxwidth_yes",
+"label": "Enable Max Width",
+"default": false,
+"info": "* only for boxed"
+},
+{
+"type": "range",
+"id": "maxwidth",
+"label": "Max Width",
+"min": 800,
+"max": 2400,
+"step": 20,
+"unit": "px",
+"default": 1600
+},
+{
+"type": "select",
+"id": "outer_margin",
+"label": "Outer top margin",
+"options":[
+{"value":"mt-0","label":"None"},
+{"value":"holder-mt-xsmall","label":"XSmall"},
+{"value":"holder-mt-small","label":"Small"},
+{"value":"holder-mt-medium","label":"Medium (default)"},
+{"value":"holder-mt-large","label":"Large"}
+],
+"default": "holder-mt-medium"
+},
+{
+"type": "checkbox",
+"id": "enable_bg",
+"label": "Add background",
+"default": false
+},
+{
+"type": "select",
+"id": "padding-t",
+"label": "Top Padding",
+"options":[
+{"value":"pt-0","label":"None"},
+{"value":"holder-pt-xsmall","label":"XSmall"},
+{"value":"holder-pt-small","label":"Small"},
+{"value":"holder-pt-medium","label":"Medium (default)"},
+{"value":"holder-pt-large","label":"Large"}
+],
+"default": "holder-pt-medium"
+},
+{
+"type": "select",
+"id": "padding-b",
+"label": "Bottom Padding",
+"options":[
+{"value":"pb-0","label":"None"},
+{"value":"holder-pb-xsmall","label":"XSmall"},
+{"value":"holder-pb-small","label":"Small"},
+{"value":"holder-pb-medium","label":"Medium (default)"},
+{"value":"holder-pb-large","label":"Large"}
+],
+"default": "holder-pb-medium"
+},
+{
+"type":"color",
+"id":"bg_color",
+"label":"Section Background Color",
+"default":"#f8f8f8"
+},
+{
+"type":"image_picker",
+"id":"bg_image",
+"label":"Section Background Image",
+"info":"(Recommended size 1920x700 px)"
+},
+{
+"type": "select",
+"id": "alignment",
+"label": "Columns Horizontal Alignment",
+"default": "center",
+"options": [
+{ "value": "start", "label": "Left" },
+{ "value": "center", "label": "Center" },
+{ "value": "end", "label": "Right" }
+]
+},
+{
+"type": "header",
+"content": "Heading"
+},
+{
+"type": "checkbox",
+"id": "enable_text",
+"label": "Enable",
+"default": false
+},
+{
+"type": "text",
+"id": "title",
+"label": "Title",
+"default":"Heading"
+},
+{
+"type": "select",
+"id": "title_size",
+"label": "Title Font Size",
+"default": "h2-style",
+"options": [
+{ "value": "h-lg-style", "label": "Large" },
+{ "value": "h1-style", "label": "Normal" },
+{ "value": "h2-style", "label": "Small" }
+]
+},
+{
+"type": "select",
+"id": "text_alignment",
+"label": "Text Alignment",
+"default": "center",
+"options": [
+{ "value": "left", "label": "Left" },
+{ "value": "center", "label": "Center" },
+{ "value": "right", "label": "Right" }
+]
+},
+{
+"type": "text",
+"id": "subtitle",
+"label": "Sub Heading"
+},
+{
+"type": "text",
+"id": "bgtitle",
+"label": "Background Heading"
+},
+{
+"type": "checkbox",
+"id": "title_inside",
+"label": "Place Title in the Text block",
+"default": false
+}
+],
+"blocks":[
+{
+"type":"image",
+"name":"Image",
+"settings":[
+{
+"type":"checkbox",
+"id":"enable",
+"label":"Enable",
+"default":true
+},
+{
+"type":"select",
+"id":"col",
+"label":"Column for Mobile",
+"options":[
+{"value":"2","label":"1/18"},
+{"value":"3","label":"3/18"},
+{"value":"4","label":"4/19"},
+{"value":"5","label":"5/18"},
+{"value":"6","label":"6/18"},
+{"value":"7","label":"7/18"},
+{"value":"8","label":"8/18"},
+{"value":"9","label":"9/18"},
+{"value":"10","label":"10/18"},
+{"value":"11","label":"11/18"},
+{"value":"12","label":"12/18"},
+{"value":"18","label":"1"}
+],
+"default":"18"
+},
+{
+"type":"select",
+"id":"col_md",
+"label":"Column for Desktop",
+"options":[
+{"value":"2","label":"1/18"},
+{"value":"3","label":"3/18"},
+{"value":"4","label":"4/19"},
+{"value":"5","label":"5/18"},
+{"value":"6","label":"6/18"},
+{"value":"7","label":"7/18"},
+{"value":"8","label":"8/18"},
+{"value":"9","label":"9/18"},
+{"value":"10","label":"10/18"},
+{"value":"11","label":"11/18"},
+{"value":"12","label":"12/18"},
+{"value":"18","label":"1"}
+],
+"default":"9"
+},
+{
+"type":"image_picker",
+"id":"image",
+"label":"Image"
+},
+{
+"type":"image_picker",
+"id":"bg_image",
+"label":"Image Background"
+},
+{
+"type":"checkbox",
+"id":"image_parallax",
+"label":"Enable mouseover effect",
+"default":false
+},
+{
+"type":"checkbox",
+"id":"image_outside",
+"label":"Outside Shift",
+"default":false
+},
+{
+"type":"range",
+"id":"margin_top",
+"min":0,
+"max":100,
+"step":1,
+"label":"Negative Margin Top",
+"unit":"%",
+"default": 0
+},
+{
+"type":"range",
+"id":"margin_bottom",
+"min":0,
+"max":100,
+"step":1,
+"label":"Negative Margin Bottom",
+"unit":"%",
+"default": 0
+}
+]
+},
+{
+"type":"icons",
+"name":"Text + Icons",
+"settings":[
+{
+"type":"checkbox",
+"id":"enable",
+"label":"Enable",
+"default":true
+},
+{
+"type":"select",
+"id":"col",
+"label":"Column for Mobile",
+"options":[
+{"value":"2","label":"1/18"},
+{"value":"3","label":"3/18"},
+{"value":"4","label":"4/19"},
+{"value":"5","label":"5/18"},
+{"value":"6","label":"6/18"},
+{"value":"7","label":"7/18"},
+{"value":"8","label":"8/18"},
+{"value":"9","label":"9/18"},
+{"value":"10","label":"10/18"},
+{"value":"11","label":"11/18"},
+{"value":"12","label":"12/18"},
+{"value":"18","label":"1"}
+],
+"default":"18"
+},
+{
+"type":"select",
+"id":"col_md",
+"label":"Column for Desktop",
+"options":[
+{"value":"2","label":"1/18"},
+{"value":"3","label":"3/18"},
+{"value":"4","label":"4/19"},
+{"value":"5","label":"5/18"},
+{"value":"6","label":"6/18"},
+{"value":"7","label":"7/18"},
+{"value":"8","label":"8/18"},
+{"value":"9","label":"9/18"},
+{"value":"10","label":"10/18"},
+{"value":"11","label":"11/18"},
+{"value":"12","label":"12/18"},
+{"value":"18","label":"1"}
+],
+"default":"9"
+},
+{
+"type":"textarea",
+"id":"text",
+"label":"Text"
+},
+{
+"type": "select",
+"id": "text_alignment",
+"label": "Text Alignment",
+"default": "left",
+"options": [
+{ "value": "left", "label": "Left" },
+{ "value": "center", "label": "Center" },
+{ "value": "right", "label": "Right" }
+]
+},
+{
+"type": "select",
+"id": "text_alignment_v",
+"label": "Text Vertical Alignment",
+"options":[
+{"value":"align-self-start","label":"Top"},
+{"value":"align-self-center","label":"Center"},
+{"value":"align-self-end","label":"Bottom"}
+],
+"default": "align-self-center"
+},
+{
+"type": "header",
+"content": "Colors"
+},
+{
+"type": "color",
+"id": "title_color",
+"label": "Title Color"
+},
+{
+"type": "color",
+"id": "text_color",
+"label": "Text Color"
+},
+{
+"type":"color",
+"id":"icn_color",
+"label":"Icon Color"
+},
+{
+"type":"color",
+"id":"icn_bg_color",
+"label":"Icon Background Color"
+},
+{
+"type":"color",
+"id":"icn_border_color",
+"label":"Icon Border Color"
+},
+{
+"type":"color",
+"id":"text1_color",
+"label":"Icon Title Color"
+},
+{
+"type":"color",
+"id":"text2_color",
+"label":"Icon Text Color"
+},
+{
+"type": "header",
+"content": "Icon 1"
+},
+{
+"type":"checkbox",
+"id":"enable_1",
+"label":"Enable",
+"default":true
+},
+{
+"type":"text",
+"id":"text1_1",
+"label":"Title",
+"default": "Title"
+},
+{
+"type":"text",
+"id":"text2_1",
+"label":"Text",
+"default": "Add your text here"
+},
+{
+"type": "radio",
+"id": "icon_type_1",
+"label": "Icon Source",
+"options":[
+{"value":"theme","label":"Icons Set (recommended)"},
+{"value":"name","label":"Custom Icon Name (Theme Icons Library)"},
+{"value":"svg","label":"Custom SVG code"}
+]
+},
+{
+"type": "select",
+"id": "icon_1",
+"label": "Icons Set",
+"default": "icon-box-1",
+"options":[
+{"value":"icon-box-1","label":"Box"},
+{"value":"icon-call-center","label":"Call Center"},
+{"value":"icon-speech-bubble","label":"Chat"},
+{"value":"icon-watch","label":"Clock"},
+{"value":"icon-credit-card-1","label":"Credit Card"},
+{"value":"icon-delivery-truck","label":"Delivery Truck"},
+{"value":"icon-shopping-1","label":"Hand"},
+{"value":"icon-gift","label":"Gift"},
+{"value":"icon-gift-card","label":"Gift Card"},
+{"value":"icon-guarantee","label":"Guarantee"},
+{"value":"icon-location","label":"Location"},
+{"value":"icon-return","label":"Return"},
+{"value":"icon-ribbon","label":"Ribbon"},
+{"value":"icon-tag","label":"Tag"},
+{"value":"icon-wallet","label":"Wallet"},
+{"value":"icon-award","label":"Award"},
+{"value":"icon-diplom","label":"Document"}
+]
+},
+{
+"type":"text",
+"id":"icon_name_1",
+"label":"Custom Icon Name",
+"default": "icon-gift",
+"info": "Select icon name here [Theme Icons Library](http://big-skins.com/frontend/foxic-html-demo/icon-foxic/demo.html)"
+},
+{
+"type":"textarea",
+"id":"svg_1",
+"label":"Custom SVG code"
+},
+{
+"type": "header",
+"content": "Icon 2"
+},
+{
+"type":"checkbox",
+"id":"enable_2",
+"label":"Enable",
+"default":true
+},
+{
+"type":"text",
+"id":"text1_2",
+"label":"Title",
+"default": "Title"
+},
+{
+"type":"text",
+"id":"text2_2",
+"label":"Text",
+"default": "Add your text here"
+},
+{
+"type": "radio",
+"id": "icon_type_2",
+"label": "Icon Source",
+"options":[
+{"value":"theme","label":"Icons Set (recommended)"},
+{"value":"name","label":"Custom Icon Name (Theme Icons Library)"},
+{"value":"svg","label":"Custom SVG code"}
+]
+},
+{
+"type": "select",
+"id": "icon_2",
+"label": "Icons Set",
+"default": "icon-box-1",
+"options":[
+{"value":"icon-box-1","label":"Box"},
+{"value":"icon-call-center","label":"Call Center"},
+{"value":"icon-speech-bubble","label":"Chat"},
+{"value":"icon-watch","label":"Clock"},
+{"value":"icon-credit-card-1","label":"Credit Card"},
+{"value":"icon-delivery-truck","label":"Delivery Truck"},
+{"value":"icon-shopping-1","label":"Hand"},
+{"value":"icon-gift","label":"Gift"},
+{"value":"icon-gift-card","label":"Gift Card"},
+{"value":"icon-guarantee","label":"Guarantee"},
+{"value":"icon-location","label":"Location"},
+{"value":"icon-return","label":"Return"},
+{"value":"icon-ribbon","label":"Ribbon"},
+{"value":"icon-tag","label":"Tag"},
+{"value":"icon-wallet","label":"Wallet"},
+{"value":"icon-award","label":"Award"},
+{"value":"icon-diplom","label":"Document"}
+]
+},
+{
+"type":"text",
+"id":"icon_name_2",
+"label":"Custom Icon Name",
+"default": "icon-gift",
+"info": "Select icon name here [Theme Icons Library](http://big-skins.com/frontend/foxic-html-demo/icon-foxic/demo.html)"
+},
+{
+"type":"textarea",
+"id":"svg_2",
+"label":"Custom SVG code"
+},
+{
+"type": "header",
+"content": "Icon 3"
+},
+{
+"type":"checkbox",
+"id":"enable_3",
+"label":"Enable",
+"default":true
+},
+{
+"type":"text",
+"id":"text1_3",
+"label":"Title",
+"default": "Title"
+},
+{
+"type":"text",
+"id":"text2_3",
+"label":"Text",
+"default": "Add your text here"
+},
+{
+"type": "radio",
+"id": "icon_type_3",
+"label": "Icon Source",
+"options":[
+{"value":"theme","label":"Icons Set (recommended)"},
+{"value":"name","label":"Custom Icon Name (Theme Icons Library)"},
+{"value":"svg","label":"Custom SVG code"}
+]
+},
+{
+"type": "select",
+"id": "icon_3",
+"label": "Icons Set",
+"default": "icon-box-1",
+"options":[
+{"value":"icon-box-1","label":"Box"},
+{"value":"icon-call-center","label":"Call Center"},
+{"value":"icon-speech-bubble","label":"Chat"},
+{"value":"icon-watch","label":"Clock"},
+{"value":"icon-credit-card-1","label":"Credit Card"},
+{"value":"icon-delivery-truck","label":"Delivery Truck"},
+{"value":"icon-shopping-1","label":"Hand"},
+{"value":"icon-gift","label":"Gift"},
+{"value":"icon-gift-card","label":"Gift Card"},
+{"value":"icon-guarantee","label":"Guarantee"},
+{"value":"icon-location","label":"Location"},
+{"value":"icon-return","label":"Return"},
+{"value":"icon-ribbon","label":"Ribbon"},
+{"value":"icon-tag","label":"Tag"},
+{"value":"icon-wallet","label":"Wallet"},
+{"value":"icon-award","label":"Award"},
+{"value":"icon-diplom","label":"Document"}
+]
+},
+{
+"type":"text",
+"id":"icon_name_3",
+"label":"Custom Icon Name",
+"default": "icon-gift",
+"info": "Select icon name here [Theme Icons Library](http://big-skins.com/frontend/foxic-html-demo/icon-foxic/demo.html)"
+},
+{
+"type":"textarea",
+"id":"svg_3",
+"label":"Custom SVG code"
+},
+{
+"type": "header",
+"content": "Icon 4"
+},
+{
+"type":"checkbox",
+"id":"enable_4",
+"label":"Enable",
+"default":true
+},
+{
+"type":"text",
+"id":"text1_4",
+"label":"Title",
+"default": "Title"
+},
+{
+"type":"text",
+"id":"text2_4",
+"label":"Text",
+"default": "Add your text here"
+},
+{
+"type": "radio",
+"id": "icon_type_4",
+"label": "Icon Source",
+"options":[
+{"value":"theme","label":"Icons Set (recommended)"},
+{"value":"name","label":"Custom Icon Name (Theme Icons Library)"},
+{"value":"svg","label":"Custom SVG code"}
+]
+},
+{
+"type": "select",
+"id": "icon_4",
+"label": "Icons Set",
+"default": "icon-box-1",
+"options":[
+{"value":"icon-box-1","label":"Box"},
+{"value":"icon-call-center","label":"Call Center"},
+{"value":"icon-speech-bubble","label":"Chat"},
+{"value":"icon-watch","label":"Clock"},
+{"value":"icon-credit-card-1","label":"Credit Card"},
+{"value":"icon-delivery-truck","label":"Delivery Truck"},
+{"value":"icon-shopping-1","label":"Hand"},
+{"value":"icon-gift","label":"Gift"},
+{"value":"icon-gift-card","label":"Gift Card"},
+{"value":"icon-guarantee","label":"Guarantee"},
+{"value":"icon-location","label":"Location"},
+{"value":"icon-return","label":"Return"},
+{"value":"icon-ribbon","label":"Ribbon"},
+{"value":"icon-tag","label":"Tag"},
+{"value":"icon-wallet","label":"Wallet"},
+{"value":"icon-award","label":"Award"},
+{"value":"icon-diplom","label":"Document"}
+]
+},
+{
+"type":"text",
+"id":"icon_name_4",
+"label":"Custom Icon Name",
+"default": "icon-gift",
+"info": "Select icon name here [Theme Icons Library](http://big-skins.com/frontend/foxic-html-demo/icon-foxic/demo.html)"
+},
+{
+"type":"textarea",
+"id":"svg_4",
+"label":"Custom SVG code"
+}
+]
+}
+],
+"presets": [
+{
+"name": "Text + Icons + Image",
+"category": "Text",
+"blocks":[
+{
+"type":"icons"
+},
+{
+"type":"image"
+}
+]
+}
+]
+}
+{% endschema %}

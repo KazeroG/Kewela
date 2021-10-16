@@ -1,0 +1,184 @@
+{% assign layout = section.settings.layout %}
+{% assign posts_per_row = section.settings.posts_per_row %}
+{%- assign posts_per_page = section.settings.posts_per_page -%}
+{%- paginate blog.articles by posts_per_page -%}
+{%- if layout == 'list' or  layout == 'reverse_list' -%}
+    <div class="post-prws-listing {% if section.settings.border_off  %}block-border-off{% endif %}">
+        {%- for article in blog.articles -%}
+            <div class="post-prw">
+                <div class="{% if article.image %}row{% endif %} vert-margin-middle">
+                    {%- if article.image -%}
+                        {%- assign h = article.image.height -%}
+                        {%- if h < 712 -%}{%- capture size -%}{{ h }}x{{ h }}{%- endcapture -%}{%- else -%}{%- assign size = '712x712' -%}{%- endif -%}
+                        <div class="post-prw-img col-md-7 {% if layout == 'reverse_list' %}order-sm-2{% endif %}">
+                            <a href="{{ article.url }}" class="image-hover-scale image-container" style="padding-bottom: 100%">
+                                <img class="lazyload fade-up"
+                                     data-src="{{ article.image | img_url: size, crop: 'center' }}"
+                                     data-aspectratio="1"
+                                     data-sizes="auto"
+                                     alt="">
+                            </a>
+                        </div>
+                    {%- endif -%}
+                    <div class="post-prw-text {% if article.image %}col-md-11{% else %}p-0{% endif %}">
+                        <h4 class="post-prw-title"><a href="{{ article.url }}">{{ article.title }}</a></h4>
+                        {%- if section.settings.blog_show_date or section.settings.blog_show_author or  section.settings.blog_show_comments %}
+                            <div class="post-prw-links">
+                                {%- if section.settings.blog_show_date -%}
+                                    <div class="post-prw-date"><i class="icon-calendar1"></i>{{ article.published_at | time_tag: format: 'date' }}</div>
+                                {%- endif -%}
+                                {%- if section.settings.blog_show_author -%}
+                                    <div class="post-prw-author">{{ 'blogs.article.by_author' | t: author: article.author }}</div>
+                                {%- endif -%}
+                                {%- if section.settings.blog_show_comments -%}
+                                    <div class="post-prw-date"><i class="icon-chat"></i>{{ 'blogs.comments.comments_with_count' | t: count: article.comments_count }}</div>
+                        {%- endif -%}
+                            </div>
+                        {%- endif -%}
+                        <div class="post-prw-teaser">
+                            {%- if article.excerpt.size > 0 -%}
+                                {{ article.excerpt }}
+                            {%- else -%}
+                                {{ article.content | strip_html | truncate: section.settings.teaser }}
+                            {%- endif -%}
+                        </div>
+                        <div class="post-prw-btn">
+                            <a href="{{ article.url }}" class="btn btn--md">{{ "blogs.article.read_more" | t }}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {%- endfor -%}
+    </div>
+{%- else -%}
+    <div class="post-prws-grid row">
+    {% case posts_per_row %}
+    {% when 2 %}
+    {% assign column = 'col-md-9' %}
+    {% when 3 %}
+    {% assign column = 'col-md-6' %}
+    {% when 4 %}
+    {% assign column = 'col-md-up-quarter' %}
+    {% when 5 %}
+    {% assign column = 'col-md-up-onefive' %}
+    {% endcase %}
+        {%- for article in blog.articles -%}
+            <div class="col-sm-9 {{ column }}">
+                <div class="post-prw-simple">
+                    {%- if article.image -%}
+                        {%- assign h = article.image.height -%}
+                        {%- if h < 712 -%}{%- capture size -%}{{ h }}x{{ h }}{%- endcapture -%}{%- else -%}{%- assign size = '712x712' -%}{%- endif -%}
+                        <div class="post-prw-img">
+                            <a href="{{ article.url }}" class="image-hover-scale image-container" style="padding-bottom: 100%">
+                                <img class="lazyload fade-up"
+                                     data-src="{{ article.image | img_url: size, crop: 'center' }}"
+                                     data-aspectratio="1"
+                                     data-sizes="auto"
+                                     alt="">
+                            </a>
+                        </div>
+                    {%- endif -%}
+                    {%- if section.settings.blog_show_date or section.settings.blog_show_author%}
+                        <div class="post-prw-links">
+                            {%- if section.settings.blog_show_date -%}
+                                <div class="post-prw-date"><i class="icon-calendar1"></i>{{ article.published_at | time_tag: format: 'date' }}</div>
+                            {%- endif -%}
+                            {%- if section.settings.blog_show_author -%}
+                                <div class="post-prw-author">{{ 'blogs.article.by_author' | t: author: article.author }}</div>
+                            {%- endif -%}
+                        </div>
+                    {%- endif -%}
+                    <h4 class="post-prw-title"><a href="{{ article.url }}">{{ article.title }}</a></h4>
+                </div>
+            </div>
+        {%- endfor -%}
+    </div>
+{%- endif -%}
+{%- if paginate.pages > 1 -%}
+    <div class="pagination-wrap d-flex justify-content-center mt-4">
+        {%- render 'pagination', paginate: paginate -%}
+    </div>
+{%- endif -%}
+{%- endpaginate -%}
+
+{% schema %}
+{
+"name":"Blog content",
+"class": "aside aside--content col-md-14",
+"tag": "div",
+"settings": [
+{
+"type": "select",
+"id": "layout",
+"label": "Layout",
+"default": "list",
+"options": [
+{
+"value": "grid",
+"label": "Grid"
+},
+{
+"value": "list",
+"label": "List"
+},
+{
+"value": "reverse_list",
+"label": "Reverse List"
+}
+]
+},
+{
+"type": "range",
+"id": "posts_per_page",
+"label": "Number of Posts per page",
+"min": 1,
+"max": 12,
+"step": 1,
+"default": 5
+},
+{
+"type": "range",
+"id": "posts_per_row",
+"label": "Number of Posts per row (for grid layout)",
+"min": 2,
+"max": 5,
+"step": 1,
+"default": 3
+},
+{
+"type": "checkbox",
+"id": "blog_show_author",
+"label": "Show author",
+"default": false
+},
+{
+"type": "checkbox",
+"id": "blog_show_date",
+"label": "Show date",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "blog_show_comments",
+"label": "Show comments count",
+"default": false
+},
+{
+"type": "range",
+"id": "teaser",
+"min": 100,
+"max": 800,
+"step": 10,
+"label": "Truncate teaser after",
+"default": 460,
+"info": "letters"
+},
+{
+"type": "checkbox",
+"id": "border_off",
+"label": "Remove Divider Line",
+"default": false
+}
+]
+}
+{% endschema %}

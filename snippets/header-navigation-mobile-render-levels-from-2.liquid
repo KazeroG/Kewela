@@ -1,0 +1,25 @@
+{% for link in  linklists[list].links %}
+    <li>
+        {%- assign link_url = link.url -%}
+        <a href="{{ link_url }}">{% include 'title' link:link %}{% if linklists[link.handle].links.size > 0 %}<span class="arrow"><i class="icon-angle-right"></i></span>{% endif %}</a>
+        {% if linklists[link.handle].links.size > 0 %}
+            <ul>
+                {% for link_1 in linklists[link.handle].links %}
+                    <li>
+                        {%- assign link_url_1 = link_1.url -%}
+                        <a href="{{ link_url_1 }}">{% include 'title' link:link_1 %}{% if linklists[link_1.handle].links.size > 0 %}<span class="arrow"><i class="icon-angle-right"></i></span>{% endif %}</a>
+                        {% if linklists[link_1.handle].links.size > 0 %}
+                            <ul>
+                                {% for link_2 in linklists[link_1.handle].links %}
+                                    <li>
+                                        <a href="{{ link_2.url }}">{% include 'title' link:link_2 %}{% if linklists[link_2.handle].links.size > 0 %}<span class="arrow"><i class="icon-angle-right"></i></span>{% endif %}</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </li>
+{% endfor %}

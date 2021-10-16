@@ -1,0 +1,115 @@
+{%- if section.settings.enable -%}
+<div class="holder {{ section.settings.outer_margin }} py-5 py-md-10 bg-cover lazyload" {% if section.settings.bg_image != blank %}data-bgset="{% include 'bgset', image: section.settings.bg_image %}" data-sizes="auto"{% endif %} {%- if section.settings.enable_bg -%}{% unless section.settings.bg_color == blank or section.settings.bg_color contains 'rgba(0,0,0,0)' -%}style="background-color: {{ section.settings.bg_color }}"{% endunless %}{% endif %}>
+    <div class="container">
+        <div class="page-title-bg {% if section.settings.no_border %}p-0 border-0{% endif %} text-{{ section.settings.text_alignment }}" {% if section.settings.text_color != blank and section.settings.text_color != 'rgba(0,0,0,0)' %}style="color:{{ section.settings.text_color }}"{% endif %}>
+            {% if section.settings.title != blank %}<h1 class="text-{{ section.settings.title_alignment }}" {% if section.settings.title_color != blank and section.settings.title_color != 'rgba(0,0,0,0)' %}style="color:{{ section.settings.title_color }}"{% endif %}>{{ section.settings.title }}</h1>{% endif %}
+            {{ section.settings.text }}
+        </div>
+    </div>
+</div>
+{%- endif -%}
+
+{% schema %}
+{
+"name": "About Us - Hero",
+"settings": [
+{
+"type": "checkbox",
+"id": "enable",
+"label": "Enable",
+"default": true
+},
+{
+"type": "header",
+"content": "Layout"
+},
+{
+"type": "select",
+"id": "outer_margin",
+"label": "Outer top margin",
+"options":[
+{"value":"mt-0","label":"None"},
+{"value":"holder-mt-xsmall","label":"XSmall"},
+{"value":"holder-mt-small","label":"Small"},
+{"value":"holder-mt-medium","label":"Medium (default)"},
+{"value":"holder-mt-large","label":"Large"}
+],
+"default": "mt-0"
+},
+{
+"type":"color",
+"id":"bg_color",
+"label":"Section Background Color",
+"default":"#C5C5C5"
+},
+{
+"type":"image_picker",
+"id":"bg_image",
+"label":"Section Background Image",
+"info":"(Recommended size 1920x700 px)"
+},
+{
+"type":"checkbox",
+"id":"no_border",
+"label":"Remove decorate border",
+"default":false
+},
+{
+"type": "header",
+"content": "Title"
+},
+{
+"type": "text",
+"id": "title",
+"label": "Title",
+"default":"About Us"
+},
+{
+"type": "select",
+"id": "title_alignment",
+"label": "Title Alignment",
+"default": "left",
+"options": [
+{ "value": "left", "label": "Left" },
+{ "value": "center", "label": "Center" },
+{ "value": "right", "label": "Right" }
+]
+},
+{
+"type":"color",
+"id":"title_color",
+"label":"Title Color"
+},
+{
+"type": "header",
+"content": "Text"
+},
+{
+"type": "richtext",
+"id": "text",
+"label": "Text",
+"default": "<p>Add your text here</p>"
+},
+{
+"type":"color",
+"id":"text_color",
+"label":"Text Color"
+},
+{
+"type": "select",
+"id": "text_alignment",
+"label": "Text Alignment",
+"default": "left",
+"options": [
+{ "value": "left", "label": "Left" },
+{ "value": "center", "label": "Center" },
+{ "value": "right", "label": "Right" }
+]
+}
+],
+"presets": [{
+"name": "About Us - Hero",
+"category": "Info Blocks"
+}]
+}
+{% endschema %}

@@ -1,0 +1,13 @@
+{% if section.settings.login_box and shop.customer_accounts_enabled %}
+    <!-- Header Account -->
+    {% if section.settings.login_box_icon %}
+        <div class="dropdn dropdn_account">
+            <a href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}" class="dropdn-link {{ class }}" title="{{ 'layout.customer.log_in' | t }}"><i class="icon-user"></i><span class="dropdn-link-txt">{% if customer %}{{ customer.customer.name }}{% else %}{{ 'layout.customer.log_in' | t }}{% endif %}</span></a>
+        </div>
+    {% else %}
+        <div class="dropdn dropdn_account dropdn_fullheight">
+            <a href="#" class="dropdn-link js-dropdn-link {{ class }}" data-panel="#dropdnAccount" title="{{ 'layout.customer.log_in' | t }}"><i class="icon-user"></i><span class="dropdn-link-txt">{% if customer %}{{ customer.customer.name }}{% else %}{{ 'layout.customer.log_in' | t }}{% endif %}</span></a>
+        </div>
+    {% endif %}
+    <!-- /Header Account -->
+{% endif %}

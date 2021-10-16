@@ -1,0 +1,21 @@
+{%- assign new = false %}
+{%- for tag in product.tags -%}{% if tag == 'new' or tag == 'NEW' or tag == 'New' or tag contains '_new' %}{% assign new = true %}{% endif %}{% endfor -%}
+{%- assign not_sale = true -%}
+{%- if on_sale and section.settings.show_label_sale -%}
+    {%- assign not_sale = false -%}
+{%- endif -%}
+{%- if settings.product_labels_style == 'prd-big-squared-labels' -%}{%- assign style = '-squared' -%}{%- endif -%}
+
+{% if new and section.settings.show_label_new %}<div class="prd-block_label-new{{ style }} align-items-center {% if new and not_sale %}prd-block_label--single{% endif %}" data-new-label><span>{{ 'theme.general.new' | t }}</span></div>{% endif %}
+<div class="prd-block_label-outstock{{ style }} justify-content-center align-items-center {% if product.selected_or_first_available_variant.available %}d-none{% endif %}" data-sold-out-label><span>{{ 'products.product.sold_out' | t }}</span></div>
+<div class="prd-block_label-sale{{ style }} justify-content-center align-items-center {% unless on_sale and section.settings.show_label_sale %}d-none{% endunless %} {% unless product.selected_or_first_available_variant.available %}d-none{% endunless %}" data-sale-label>
+    {% assign percent = product.selected_or_first_available_variant.compare_at_price | minus: product.selected_or_first_available_variant.price | times: 100.0 | divided_by:product.selected_or_first_available_variant.compare_at_price | times: 100 | divided_by: 100 | floor %}
+    {%- if section.settings.label_sale_style == 'all' -%}
+        <span data-price>-<span data-percent>{{ percent }}</span>%</span>
+        <span>{{ 'products.product.on_sale' | t }}</span>
+        {%- elsif section.settings.label_sale_style == 'text' -%}
+        <span>{{ 'products.product.on_sale' | t }}</span>
+    {%- else -%}
+        <span data-price>-<span data-percent>{{ percent }}</span>%</span>
+    {%- endif -%}
+</div>

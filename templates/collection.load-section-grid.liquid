@@ -1,0 +1,4 @@
+{% layout none %}
+{% paginate collection.products by settings.section_products_grid_with_tabs %}
+    {% include 'collection-section-grid' %}
+{% endpaginate %}

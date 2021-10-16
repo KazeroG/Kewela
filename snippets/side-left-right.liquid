@@ -1,0 +1,214 @@
+{%- if settings.side_images_yes -%}
+    {%- assign show = true -%}
+    {%- if settings.side_images_home_only_yes and template != 'index' -%}
+        {%- assign show = false -%}
+    {%- endif -%}
+    {% if show %}
+        <div class="side-fixed">
+            <div class="left-fixed">
+                {% if settings.side_left_1 != blank %}
+                    <div style="top: {{ settings.side_left_1_top }}{{ settings.side_top_unit }}"><img
+                                src="{{ settings.side_left_1 | img_url: '400x' }}" alt=""></div>
+                {% endif %}
+                {% if settings.side_left_2 != blank %}
+                    <div style="top: {{ settings.side_left_2_top }}{{ settings.side_top_unit }}"><img
+                                src="{{ settings.side_left_2 | img_url: '400x' }}" alt=""></div>
+                {% endif %}
+            </div>
+            <div class="right-fixed">
+                {% if settings.side_right_1 != blank %}
+                    <div style="top: {{ settings.side_right_1_top }}{{ settings.side_top_unit }}"><img
+                                src="{{ settings.side_right_1 | img_url: '400x' }}" alt=""></div>
+                {% endif %}
+                {% if settings.side_right_2 != blank %}
+                    <div style="top: {{ settings.side_right_2_top }}{{ settings.side_top_unit }}"><img
+                                src="{{ settings.side_right_2 | img_url: '400x' }}" alt=""></div>
+                {% endif %}
+            </div>
+        </div>
+        <style>
+            body {
+                position: relative;
+            }
+
+            .side-fixed {
+                position: absolute;
+                z-index: 1;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                overflow: hidden;
+                pointer-events: none;
+            }
+
+            @media (max-width: {{ settings.side_hide }}px) {
+                .side-fixed {
+                    display: none;
+                }
+            }
+
+            .left-fixed {
+                position: absolute;
+                width: 100%;
+                left: -20px;
+                top: 0;
+                bottom: 0;
+            }
+
+            .left-fixed > * {
+                height: 100vh;
+                position: absolute;
+                left: 0;
+            }
+
+            .left-fixed img {
+                position: absolute;
+                left: 0;
+                top: 0;
+            {%- if settings.side_images_animation -%}
+                animation: smRotate_l 7s infinite;
+            {%- endif -%}
+            }
+
+            .right-fixed {
+                position: absolute;
+                width: 100%;
+                right: -20px;
+                top: 0;
+                bottom: 0;
+            }
+
+            .right-fixed > * {
+                height: 100vh;
+                position: relative;
+                right: 0;
+            }
+
+            .right-fixed img {
+                position: absolute;
+                right: 0;
+                top: 0;
+            {%- if settings.side_images_animation -%}
+                animation: smRotate_r 7s infinite;
+            {%- endif -%}
+            }
+
+            @keyframes smRotate_l {
+                50% {
+                    transform: rotate(-7deg);
+                }
+            }
+
+            @keyframes smRotate_r {
+                50% {
+                    transform: rotate(7deg);
+                }
+            }
+        </style>
+    {%- endif -%}
+{%- endif -%}
+{%- if settings.side_shapes_yes -%}
+    {%- assign show = true -%}
+    {%- if settings.side_shapes_images_home_only_yes and template != 'index' -%}
+        {%- assign show = false -%}
+    {%- endif -%}
+    {% if show %}
+        <div class="side-fixed">
+            <div class="left-fixed">
+                {% if settings.side_shapes_left_1_yes %}
+                    <div style="top: {{ settings.side_shapes_left_1_top }}{{ settings.side_shapes_top_unit }}">
+                        {% include 'shape-morphing' %}
+                    </div>
+                {% endif %}
+                {% if settings.side_shapes_left_2_yes %}
+                    <div style="top: {{ settings.side_shapes_left_2_top }}{{ settings.side_shapes_top_unit }}">
+                        {% include 'shape-morphing' %}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="right-fixed">
+                {% if settings.side_shapes_right_1_yes %}
+                    <div style="top: {{ settings.side_shapes_right_1_top }}{{ settings.side_shapes_top_unit }}">
+                        {% include 'shape-morphing' %}
+                    </div>
+                {% endif %}
+                {% if settings.side_shapes_right_2_yes %}
+                    <div style="top: {{ settings.side_shapes_right_2_top }}{{ settings.side_shapes_top_unit }}">
+                        {% include 'shape-morphing' %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <style>
+            body {
+                position: relative;
+            }
+
+            .side-fixed {
+                position: absolute;
+                z-index: -1;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                overflow: hidden;
+                pointer-events: none;
+            }
+
+            @media (max-width: {{ settings.side_hide }}px) {
+                .side-fixed {
+                    display: none;
+                }
+            }
+
+            .left-fixed {
+                position: absolute;
+                width: 100%;
+                left: -20px;
+                top: 0;
+                bottom: 0;
+                text-align: left;
+            }
+
+            .left-fixed > * {
+                height: 100vh;
+                position: absolute;
+                left: 0;
+            }
+
+            .right-fixed {
+                position: absolute;
+                width: 100%;
+                right: -20px;
+                top: 0;
+                bottom: 0;
+                text-align: right;
+            }
+
+            .right-fixed > * {
+                height: 100vh;
+                position: relative;
+                right: 0;
+            }
+
+            .side-fixed svg {
+                width: 40vw;
+                height: 40vw;
+            }
+
+            .side-fixed svg path {
+                fill: {{ settings.side_shapes_bg }};
+            }
+
+            .side-fixed .left-fixed svg {
+                transform: translate3d(-65%, 0, 0);
+            }
+
+            .side-fixed .right-fixed svg {
+                transform: translate3d(65%, 0, 0);
+            }
+
+        </style>
+    {%- endif -%}
+{%- endif -%}

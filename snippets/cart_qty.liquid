@@ -1,0 +1,21 @@
+<div class="qty qty-changer" data-item-qty data-variant-id="{{ item.variant_id }}" data-line-number="{{ forloop.index }}">
+    <button class="decrease js-qty-button-minus"></button>
+    {% assign variants = item.product.variants %}
+    {% for variant in variants %}
+        {% assign inventory_quantity = 0 %}
+        {% if variant.id == item.variant_id %}
+            {% if variant.inventory_management == 'shopify' %}
+                {% assign inventory_quantity = variant.inventory_quantity %}
+                {% if variant.inventory_policy == 'continue' %}
+                    {% assign inventory_quantity = 1000 %}
+                {% endif %}
+                {% break %}
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+    {% if inventory_quantity == 0 %}
+        {% assign inventory_quantity = 1000 %}
+    {% endif %}
+    <input class="qty-input js-qty-input" type="number" value="{{ item.quantity }}" data-min="1" data-max="{{ inventory_quantity | default:1000 }}" pattern="[0-9]*">
+    <button class="increase js-qty-button-plus"></button>
+</div>

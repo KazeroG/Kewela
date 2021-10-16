@@ -1,0 +1,339 @@
+{%- if section.settings.enable -%}
+    <div class="holder {{ section.settings.outer_margin }} {{ section.settings.block_width }} {% if section.settings.block_width == 'fullwidth' %}full-nopad{% endif %}">
+        <div class="container"
+             {% if section.settings.block_width == 'boxed' and  section.settings.maxwidth_yes %}style="max-width:{{ section.settings.maxwidth }}px"{% endif %}>
+            {% case section.settings.title_size %}
+            {% when 'h-lg-style' %}
+            {%- assign title_size = 'title-lg' -%}
+            {% when 'h1-style' %}
+            {%- assign title_size = 'title-md' -%}
+            {% else %}
+            {%- assign title_size = 'title-sm' -%}
+            {% endcase %}
+            {%- unless section.settings.title_inside -%}
+                <!-- Page Title -->
+                <div class="title-wrap {{ title_size }} text-{{ section.settings.text_alignment }}">
+                    <h2 class="{{ section.settings.title_size }}{% if settings.heading_sub_first %} mb-0{% endif %}">{{ section.settings.title }}</h2>
+                    <div class="h-sub maxW-825{% if settings.heading_sub_first %} h-sub--first{% endif %}">{{ section.settings.subtitle }}</div>
+                </div>
+                <!-- /Page Title -->
+            {%- endunless -%}
+            <div class="row vert-margin-small justify-content-md-center">
+                {%- for block in section.blocks -%}
+                    {%- case block.type -%}
+                    {%- when 'image' -%}
+                        <div {{ block.shopify_attributes }}
+                                class="d-flex align-items-center justify-content-center {% if block.settings.image_parallax %}overflow-hidden{% endif %} col-{{ block.settings.col }} col-sm-{{ block.settings.col_md }} text-center bg-center-all lazyload"
+                                {% if block.settings.bg_image != blank %}data-bgset="{% include 'bgset', image: block.settings.bg_image %}" data-sizes="auto"{% endif %}>
+                            {%- if block.settings.image -%}
+                                <img class="{% if block.settings.image_parallax %}parallaxed{% endif %} lazyload fade-up"
+                                     src="{{ block.settings.image | img_url: '100x' }}"
+                                     data-src="{{ block.settings.image | img_url: '800x' }}"
+                                     alt="{{ block.settings.image.alt }}"/>
+                            {%- else -%}
+                                {%- render 'image-placeholder-aspect-ratio', width: 100, height: 50, text: 'image' -%}
+                            {%- endif -%}
+                        </div>
+                    {%- when 'html' -%}
+                        <div {{ block.shopify_attributes }}
+                                class="col-{{ block.settings.col }} col-sm-{{ block.settings.col_md }} text-{{ block.settings.text_alignment }} {{ block.settings.text_alignment_v }}">
+                            {%- if section.settings.title_inside -%}
+                                <!-- Page Title -->
+                                <div class="title-wrap {{ title_size }} text-{{ section.settings.text_alignment }}">
+                                    <h2 class="{{ section.settings.title_size }}{% if settings.heading_sub_first %} mb-0{% endif %}">{{ section.settings.title }}</h2>
+                                    <div class="h-sub maxW-825{% if settings.heading_sub_first %} h-sub--first{% endif %}">{{ section.settings.subtitle }}</div>
+                                </div>
+                                <!-- /Page Title -->
+                            {%- endif -%}
+                            <ul class="feature-list">
+                                <li>{{ block.settings.text | escape | replace: "|", "</li><li>" }}</li>
+                            </ul>
+                        </div>
+                    {%- endcase -%}
+                {%- endfor -%}
+            </div>
+        </div>
+    </div>
+{%- endif -%}
+<style>
+    #shopify-section-{{ section.id }} .parallaxed {
+        transition: all .1s linear;
+    }
+    #shopify-section-{{ section.id }} .feature-list li {
+    {%- unless section.settings.border_color == '' or section.settings.border_color contains 'rgba(0,0,0,0)' -%} border-color: {{ section.settings.border_color }};
+    {%- endunless -%}
+    }
+
+    #shopify-section-{{ section.id }} .feature-list li {
+    {%- unless section.settings.text_color == '' or section.settings.text_color contains 'rgba(0,0,0,0)' -%} color: {{ section.settings.icon_color }};
+    {%- endunless -%}
+    }
+
+    #shopify-section-{{ section.id }} .feature-list li:before {
+    {%- unless section.settings.marker_color == '' or section.settings.marker_color contains 'rgba(0,0,0,0)' -%} color: {{ section.settings.marker_color }};
+    {%- endunless -%}
+    }
+</style>
+{% schema %}
+    {
+    "name": "Features + Image",
+    "class": "index-section",
+    "settings": [
+    {
+    "type": "checkbox",
+    "id": "enable",
+    "label": "Enable",
+    "default": true
+    },
+    {
+    "type": "header",
+    "content": "Layout"
+    },
+    {
+    "type":"select",
+    "id":"block_width",
+    "label":"Width",
+    "options":[
+    {"value":"boxed","label":"Boxed"},
+    {"value":"fullwidth","label":"Fullwidth"}
+    ],
+    "default":"boxed"
+    },
+    {
+    "type": "checkbox",
+    "id": "maxwidth_yes",
+    "label": "Enable Max Width",
+    "default": false,
+    "info": "* only for boxed"
+    },
+    {
+    "type": "range",
+    "id": "maxwidth",
+    "label": "Max Width",
+    "min": 800,
+    "max": 2400,
+    "step": 20,
+    "unit": "px",
+    "default": 1600
+    },
+    {
+    "type": "select",
+    "id": "outer_margin",
+    "label": "Outer top margin",
+    "options":[
+    {"value":"mt-0","label":"None"},
+    {"value":"holder-mt-xsmall","label":"XSmall"},
+    {"value":"holder-mt-small","label":"Small"},
+    {"value":"holder-mt-medium","label":"Medium (default)"},
+    {"value":"holder-mt-large","label":"Large"}
+    ],
+    "default": "holder-mt-medium"
+    },
+    {
+    "type": "header",
+    "content": "General"
+    },
+    {
+    "type": "text",
+    "id": "title",
+    "label": "Title",
+    "default":"Feature List"
+    },
+    {
+    "type": "select",
+    "id": "title_size",
+    "label": "Title Font Size",
+    "default": "h1-style",
+    "options": [
+    { "value": "h-lg-style", "label": "XLarge" },
+    { "value": "h1-style", "label": "Large" },
+    { "value": "h2-style", "label": "Normal" },
+    { "value": "h3-style", "label": "Small" }
+    ]
+    },
+    {
+    "type": "richtext",
+    "id": "subtitle",
+    "label": "Add custom text below",
+    "default": "<p>Add your text here</p>"
+    },
+    {
+    "type": "select",
+    "id": "text_alignment",
+    "label": "Text Alignment",
+    "default": "center",
+    "options": [
+    { "value": "left", "label": "Left" },
+    { "value": "center", "label": "Center" },
+    { "value": "right", "label": "Right" }
+    ]
+    },
+    {
+    "type": "checkbox",
+    "id": "title_inside",
+    "label": "Place Title in the Text block",
+    "default": true
+    },
+    {
+    "type": "header",
+    "content": "Color"
+    },
+    {
+    "type": "color",
+    "id": "text_color",
+    "label": "List Color"
+    },
+    {
+    "type": "color",
+    "id": "border_color",
+    "label": "List Divider Color"
+    },
+    {
+    "type": "color",
+    "id": "marker_color",
+    "label": "Marker Color"
+    }
+    ],
+    "blocks":[
+    {
+    "type":"image",
+    "name":"Image",
+    "settings":[
+    {
+    "type":"checkbox",
+    "id":"enable",
+    "label":"Enable",
+    "default":true
+    },
+    {
+    "type":"select",
+    "id":"col",
+    "label":"Column for Mobile",
+    "options":[
+    {"value":"2","label":"1/9"},
+    {"value":"3","label":"1/6"},
+    {"value":"6","label":"1/3"},
+    {"value":"9","label":"1/2"},
+    {"value":"12","label":"2/3"},
+    {"value":"18","label":"1"}
+    ],
+    "default":"18"
+    },
+    {
+    "type":"select",
+    "id":"col_md",
+    "label":"Column for Desktop",
+    "options":[
+    {"value":"2","label":"1/9"},
+    {"value":"3","label":"1/6"},
+    {"value":"6","label":"1/3"},
+    {"value":"9","label":"1/2"},
+    {"value":"12","label":"2/3"},
+    {"value":"18","label":"1"}
+    ],
+    "default":"9"
+    },
+    {
+    "type":"image_picker",
+    "id":"image",
+    "label":"Image"
+    },
+    {
+    "type":"image_picker",
+    "id":"bg_image",
+    "label":"Image Background"
+    },
+    {
+    "type":"checkbox",
+    "id":"image_parallax",
+    "label":"Enable mouseover effect",
+    "default":false
+    }
+    ]
+    },
+    {
+    "type":"html",
+    "name":"List",
+    "settings":[
+    {
+    "type":"checkbox",
+    "id":"enable",
+    "label":"Enable",
+    "default":true
+    },
+    {
+    "type":"select",
+    "id":"col",
+    "label":"Column for Mobile",
+    "options":[
+    {"value":"2","label":"1/9"},
+    {"value":"3","label":"1/6"},
+    {"value":"6","label":"1/3"},
+    {"value":"9","label":"1/2"},
+    {"value":"12","label":"2/3"},
+    {"value":"18","label":"1"}
+    ],
+    "default":"18"
+    },
+    {
+    "type":"select",
+    "id":"col_md",
+    "label":"Column for Desktop",
+    "options":[
+    {"value":"2","label":"1/9"},
+    {"value":"3","label":"1/6"},
+    {"value":"6","label":"1/3"},
+    {"value":"9","label":"1/2"},
+    {"value":"12","label":"2/3"},
+    {"value":"18","label":"1"}
+    ],
+    "default":"9"
+    },
+    {
+    "type":"textarea",
+    "id":"text",
+    "label":"Text",
+    "default":"Maecenas varius laoreet imperdiet. | Nullam iaculis odio ac urna blandit tempor. | Etiam libero dui, tempor et turpis ut. | Venenatis varius odio.",
+    "info": "Use symbol '|' to separate list items"
+    },
+    {
+    "type": "select",
+    "id": "text_alignment",
+    "label": "Text Alignment",
+    "default": "left",
+    "options": [
+    { "value": "left", "label": "Left" },
+    { "value": "center", "label": "Center" },
+    { "value": "right", "label": "Right" }
+    ]
+    },
+    {
+    "type": "select",
+    "id": "text_alignment_v",
+    "label": "Text Vertical Alignment",
+    "options":[
+    {"value":"align-self-start","label":"Top"},
+    {"value":"align-self-center","label":"Center"},
+    {"value":"align-self-end","label":"Bottom"}
+    ],
+    "default": "align-self-center"
+    }
+    ]
+    }
+    ],
+    "presets": [
+    {
+    "name": "Features + Image",
+    "category": "Text",
+    "blocks":[
+    {
+    "type":"image"
+    },
+    {
+    "type":"html"
+    }
+    ]
+    }
+    ]
+    }
+{% endschema %}

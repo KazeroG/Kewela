@@ -1,0 +1,58 @@
+{% assign on_sale = false %}
+{% if product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price %}
+    {% assign on_sale = true %}
+{% endif %}
+
+{% assign sold_out = true %}
+{% if product.available %}
+    {% assign sold_out = false %}
+{% endif %}
+
+{% assign show = true %}
+{% if sold_out %}
+    {% unless settings.show_out_of_stock %}
+    {% assign show = false %}
+    {% endunless %}
+{% endif %}
+{%- assign countdown = product.metafields.c_f.countdown -%}
+
+{%- assign grid_image_width = '684x' -%}
+{%- assign gallery_image_preview = '32x32' -%}
+{%- assign grid_image_scale = '2' -%}
+<div class="prd-promo prd-promo--lg prd-has-loader">
+    <div class="prd-inside">
+        <div class="prd-img-area w-100">
+            {%- if product.featured_image -%}
+                {%- assign aspect_ratio = 1 | divided_by: product.featured_image.aspect_ratio -%}
+            {%- endif -%}
+            <a href="{{ product.url | within: collection }}" class="prd-img {% if settings.zoom_preview %}image-hover-scale{% endif %} image-container" title="{{ product.title | strip_html }}" {% if product.featured_image %}style="padding-bottom: {{ aspect_ratio | times: 100 }}%{% endif %}">
+                <img class="js-prd-img fade-up lazyload"
+                     src={{ product.featured_image.src | img_url: '300x' }}
+                     data-srcset="{{ product.featured_image.src | img_url: grid_image_width }} 1x, {{ product.featured_image.src | img_url: grid_image_width, scale:grid_image_scale }} 2x"
+                     alt="{{ product.featured_image.alt }}"
+                     data-image>
+                {%- if  product.images[1] and settings.product_hover_image -%}
+                    {% assign product_card_image_2 = product.images[1] %}
+                    <img class="js-prd-img fade-up lazyload"
+                         src={{ product_card_image_2 | img_url: '300x' }}
+                         data-srcset="{{ product_card_image_2 | img_url: grid_image_width }} 1x, {{ product_card_image_2 | img_url: grid_image_width, scale:grid_image_scale }} 2x"
+                         alt="{{ product.featured_image.alt }}"
+                         data-image>
+                {%- endif -%}
+                {% include 'product-card-labels' %}
+                <div class="prd-circle-labels">
+                    {% render 'compare_quick_view' with product as product %}
+                </div>
+            </a>
+        </div>
+        <div class="prd-info text-center">
+            <h2 class="prd-title"><a title="{{ product.title  | strip_html  }}" href="{{ product.url | within: collection }}">{{ product.title  | strip_html  | truncate: settings.product_title_truncate }}</a></h2>
+            <div class="prd-rating"><span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span></div>
+            <div class="prd-hover">
+                <div class="prd-price">
+                    {% render 'product-price' with product as product %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

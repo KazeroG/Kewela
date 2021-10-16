@@ -1,0 +1,148 @@
+{%- assign collection = collections[section.settings.collection] -%}
+{% if section.settings.limit != blank %}
+    {%- assign product_limit = section.settings.limit -%}
+{% endif %}
+{%- assign collection = collections[section.settings.collection] -%}
+<div class="holder {{ section.settings.outer_margin }}">
+    <div class="container">
+        {% include 'section-headings' %}
+        <div class="row vert-margin justify-content-md-center">
+            <div class="col-sm-5 js-sticky-collision">
+                <div class="bnr-sticky">
+                    <a href="{{ collection.url }}" class="bnr">
+                        {%- if section.settings.image != blank -%}
+                            {%- assign img_url = section.settings.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+                            {%- assign img_url_2 = section.settings.image | img_url: '1x1', scale:2 | replace: '_1x1.', '_{width}x.' -%}
+                            <img id="img-{{ section.settings.image.id }}"
+                                 class="lazyload"
+                                 data-src="{{ img_url }}"
+                                 data-srcset="{{ img_url }} 1x, {{ img_url_2 }} 2x"
+                                 data-sizes="auto"
+                                 alt="{{ block.settings.name | escape }}">
+                        {%- else -%}
+                            {%- render 'image-placeholder-aspect-ratio', width: 470, height: 836 -%}
+                        {%- endif -%}
+                    </a>
+                    <h3 class="bnr-under-title text-center">{{ section.settings.subtitle }}</h3>
+                </div>
+            </div>
+            <div class="col-sm-13">
+                <div class="prd-grid data-to-show-4 data-to-show-md-3 data-to-show-sm-2 data-to-show-xs-2">
+                    {% for product in collection.products limit: product_limit %}{% include 'product-card' %}{% else %}{% include 'empty-carousel' %}{% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% schema %}
+{
+"name": "Products Grid + Image",
+"class": "index-section",
+"presets": [
+{
+"name": "Products Grid + Image",
+"category": "Products"
+}
+],
+"settings": [
+{
+"type": "header",
+"content": "Layout"
+},
+{
+"type": "select",
+"id": "outer_margin",
+"label": "Outer top margin",
+"options":[
+{"value":"mt-0","label":"None"},
+{"value":"holder-mt-xsmall","label":"XSmall"},
+{"value":"holder-mt-small","label":"Small"},
+{"value":"holder-mt-medium","label":"Medium (default)"},
+{"value":"holder-mt-large","label":"Large"}
+],
+"default": "holder-mt-medium"
+},
+{
+"type": "header",
+"content": "General"
+},
+{
+"type": "header",
+"content": "Heading"
+},
+{
+"type": "checkbox",
+"id": "enable_text",
+"label": "Enable",
+"default": true
+},
+{
+"type": "text",
+"id": "title",
+"label": "Title",
+"default":"Heading"
+},
+{
+"type": "select",
+"id": "title_size",
+"label": "Title Font Size",
+"default": "h2-style",
+"options": [
+{ "value": "h-lg-style", "label": "Large" },
+{ "value": "h1-style", "label": "Normal" },
+{ "value": "h2-style", "label": "Small" }
+]
+},
+{
+"type": "select",
+"id": "text_alignment",
+"label": "Text Alignment",
+"default": "center",
+"options": [
+{ "value": "left", "label": "Left" },
+{ "value": "center", "label": "Center" },
+{ "value": "right", "label": "Right" }
+]
+},
+    {
+    "type": "text",
+    "id": "subtitle",
+    "label": "Sub Heading",
+    "default": "Sub Heading"
+    },
+    {
+    "type": "text",
+    "id": "bgtitle",
+    "label": "Background Heading"
+    },
+{
+"id": "collection",
+"type": "collection",
+"label": "Collection"
+},
+{
+"id": "limit",
+"type": "text",
+"label": "Products limit",
+"default":"9"
+},
+{
+    "type": "image_picker",
+    "id": "image",
+    "label": "Preview",
+    "info": "Recommended size 470x836px"
+},
+{
+"type": "select",
+"id": "per_row_mobile",
+"label": "Mobile:",
+"default": "2",
+"options": [
+{ "value": "1", "label": "1" },
+{ "value": "2", "label": "2" }
+],
+"info": "products per row"
+}
+]
+}
+{% endschema %}

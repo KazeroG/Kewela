@@ -1,0 +1,10 @@
+{% for i in (1..4) %}
+    {% capture current %}{% cycle 1, 2, 3, 4 %}{% endcapture %}
+    <div class="prd">
+        <div class="prd-inside">
+            <div class="prd-img-area">
+                {{ 'product-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+            </div>
+        </div>
+    </div>
+{% endfor %}

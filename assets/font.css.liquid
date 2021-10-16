@@ -1,0 +1,13 @@
+{%- comment -%}
+To add custom fonts to website use @fontface.
+All font files need to be uploaded into the 'assets' folder of your theme.
+Here’s a code example:
+@font-face {
+    font-family: "Font";
+    src: url('{{ "font.eot" | asset_url }}');
+    src: url('{{ "font.eot" | asset_url }} ?#iefix') format("embedded-opentype"),
+    url('{{ "font.woff" | asset_url }}') format("woff"),
+    url('{{ "font.ttf" | asset_url }}') format("truetype"),
+    url('{{ "font.svg" | asset_url }} #myfont') format("svg");
+}
+{%- endcomment -%}

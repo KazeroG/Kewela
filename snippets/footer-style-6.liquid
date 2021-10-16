@@ -1,0 +1,186 @@
+{%- assign demo = false -%}
+<footer class="page-footer footer-style-6 {% if template == 'index' %}{{ section.settings.outer_margin_index }}{% else %}{{ section.settings.outer_margin }}{% endif %}">
+    {% if section.settings.shop_info_yes %}
+        {% include 'footer-shop-info' %}
+    {% endif %}
+    <div class="footer-top {% unless demo %}{{ settings.color_footer_style }}{% else %}{{ settings_color_scheme }}{% endunless %} {% unless section.settings.logo_yes %}footer-without-logo{% endunless %}">
+        <div class="container">
+            <div class="row mt-0">
+                <div class="col-lg col-xl last-mobile">
+                    <div class="footer-block">
+                        <div class="footer-logo">
+                            {% include 'footer-logo' %}
+                        </div>
+                        <div class="collapsed-content">
+                            {{ section.settings.support_time }}
+                        </div>
+                        {%- if section.settings.social_icons -%}
+                            <ul class="social-list">
+                                {% include 'social-media-links' %}
+                            </ul>
+                        {%- endif -%}
+                        {%- if section.settings.show_voucher -%}
+                            <div class="d-lg-none mt-3">
+                                {% include 'footer-coupon' %}
+                            </div>
+                        {%- endif -%}
+                    </div>
+                </div>
+                {%- if section.settings.navigation_1 != blank and section.settings.navigation_1_yes -%}
+                    <div class="col-lg col-xl">
+                        {%- if section.settings.navigation_1_hide_title %}
+                            <div class="footer-block">
+                                <ul>
+                                    {% for link in linklists[section.settings.navigation_1].links %}
+                                        <li>
+                                            {{ link.title | append:label | link_to: link.url }}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {%- else -%}
+                            <div class="footer-block collapsed-mobile">
+                                <div class="title">
+                                    <h4>{%- if section.settings.navigation_1_title != blank %}{{ section.settings.navigation_1_title }}{%- else -%}{{ linklists[section.settings.navigation_1].title }}{%- endif -%}</h4>
+                                    <div class="toggle-arrow"><span></span><span></span></div>
+                                </div>
+                                <div class="collapsed-content">
+                                    <ul>
+                                        {% for link in linklists[section.settings.navigation_1].links %}
+                                            <li>
+                                                {{ link.title | append:label | link_to: link.url }}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        {%- endif -%}
+                    </div>
+                {%- endif -%}
+                {%- if section.settings.navigation_2 != blank and section.settings.navigation_2_yes -%}
+                    <div class="col-lg col-xl">
+                        {%- if section.settings.navigation_2_hide_title %}
+                            <div class="footer-block">
+                                <ul>
+                                    {% for link in linklists[section.settings.navigation_2].links %}
+                                        <li>
+                                            {{ link.title | append:label | link_to: link.url }}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {%- else -%}
+                            <div class="footer-block collapsed-mobile">
+                                <div class="title">
+                                    <h4>{%- if section.settings.navigation_2_title != blank %}{{ section.settings.navigation_2_title }}{%- else -%}{{ linklists[section.settings.navigation_2].title }}{%- endif -%}</h4>
+                                    <div class="toggle-arrow"><span></span><span></span></div>
+                                </div>
+                                <div class="collapsed-content">
+                                    <ul>
+                                        {% for link in linklists[section.settings.navigation_2].links %}
+                                            <li>
+                                                {{ link.title | append:label | link_to: link.url }}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        {%- endif -%}
+                    </div>
+                {%- endif -%}
+                {%- if section.settings.navigation_3 != blank and section.settings.navigation_3_yes -%}
+                    <div class="col-lg col-xl">
+                        {%- if section.settings.navigation_3_hide_title %}
+                            <div class="footer-block">
+                                <ul>
+                                    {% for link in linklists[section.settings.navigation_3].links %}
+                                        <li>
+                                            {{ link.title | append:label | link_to: link.url }}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {%- else -%}
+                            <div class="footer-block collapsed-mobile">
+                                <div class="title">
+                                    <h4>{%- if section.settings.navigation_3_title != blank %}{{ section.settings.navigation_3_title }}{%- else -%}{{ linklists[section.settings.navigation_3].title }}{%- endif -%}</h4>
+                                    <div class="toggle-arrow"><span></span><span></span></div>
+                                </div>
+                                <div class="collapsed-content">
+                                    <ul>
+                                        {% for link in linklists[section.settings.navigation_3].links %}
+                                            <li>
+                                                {{ link.title | append:label | link_to: link.url }}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        {%- endif -%}
+                    </div>
+                {%- endif -%}
+                {%- if section.settings.show_methods_of_payment or section.settings.show_phone -%}
+                    <div class="col-lg col-xl">
+                        {%- if section.settings.show_methods_of_payment -%}
+                            <div class="footer-block collapsed-mobile">
+                                <div class="title">
+                                    <h4>{%- if section.settings.methods_of_payment_title != blank -%}{{ section.settings.methods_of_payment_title }}{%- else -%}{{ 'theme.footer.safe_payments' | t }}{%- endif -%}</h4>
+                                    <div class="toggle-arrow"><span></span><span></span></div>
+                                </div>
+                                <div class="collapsed-content">
+                                    <ul class="payment-link">
+                                        {% render 'footer_payments' %}
+                                    </ul>
+                                </div>
+                            </div>
+                        {%- endif -%}
+                        {%- if section.settings.show_phone -%}
+                            <div class="footer-block collapsed-mobile open">
+                                <div class="title">
+                                    <h4>{%- if section.settings.phone_title != blank -%}{{ section.settings.phone_title }}{%- else -%}{{ 'theme.footer.got_questions' | t }}{%- endif -%}</h4>
+                                    <div class="toggle-arrow"><span></span><span></span></div>
+                                </div>
+                                <div class="collapsed-content">
+                                    <ul class="list-icon-lg">
+                                        <li>
+                                            <i class="icon-phone"></i><a href="tel:{{ section.settings.phone }}">{{ section.settings.phone }}</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        {%- endif -%}
+                    </div>
+                {%- endif -%}
+                {%- if section.settings.show_short_description -%}
+                    <div class="col-lg col-xl">
+                        {%- if section.settings.show_short_description -%}
+                            <div class="footer-block collapsed-mobile">
+                                <div class="title">
+                                    <h4>{%- if section.settings.short_description_title != blank -%}{{ section.settings.short_description_title }}{%- else -%}{{ 'theme.footer.about_the_store' | t }}{%- endif -%}</h4>
+                                    <div class="toggle-arrow"><span></span><span></span></div>
+                                </div>
+                                <div class="collapsed-content">
+                                    {{ section.settings.short_description }}
+                                </div>
+                            </div>
+                        {%- endif -%}
+                        {%- if section.settings.show_voucher -%}
+                            <div class="d-none d-lg-block  {% if section.settings.show_short_description %}mt-3{% endif %}">
+                                {% include 'footer-coupon' %}
+                            </div>
+                        {%- endif -%}
+                    </div>
+                {%- endif -%}
+            </div>
+        </div>
+    </div>
+    {%- if section.settings.show_copyright -%}
+        <div class="footer-bottom footer-bottom--bg">
+            <div class="container">
+                <div class="footer-copyright text-center">
+                    {{ section.settings.copyright }}
+                </div>
+            </div>
+        </div>
+    {%- endif -%}
+</footer>

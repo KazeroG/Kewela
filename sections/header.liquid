@@ -1,0 +1,1212 @@
+{%- assign style = section.settings.style -%}
+{%- assign style_file = 'header-style-' | append:style -%}
+{%- assign sticky = false -%}
+{%- if section.settings.sticky -%}
+    {%- assign sticky = true -%}
+{%- endif -%}
+{% if template contains 'product' and section.settings.sticky_off_product %}
+    {%- assign sticky = false -%}
+{%- endif -%}
+{% if template contains 'collection' and section.settings.sticky_off_collection %}
+    {%- assign sticky = false -%}
+{%- endif -%}
+<header class="hdr-wrap {% if section.settings.transparent and template == 'index' %}hdr-transparent{% endif %}"  data-section-id="{{ section.id }}" data-section-type="header-section">
+    {% if sticky %}
+        <div class="hdr-content hdr-content-sticky">
+            <div class="container">
+                <div class="row">
+                    <div class="col-auto show-mobile">
+                        {% include 'header-burger' %}
+                    </div>
+                    <div class="col-auto hdr-logo">
+                        {%- if section.settings.logo_sticky != blank -%}{% include 'header-logo-sticky' %}{%- else -%}{% include 'header-logo' %}{%- endif -%}
+                    </div>
+                    {%- if section.settings.phone_1 != blank and section.settings.phone_1_yes -%}
+                        {% assign phones_yes = true %}
+                        {%- if style == '1' or style == '3' -%}
+                            <div class="hdr-phone hide-mobile">
+                                <i class="icon-phone"></i><span>{{ section.settings.phone_1 }}</span>
+                            </div>
+                        {%- endif -%}
+                    {%- endif -%}
+                    <div class="hdr-nav hide-mobile nav-holder-s {% if style == '1' or style == '4' or style == '7' %}{{ section.settings.nav_alignment }}{% unless phones_yes %} px-4{% endunless %}{% endif %}"></div>
+                    {%- if section.settings.phone_1 != blank and section.settings.phone_1_yes -%}
+                        {%- if style == '7' -%}
+                            <div class="hdr-custom-block hide-mobile">
+                                <div class="hdr-icn-text">
+                                    <div>{%- if section.settings.phone_1 != blank -%}<i class="icon-phone"></i><span><a href="tel:{{ section.settings.phone_1 }}">{{ section.settings.phone_1 }}</a>{%- endif -%}{%- if section.settings.phone_2 != blank -%}<br><a href="tel:{{ section.settings.phone_2 }}">{{ section.settings.phone_2 }}</a></span>{%- endif -%}</div>
+                                </div>
+                            </div>
+                        {%- endif -%}
+                    {%- endif -%}
+                    <div class="hdr-links-wrap col-auto ml-auto">
+                        <div class="hdr-inline-link {% if section.settings.icon_small_space %}hdr-inline-link--compact{% endif %} {% if section.settings.icon_small %}hdr-inline-link--sm{% endif %}">
+                            {% include 'header-search' %}
+                            {% include 'header-wishlist' %}
+                            {% include 'header-account' class:'only-icon' %}
+                            {% include 'header-cart' %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    {% include style_file, sticky: sticky %}
+</header>
+<div class="header-side-panel">
+    {% include 'header-navigation-mobile' %}
+    {% include 'header-panels' %}
+</div>
+{%- if settings.color_header_transparent_mobile_yes -%}
+    <style>
+        @media (max-width: 1024px){
+            .hdr-content {
+                position: relative;
+            }
+            .hdr-content:after {
+                content: '';
+                position: absolute;
+                z-index: -1;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background-color: {{ settings.color_header_transparent_mobile }};
+                opacity: {{ settings.color_header_transparent_mobile_opacity }}%;
+            }
+        }
+    </style>
+{%- endif -%}
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "name": {{ shop.name | json }},
+  {% if section.settings.logo %}
+    {% assign image_size = section.settings.logo.width | append:'x' %}
+    "logo": {{ section.settings.logo | img_url: image_size | prepend: "https:" | json }},
+  {% endif %}
+  "sameAs": [
+    {{ settings.social_twitter_link | json }},
+    {{ settings.social_facebook_link | json }},
+    {{ settings.social_pinterest_link | json }},
+    {{ settings.social_instagram_link | json }},
+    {{ settings.social_tumblr_link | json }},
+    {{ settings.social_snapchat_link | json }},
+    {{ settings.social_youtube_link | json }},
+    {{ settings.social_vimeo_link | json }}
+  ],
+  "url": {{ shop.url | append: page.url | json }}
+}
+</script>
+
+{% if request.page_type == 'index' %}
+    {% assign potential_action_target = shop.url | append: routes.search_url | append: "?q={search_term_string}" %}
+    <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "WebSite",
+      "name": {{ shop.name | json }},
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {{ potential_action_target | json }},
+        "query-input": "required name=search_term_string"
+      },
+      "url": {{ shop.url | append: page.url | json }}
+    }
+  </script>
+{% endif %}
+
+{% schema %}
+{
+"name": "Header",
+"class": "hdr-wrap",
+"settings": [
+{
+"type": "header",
+"content": "Layout"
+},
+{
+"type": "select",
+"id": "style",
+"label": "Style for Desktop",
+"options": [
+{ "value": "1", "label": "Header 1 (Default)"},
+{ "value": "2", "label": "Header 2"},
+{ "value": "3", "label": "Header 3"},
+{ "value": "4", "label": "Header 4"},
+{ "value": "5", "label": "Header 5"},
+{ "value": "6", "label": "Header 6"},
+{ "value": "7", "label": "Header 7"},
+{ "value": "8", "label": "Header 8"}
+],
+"default": "1"
+},
+{
+"type": "header",
+"content": "Logo"
+},
+{
+"type": "image_picker",
+"id": "logo",
+"label": "Logo image"
+},
+{
+"type": "image_picker",
+"id": "logo_sticky",
+"label": "Sticky Logo image",
+"info": "if empty, the 'Logo Image' is used"
+},
+{
+"type": "range",
+"id": "logo_max_width",
+"label": "Custom logo max width for Desktop",
+"min": 50,
+"max": 220,
+"step": 2,
+"unit": "px",
+"default": 170
+},
+{
+"type": "range",
+"id": "logo_max_width_mobile",
+"label": "Custom logo max width for Mobile (max 768px)",
+"min": 50,
+"max": 220,
+"step": 2,
+"unit": "px",
+"default": 140
+},
+{
+"type": "checkbox",
+"id": "topbar_enable",
+"label": "Show Topline",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "cart",
+"label": "Show cart icon",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "languages",
+"label": "Show languages",
+"default": false
+},
+{
+"type": "checkbox",
+"id": "currencies",
+"label": "Show currencies",
+"default": true,
+"info": "config in theme settings/currency"
+},
+{
+"type": "checkbox",
+"id": "header_search",
+"label": "Show Search",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "login_box",
+"label": "Show Login Box",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "login_box_icon",
+"label": "Show Only Login Link",
+"default": false
+},
+{
+"type": "checkbox",
+"id": "icon_small",
+"label": "Small icons",
+"default": false
+},
+{
+"type": "checkbox",
+"id": "icon_small_space",
+"label": "Small space between menu links / icons",
+"default": false
+},
+{
+"type": "checkbox",
+"id": "phone_1_yes",
+"label": "Show Phone",
+"default": false
+},
+{
+"type": "text",
+"id": "phone_1",
+"label": "Phone",
+"default": "+ 7 555 35 305"
+},
+{
+"type": "text",
+"id": "phone_2",
+"label": "Phone (Header 7)",
+"default": "+ 7 555 35 306"
+},
+{
+"type": "checkbox",
+"id": "hours_yes",
+"label": "Show Store Hours (Header 7)",
+"default": true
+},
+{
+"type": "textarea",
+"id": "hours",
+"label": "Store Hours",
+"default": "<i class='icon-watch'></i><span>7 days a week<br><span class='text-nowrap'>from 10 am to 6 pm</span></span>"
+},
+{
+"type": "header",
+"content": "Transparent Header"
+},
+{
+"type": "checkbox",
+"id": "transparent",
+"label": "Enable Transparent Header",
+"default": false,
+"info": "*only for Home Page"
+},
+{
+"type": "select",
+"id": "header_outer_margin",
+"label": "Top Margin for Desktop",
+"options":[
+{"value":"mt-0","label":"None (default)"},
+{"value":"mt-lg-l","label":"XSmall"},
+{"value":"mt-lg-2","label":"Small"},
+{"value":"mt-lg-3","label":"Medium"},
+{"value":"mt-lg-5","label":"Large"}
+],
+"default": "mt-0"
+},
+{
+"type": "header",
+"content": "Sticky header"
+},
+{
+"type": "checkbox",
+"id": "sticky",
+"label": "Show",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "sticky_off_product",
+"label": "Disable Sticky header at Product pages",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "sticky_off_collection",
+"label": "Disable Sticky header at Collection pages",
+"default": true
+},
+{
+"type": "header",
+"content": "About Us (dropdown)"
+},
+{
+    "type": "checkbox",
+    "id": "about_us_enable",
+    "label": "Enable",
+    "default": true
+},
+{
+    "type": "text",
+    "id": "about_us_title",
+    "label": "Title",
+    "default":"Services"
+},
+{
+"type": "radio",
+"id": "about_us_icon_type",
+"label": "Icon Source",
+"options":[
+{"value":"theme","label":"Section Icons Set (recommended)"},
+{"value":"name","label":"Custom Icon Name (Theme Icons Library)"},
+{"value":"svg","label":"Custom SVG code"}
+]
+},
+{
+"type": "select",
+"id": "about_us_icon",
+"label": "Section Icons Set",
+"default": "icon-bell",
+"options":[
+{"value":"icon-bell","label":"Bell"},
+{"value":"icon-box-1","label":"Box 1"},
+{"value":"icon-box","label":"Box 2"},
+{"value":"icon-call-center","label":"Call Center"},
+{"value":"icon-credit-card-1","label":"Credit Card"},
+{"value":"icon-shopping-1","label":"Hand"},
+{"value":"icon-gift","label":"Gift"},
+{"value":"icon-gift-card","label":"Gift Card"},
+{"value":"icon-guarantee","label":"Guarantee"},
+{"value":"icon-ribbon","label":"Ribbon"},
+{"value":"icon-tag","label":"Tag"},
+{"value":"icon-manager","label":"Manager"},
+{"value":"icon-shopping","label":"Shopping"}
+]
+},
+{
+"type":"text",
+"id":"about_us_icon_name",
+"label":"Custom Icon Name",
+"default": "icon-gift",
+"info": "Select icon name here [Theme Icons Library](http://big-skins.com/frontend/foxic-html-demo/icon-foxic/demo.html)"
+},
+{
+"type":"textarea",
+"id":"about_us_svg",
+"label":"Custom SVG code"
+},
+{
+"type": "text",
+"id": "about_us_col_1_title",
+"label": "Column 1 Title",
+"default":"About the store"
+},
+{
+"type": "textarea",
+"id": "about_us_col_1_content",
+"label": "Column 1 Content",
+"default":"<p>STORE - worldwide fashion store since 2015.</p> <h4>Vouchers & discounts</h4> <ul class='list-unstyled'> <li><a href='#'>Buy Gift Vouchers</a></li> <li><a href='#'>Voucher Information</a></li> <li><a href='#'>Coupons buy</a></li> </ul>"
+},
+{
+"type": "text",
+"id": "about_us_col_2_title",
+"label": "Column 2 Title",
+"default":"Safe payments"
+},
+{
+"type": "textarea",
+"id": "about_us_col_2_content",
+"label": "Column 2 Content",
+"default":"<p>You can pay by credit card when booking a ticket at KLM.com. We accept MasterCard, Visa and American Express.</p> <ul class='payment-link'> <li><i class='icon-amazon-logo'></i></li> <li><i class='icon-visa-pay-logo'></i></li> <li><i class='icon-master-card-logo'></i></li> <li><i class='icon-discover-logo-of-pay-system'></i></li> <li><i class='icon-paypal-logo'></i></li> <li><i class='icon-diners-club-pay-logo'></i></li> </ul>"
+},
+{
+"type": "text",
+"id": "about_us_col_3_title",
+"label": "Column 3 Title",
+"default":"Return Policy"
+},
+{
+"type": "textarea",
+"id": "about_us_col_3_content",
+"label": "Column 3 Content",
+"default":"<p>You can return a product for up to 30 days from the date you purchased it. Any product you return must be in the same condition you received it and in the original packaging. Please keep the receipt.</p> <p>A Return and Refund Policy is the agreement where you inform customers about your policies regarding returns and refunds</p>"
+},{
+"type": "text",
+"id": "about_us_col_4_title",
+"label": "Column 3 Title",
+"default":"Get In Touch"
+},
+{
+"type": "textarea",
+"id": "about_us_col_4_content",
+"label": "Column 3 Content",
+"default":" <ul class='list-icon'> <li><i class='icon-info'></i>FoxShop</li> <li><i class='icon-location'></i>Level 3 178 Clarence St, Jhenidah Australia</li> <li><i class='icon-phone'></i>+ 7 555 35 305</li> <li><i class='icon-envelope'></i><a href='mailto:FoxShopSupport777@gmail.com'>FoxShopSupport@gmail.com</a></li> <li><i class='icon-watch'></i>5 Days a week Mon-Fri</li> <li><i class='icon-calendar'></i>10:00am-18:00pm GMT + 2 </li> </ul>"
+},
+{
+"type": "image_picker",
+"id": "about_us_image",
+"label": "Image",
+"info":"recommended width 345x318px (like in demo)"
+},
+{
+"type": "url",
+"id": "about_us_link",
+"label": "Link"
+},
+{
+"type": "select",
+"id": "about_us_link_target",
+"label": "Link Target",
+"default":"_self",
+"options": [
+{ "value": "_blank", "label": "New page" },
+{ "value": "_self",  "label": "In current page" }
+]
+},
+{
+"type": "header",
+"content": "Topline Promo Text"
+},
+{
+"type": "checkbox",
+"id": "topline_enable",
+"label": "Enable",
+"default": true,
+"info": "* Topline must be enabled"
+},
+{
+"type": "text",
+"id": "topline_caption_1",
+"label": "Animated text 1",
+"default":"<i class='icon-fox'></i> Use promocode <span>FOXIC</span> to get 15% discount!"
+},
+{
+"type": "text",
+"id": "topline_caption_2",
+"label": "Animated text 2",
+"default":"<i class='icon-air-freight'></i> <span>Free</span> plane shipping over <span>$250</span>"
+},
+{
+"type": "text",
+"id": "topline_caption_3",
+"label": "Animated text 3",
+"default":"<i class='icon-gift'></i> Today only! Post <span>holiday</span> Flash Sale! 2 for $20"
+},
+{
+"type": "text",
+"id": "topline_caption_4",
+"label": "Animated text 4"
+},
+{
+"type": "header",
+"content": "Login Box"
+},
+{
+"type": "checkbox",
+"id": "quick_login",
+"label": "Login form",
+"default": true
+},
+{
+"type": "text",
+"id": "quick_login_title",
+"label": "Form Title",
+"default": "QUICK LOGIN"
+},
+{
+"type": "checkbox",
+"id": "quick_login_image_enable",
+"label": "Banner image",
+"default": true
+},
+{
+"type": "image_picker",
+"id": "quick_login_image",
+"label": "Banner image",
+"info": "recommended width 500x468px (like in demo)"
+},
+{
+"type": "url",
+"id": "quick_login_image_url",
+"label": "Banner image link"
+},
+{
+"type": "text",
+"id": "quick_login_banner_caption_1",
+"label": "Banner caption 1"
+},
+{
+"type": "text",
+"id": "quick_login_banner_caption_2",
+"label": "Banner caption 2"
+},
+{
+"type": "header",
+"content": "Navigation"
+},
+{
+"type": "paragraph",
+"content": "[Documentation](http://big-skins.com/foxic/manuals/#SetupNavigation)"
+},
+{
+"type": "paragraph",
+"content": "You can choose default Shopify dropdown navigation from selectbox or create Megamenu dropdowns with our sections constructor"
+},
+{
+"type":"link_list",
+"id":"default_navigation",
+"label":"Default navigation",
+"info":"if you select 'None' then the Megamenu that is based on sections will be enabled",
+"default":"main-menu"
+},
+{
+"type": "select",
+"id": "nav_alignment",
+"label": "Navigation 1st Level Alignment",
+"default": "justify-content-center",
+"options": [
+{ "value": "justify-content-start", "label": "Left" },
+{ "value": "justify-content-center", "label": "Center" },
+{ "value": "justify-content-end", "label": "Right" }
+],
+"info": "*for Header style 1,4,7"
+}
+],
+"blocks": [
+{
+"type": "tree",
+"name": "Navigation Item - Simple",
+"settings": [
+{
+"type":"checkbox",
+"id":"enable",
+"label":"Enable",
+"default":true
+},
+{
+"type": "select",
+"id": "enable_device",
+"label": "Show on Devices",
+"default": "show-all",
+"options": [
+{ "value": "show-all", "label": "Mobile & Desktop" },
+{ "value": "hide-mobile", "label": "Only Desktop" },
+{ "value": "show-mobile", "label": "Only Mobile" }
+]
+},
+{
+"type": "text",
+"id": "title",
+"label": "Title",
+"default":"Item"
+},
+{
+"type": "url",
+"id": "link",
+"label": "Url"
+},
+{
+"type": "text",
+"id": "label",
+"label": "Label",
+"info":"1st level items only"
+},
+{
+"type": "color",
+"id": "label_color",
+"label": "Label Color"
+},
+{
+"type":"link_list",
+"id":"dropdown_list",
+"label":"Dropdown navigation"
+}
+]
+},
+{
+"type": "tree_double",
+"name": "Navigation Item - Double",
+"settings": [
+{
+"type":"checkbox",
+"id":"enable",
+"label":"Enable",
+"default":true
+},
+{
+"type": "select",
+"id": "enable_device",
+"label": "Show on Devices",
+"default": "show-all",
+"options": [
+{ "value": "show-all", "label": "Mobile & Desktop" },
+{ "value": "hide-mobile", "label": "Only Desktop" },
+{ "value": "show-mobile", "label": "Only Mobile" }
+]
+},
+{
+"type": "text",
+"id": "title",
+"label": "Title",
+"default":"Item"
+},
+{
+"type": "url",
+"id": "link",
+"label": "Url"
+},
+{
+"type": "text",
+"id": "label",
+"label": "Label",
+"info":"1st level items only"
+},
+{
+"type": "color",
+"id": "label_color",
+"label": "Label Color"
+},
+{
+"type":"link_list",
+"id":"dropdown_list",
+"label":"Dropdown navigation"
+},
+{
+"type":"link_list",
+"id":"dropdown_list_2",
+"label":"Dropdown navigation"
+}
+]
+},
+{
+"type": "columns",
+"name": "Navigation Item - Columns",
+"settings": [
+{
+"type":"checkbox",
+"id":"enable",
+"label":"Enable",
+"default":true
+},
+{
+"type": "select",
+"id": "enable_device",
+"label": "Show on Devices",
+"default": "show-all",
+"options": [
+{ "value": "show-all", "label": "Mobile & Desktop" },
+{ "value": "hide-mobile", "label": "Only Desktop" },
+{ "value": "show-mobile", "label": "Only Mobile" }
+]
+},
+{
+"type": "text",
+"id": "title",
+"label": "Title",
+"default":"Item"
+},
+{
+"type": "url",
+"id": "link",
+"label": "Url"
+},
+{
+"type": "text",
+"id": "label",
+"label": "Label",
+"info":"1st level items only"
+},
+{
+"type": "color",
+"id": "label_color",
+"label": "Label Color"
+},
+{
+"type": "select",
+"id": "columns_in_row",
+"label": "Columns in one row",
+"options": [
+{ "value": "2", "label": "2" },
+{ "value": "3", "label": "3" },
+{ "value": "4", "label": "4" },
+{ "value": "5", "label": "5" },
+{ "value": "6", "label": "6" }
+],
+"default": "4"
+},
+{
+"type":"header",
+"content":"Navigation's columns"
+},
+{
+"type":"header",
+"content":"Column 1"
+},
+{
+"type":"checkbox",
+"id":"nav_col_1_yes",
+"label":"Enable",
+"default":false
+},
+{
+"type":"text",
+"id":"nav_col_1_title",
+"label":"Title",
+"default":"Column title"
+},
+{
+"type":"url",
+"id":"nav_col_1_link",
+"label":"Url",
+"info":"for title"
+},
+{
+"type":"link_list",
+"id":"nav_col_1_list",
+"label":"Navigation"
+},
+{
+"type":"header",
+"content":"Column 2"
+},
+{
+"type":"checkbox",
+"id":"nav_col_2_yes",
+"label":"Enable",
+"default":false
+},
+{
+"type":"text",
+"id":"nav_col_2_title",
+"label":"Title",
+"default":"Column title"
+},
+{
+"type":"url",
+"id":"nav_col_2_link",
+"label":"Url",
+"info":"for  title"
+},
+{
+"type":"link_list",
+"id":"nav_col_2_list",
+"label":"Navigation"
+},
+{
+"type":"header",
+"content":"Column 3"
+},
+{
+"type":"checkbox",
+"id":"nav_col_3_yes",
+"label":"Enable",
+"default":false
+},
+{
+"type":"text",
+"id":"nav_col_3_title",
+"label":"Title",
+"default":"Column title"
+},
+{
+"type":"url",
+"id":"nav_col_3_link",
+"label":"Url",
+"info":"for  title"
+},
+{
+"type":"link_list",
+"id":"nav_col_3_list",
+"label":"Navigation"
+},
+{
+"type":"header",
+"content":"Column 4"
+},
+{
+"type":"checkbox",
+"id":"nav_col_4_yes",
+"label":"Enable",
+"default":false
+},
+{
+"type":"text",
+"id":"nav_col_4_title",
+"label":"Title",
+"default":"Column title"
+},
+{
+"type":"url",
+"id":"nav_col_4_link",
+"label":"Url",
+"info":"for  title"
+},
+{
+"type":"link_list",
+"id":"nav_col_4_list",
+"label":"Navigation"
+},
+{
+"type":"header",
+"content":"Column 5"
+},
+{
+"type":"checkbox",
+"id":"nav_col_5_yes",
+"label":"Enable",
+"default":false
+},
+{
+"type":"text",
+"id":"nav_col_5_title",
+"label":"Title",
+"default":"Column title"
+},
+{
+"type":"url",
+"id":"nav_col_5_link",
+"label":"Url",
+"info":"for  title"
+},
+{
+"type":"link_list",
+"id":"nav_col_5_list",
+"label":"Navigation"
+},
+{
+"type":"header",
+"content":"Column 6"
+},
+{
+"type":"checkbox",
+"id":"nav_col_6_yes",
+"label":"Enable",
+"default":false
+},
+{
+"type":"text",
+"id":"nav_col_6_title",
+"label":"Title",
+"default":"Column title"
+},
+{
+"type":"url",
+"id":"nav_col_6_link",
+"label":"Url",
+"info":"for  title"
+},
+{
+"type":"link_list",
+"id":"nav_col_6_list",
+"label":"Navigation"
+},
+{
+"type":"header",
+"content":"Column 7"
+},
+{
+"type":"checkbox",
+"id":"nav_col_7_yes",
+"label":"Enable",
+"default":false
+},
+{
+"type":"text",
+"id":"nav_col_7_title",
+"label":"Title",
+"default":"Column title"
+},
+{
+"type":"url",
+"id":"nav_col_7_link",
+"label":"Url",
+"info":"for  title"
+},
+{
+"type":"link_list",
+"id":"nav_col_7_list",
+"label":"Navigation"
+},
+{
+"type":"header",
+"content":"Column 8"
+},
+{
+"type":"checkbox",
+"id":"nav_col_8_yes",
+"label":"Enable",
+"default":false
+},
+{
+"type":"text",
+"id":"nav_col_8_title",
+"label":"Title",
+"default":"Column title"
+},
+{
+"type":"url",
+"id":"nav_col_8_link",
+"label":"Url",
+"info":"for  title"
+},
+{
+"type":"link_list",
+"id":"nav_col_8_list",
+"label":"Navigation"
+},
+{
+"type":"header",
+"content":"Column 9"
+},
+{
+"type":"checkbox",
+"id":"nav_col_9_yes",
+"label":"Enable",
+"default":false
+},
+{
+"type":"text",
+"id":"nav_col_9_title",
+"label":"Title",
+"default":"Column title"
+},
+{
+"type":"url",
+"id":"nav_col_9_link",
+"label":"Url",
+"info":"for  title"
+},
+{
+"type":"link_list",
+"id":"nav_col_9_list",
+"label":"Navigation"
+},
+{
+"type":"header",
+"content":"Column 10"
+},
+{
+"type":"checkbox",
+"id":"nav_col_10_yes",
+"label":"Enable",
+"default":false
+},
+{
+"type":"text",
+"id":"nav_col_10_title",
+"label":"Title",
+"default":"Column title"
+},
+{
+"type":"url",
+"id":"nav_col_10_link",
+"label":"Url",
+"info":"for  title"
+},
+{
+"type":"link_list",
+"id":"nav_col_10_list",
+"label":"Navigation"
+},
+{
+"type":"header",
+"content":"Column 11"
+},
+{
+"type":"checkbox",
+"id":"nav_col_11_yes",
+"label":"Enable",
+"default":false
+},
+{
+"type":"text",
+"id":"nav_col_11_title",
+"label":"Title",
+"default":"Column title"
+},
+{
+"type":"url",
+"id":"nav_col_11_link",
+"label":"Url",
+"info":"for  title"
+},
+{
+"type":"link_list",
+"id":"nav_col_11_list",
+"label":"Navigation"
+},
+{
+"type":"header",
+"content":"Column 12"
+},
+{
+"type":"checkbox",
+"id":"nav_col_12_yes",
+"label":"Enable",
+"default":false
+},
+{
+"type":"text",
+"id":"nav_col_12_title",
+"label":"Title",
+"default":"Column title"
+},
+{
+"type":"url",
+"id":"nav_col_12_link",
+"label":"Url",
+"info":"for  title"
+},
+{
+"type":"link_list",
+"id":"nav_col_12_list",
+"label":"Navigation"
+},
+{
+"type":"header",
+"content":"Column 13"
+},
+{
+"type":"checkbox",
+"id":"nav_col_13_yes",
+"label":"Enable",
+"default":false
+},
+{
+"type":"text",
+"id":"nav_col_13_title",
+"label":"Title",
+"default":"Column title"
+},
+{
+"type":"url",
+"id":"nav_col_13_link",
+"label":"Url",
+"info":"for  title"
+},
+{
+"type":"link_list",
+"id":"nav_col_13_list",
+"label":"Navigation"
+},
+{
+"type":"header",
+"content":"Column 14"
+},
+{
+"type":"checkbox",
+"id":"nav_col_14_yes",
+"label":"Enable",
+"default":false
+},
+{
+"type":"text",
+"id":"nav_col_14_title",
+"label":"Title",
+"default":"Column title"
+},
+{
+"type":"url",
+"id":"nav_col_14_link",
+"label":"Url",
+"info":"for  title"
+},
+{
+"type":"link_list",
+"id":"nav_col_14_list",
+"label":"Navigation"
+},
+{
+"type":"header",
+"content":"Column 15"
+},
+{
+"type":"checkbox",
+"id":"nav_col_15_yes",
+"label":"Enable",
+"default":false
+},
+{
+"type":"text",
+"id":"nav_col_15_title",
+"label":"Title",
+"default":"Column title"
+},
+{
+"type":"url",
+"id":"nav_col_15_link",
+"label":"Url",
+"info":"for  title"
+},
+{
+"type":"link_list",
+"id":"nav_col_15_list",
+"label":"Navigation"
+},
+{
+"type":"header",
+"content":"Left Column"
+},
+{
+"type":"checkbox",
+"id":"left_col_yes",
+"label":"Enable",
+"default":false
+},
+{
+"type": "image_picker",
+"id": "left_col_image",
+"label": "Image",
+"info":"recommended width 379x390px (like in demo)"
+},
+{
+"type": "text",
+"id": "left_col_text",
+"label": "Caption",
+"default":"Pre-Collection<br>Spring-Summer"
+},
+{
+"type": "url",
+"id": "left_col_link",
+"label": "Url for link+caption"
+},
+{
+"type": "select",
+"id": "left_col_html_width",
+"label": "Width",
+"options": [
+{ "value": "20", "label": "20%" },
+{ "value": "25", "label": "25%" }
+],
+"default": "25"
+},
+{
+"type":"header",
+"content":"Right Column"
+},
+{
+"type":"checkbox",
+"id":"right_col_yes",
+"label":"Enable",
+"default":true
+},
+{
+"type": "image_picker",
+"id": "right_col_image",
+"label": "Image",
+"info":"recommended width 379x390px (like in demo)"
+},
+{
+"type": "text",
+"id": "right_col_text",
+"label": "Caption",
+"default":"Pre-Collection<br>Spring-Summer"
+},
+{
+"type": "url",
+"id": "right_col_link",
+"label": "Url for link+caption"
+},
+{
+"type": "select",
+"id": "right_col_html_width",
+"label": "Width",
+"options": [
+{ "value": "20", "label": "20%" },
+{ "value": "25", "label": "25%" }
+],
+"default": "25"
+},
+{
+"type":"header",
+"content":"Bottom Row"
+},
+{
+"type":"checkbox",
+"id":"btm_row_yes",
+"label":"Enable",
+"default":false
+},
+{
+"type":"textarea",
+"id":"btm_row_html",
+"label":"Html",
+"default":"<a href='/'><i class='icon-fox icon--lg'></i><b>FOXshop News</b><i class='icon-arrow-right'></i></a>"
+}
+]
+}
+]
+}
+{% endschema %}

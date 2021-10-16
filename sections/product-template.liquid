@@ -1,0 +1,825 @@
+{%- assign settings_gallery_previews_pos = section.settings.gallery_previews_pos -%}
+{%- assign settings_gallery_previews = section.settings.gallery_previews -%}
+{%- assign settings_container_width_true = section.settings.container_width_true -%}
+{%- assign settings_container_width = section.settings.container_width -%}
+{%- assign settings_tabs_position = section.settings.tabs_position -%}
+{%- assign settings_tabs_style = section.settings.tabs_style -%}
+
+{%- assign settings_options_style = section.settings.options_style -%}
+{%- assign settings_color_options_name = section.settings.color_options_name -%}
+{%- assign settings_color_swatches_style = section.settings.color_swatches_style -%}
+{%- assign settings_swatches_width = section.settings.swatches_width  -%}
+
+{%- assign settings_show_title_top = section.settings.show_title_top -%}
+
+{%- assign settings_gallery_width_yes = section.settings.gallery_width_yes -%}
+{%- assign settings_gallery_width = section.settings.gallery_width -%}
+{%- assign settings_per_col_custom = section.settings.per_col_custom -%}
+{%- assign settings_per_col_desktop = section.settings.per_col_desktop -%}
+
+{%- assign settings_video = section.settings.video_preview -%}
+
+{%- if product.images.size < 5 -%}
+    {%- case settings_gallery_previews_pos -%}
+    {%- when 'prd-block--prv-left prd-block--prv-double' -%}
+    {%- assign settings_gallery_previews_pos = 'prd-block--prv-left' -%}
+    {%- when 'prd-block--prv-right prd-block--prv-double' -%}
+    {%- assign settings_gallery_previews_pos = 'prd-block--prv-right' -%}
+    {%- when 'prd-block--prv-bottom prd-block--prv-double' -%}
+    {%- assign settings_gallery_previews_pos = 'prd-block--prv-bottom' -%}
+    {% endcase %}
+{%- endif -%}
+<div class="holder" id="ProductSection-{{ section.id }}" {%- if section.settings.open_tab_mobile -%}data-open-mobile="true"{%- endif -%}
+     data-section-id="{{ section.id }}"
+     data-section-type="product"
+     data-enable-history-state="true"
+     data-ajax-enabled="{{ settings.enable_ajax }}">
+    {%- assign previews = false -%}
+    {%- for image in product.images -%} {%- if image.alt == "MAIN" or image.alt == "HOVER" or forloop.first -%} {% continue %} {%- endif -%} {% assign previews = true %} {% break %} {%- endfor -%}
+
+    {%- assign column_media = 'col-md-8 col-lg-9 col-xl-10' -%}
+    {%- assign column_info = 'col-md-10 col-lg-9 col-xl-8 mt-1 mt-md-0' -%}
+    {%- if settings_gallery_width_yes -%}
+        {%- assign column_media = 'col-md-8 col-lg-custom' -%}
+        {%- assign column_info = 'col-md-10 col-lg-custom-rigth mt-1 mt-md-0' -%}
+    {%- endif -%}
+    {%- if product.images.size == 1 or previews == false -%}
+        {%- assign column_media = 'col-md-6 col-lg-7' -%}
+        {%- assign column_info = 'col-md-12 col-lg-11 mt-1 mt-md-0' -%}
+        {%- if settings_gallery_width_yes -%}
+            {%- assign column_media = 'col-md-6 col-lg-custom' -%}
+            {%- assign column_info = 'col-md-12 col-lg-custom-rigth mt-1 mt-md-0' -%}
+        {%- endif -%}
+    {%- endif -%}
+
+    <div class="container {% unless previews %}container-prd-block{% endunless %}" {% if settings_container_width_true %}style="max-width: {{ settings_container_width }}px!important"{% endif %}>
+    <div class="row prd-block prd-block-under {% if settings_gallery_previews and product.images.size > 1 and previews %}{{ settings_gallery_previews_pos }}{% endif %}">
+      {%- if settings_show_title_top -%}
+      <div class="col">
+        <div class="js-prd-d-holder">
+          <div class="prd-block_title-wrap">
+            {% include 'product-info-reviews' %}
+            <h1 class="prd-block_title">{{ product.title  | strip_html }}</h1>
+          </div>
+        </div>
+      </div>
+      {%- endif -%}
+      {%- if settings_show_title_top -%}
+      <div class="col-md-8 prd-block-prevnext-wrap">
+          {% render 'product_prev_next' with product as product, with collection as collection %}
+      </div>
+      {%- endif -%}
+    </div>
+    <div class="row prd-block {% if settings_gallery_previews and product.images.size > 1 %}{{ settings_gallery_previews_pos }}{% endif %}" {%- if section.settings.open_tab_mobile -%}data-open-mobile="true"{%- endif -%}>
+      <div class="{{ column_media }} {% unless settings_gallery_previews_pos == 'grid' %}aside--sticky js-sticky-collision {% endunless %}">
+        <div class="aside-content">
+            {% include 'product-media' %}
+        </div>
+      </div>
+        <div class="{{ column_info }}  {% if settings_gallery_previews_pos == 'grid' %}aside--sticky js-sticky-collision{% endif %}">
+            <div {%- if settings_gallery_previews_pos == 'grid' -%}class="aside-content flex-column"{%- endif -%}>
+                {% include 'product-info' with product as product  %}
+                {%- if settings_tabs_position == 'inner' -%}
+                    <div class="prd-block_info prd-block_info--style1">
+                        {%- if settings_tabs_style == 'vertical' -%}
+                            {% include 'product-tabs' %}
+                        {%- else -%}
+                            {% include 'product-tabs-horizontal' %}
+                        {%- endif -%}
+                    </div>
+                {%- endif -%}
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+{%- if section.settings.social_sharing_products -%}
+    <div class="holder prd-block_links-wrap-bg">
+        <div class="prd-block_links-wrap prd-block_info_item container mt-2 mt-md-5 {% unless section.settings.social_sharing_products_code contains 'script' %}py-1{% endunless %}">
+                {%- if section.settings.sharing_left_side != blank %}<div class="prd-block_link"><span>{{ section.settings.sharing_left_side }}</span></div>{% endif -%}
+                {%- if section.settings.social_sharing_products_code != blank -%}
+                <div class="prd-block_link">
+                    {%- if section.settings.social_sharing_products_code contains 'script' -%}
+                            <div class="prd-block_sharing_plugin">
+                                {{ section.settings.social_sharing_products_code }}
+                                <div class="addthis_inline_share_toolbox" data-url="{{ shop.url | append:product.url }}" data-title="{{ product.title }}" style="clear: both;"><div id="atstbx" class="at-resp-share-element at-style-responsive addthis-smartlayers addthis-animated at4-show" aria-labelledby="at-a2d68dbf-bb05-4c46-a120-56a7ce508b12" role="region"><span id="at-a2d68dbf-bb05-4c46-a120-56a7ce508b12" class="at4-visually-hidden">AddThis Sharing Buttons</span><div class="at-share-btn-elements"><a role="button" tabindex="0" class="at-icon-wrapper at-share-btn at-svc-facebook" style="background-color: rgb(59, 89, 152); border-radius: 4px;"><span class="at4-visually-hidden">Share to Facebook</span><span class="at-icon-wrapper" style="line-height: 20px; height: 20px; width: 20px;"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 32 32" version="1.1" role="img" aria-labelledby="at-svg-facebook-1" class="at-icon at-icon-facebook" style="fill: rgb(255, 255, 255); width: 20px; height: 20px;"><title id="at-svg-facebook-1">Facebook</title><g><path d="M22 5.16c-.406-.054-1.806-.16-3.43-.16-3.4 0-5.733 1.825-5.733 5.17v2.882H9v3.913h3.837V27h4.604V16.965h3.823l.587-3.913h-4.41v-2.5c0-1.123.347-1.903 2.198-1.903H22V5.16z" fill-rule="evenodd"></path></g></svg></span></a><a role="button" tabindex="0" class="at-icon-wrapper at-share-btn at-svc-twitter" style="background-color: rgb(29, 161, 242); border-radius: 4px;"><span class="at4-visually-hidden">Share to Twitter</span><span class="at-icon-wrapper" style="line-height: 20px; height: 20px; width: 20px;"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 32 32" version="1.1" role="img" aria-labelledby="at-svg-twitter-2" class="at-icon at-icon-twitter" style="fill: rgb(255, 255, 255); width: 20px; height: 20px;"><title id="at-svg-twitter-2">Twitter</title><g><path d="M27.996 10.116c-.81.36-1.68.602-2.592.71a4.526 4.526 0 0 0 1.984-2.496 9.037 9.037 0 0 1-2.866 1.095 4.513 4.513 0 0 0-7.69 4.116 12.81 12.81 0 0 1-9.3-4.715 4.49 4.49 0 0 0-.612 2.27 4.51 4.51 0 0 0 2.008 3.755 4.495 4.495 0 0 1-2.044-.564v.057a4.515 4.515 0 0 0 3.62 4.425 4.52 4.52 0 0 1-2.04.077 4.517 4.517 0 0 0 4.217 3.134 9.055 9.055 0 0 1-5.604 1.93A9.18 9.18 0 0 1 6 23.85a12.773 12.773 0 0 0 6.918 2.027c8.3 0 12.84-6.876 12.84-12.84 0-.195-.005-.39-.014-.583a9.172 9.172 0 0 0 2.252-2.336" fill-rule="evenodd"></path></g></svg></span></a><a role="button" tabindex="0" class="at-icon-wrapper at-share-btn at-svc-pinterest_share" style="background-color: rgb(203, 32, 39); border-radius: 4px;"><span class="at4-visually-hidden">Share to Pinterest</span><span class="at-icon-wrapper" style="line-height: 20px; height: 20px; width: 20px;"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 32 32" version="1.1" role="img" aria-labelledby="at-svg-pinterest_share-3" class="at-icon at-icon-pinterest_share" style="fill: rgb(255, 255, 255); width: 20px; height: 20px;"><title id="at-svg-pinterest_share-3">Pinterest</title><g><path d="M7 13.252c0 1.81.772 4.45 2.895 5.045.074.014.178.04.252.04.49 0 .772-1.27.772-1.63 0-.428-1.174-1.34-1.174-3.123 0-3.705 3.028-6.33 6.947-6.33 3.37 0 5.863 1.782 5.863 5.058 0 2.446-1.054 7.035-4.468 7.035-1.232 0-2.286-.83-2.286-2.018 0-1.742 1.307-3.43 1.307-5.225 0-1.092-.67-1.977-1.916-1.977-1.692 0-2.732 1.77-2.732 3.165 0 .774.104 1.63.476 2.336-.683 2.736-2.08 6.814-2.08 9.633 0 .87.135 1.728.224 2.6l.134.137.207-.07c2.494-3.178 2.405-3.8 3.533-7.96.61 1.077 2.182 1.658 3.43 1.658 5.254 0 7.614-4.77 7.614-9.067C26 7.987 21.755 5 17.094 5 12.017 5 7 8.15 7 13.252z" fill-rule="evenodd"></path></g></svg></span></a><a role="button" tabindex="0" class="at-icon-wrapper at-share-btn at-svc-compact" style="background-color: rgb(255, 101, 80); border-radius: 4px;"><span class="at4-visually-hidden">Share to More</span><span class="at-icon-wrapper" style="line-height: 20px; height: 20px; width: 20px;"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 32 32" version="1.1" role="img" aria-labelledby="at-svg-addthis-4" class="at-icon at-icon-addthis" style="fill: rgb(255, 255, 255); width: 20px; height: 20px;"><title id="at-svg-addthis-4">AddThis</title><g><path d="M18 14V8h-4v6H8v4h6v6h4v-6h6v-4h-6z" fill-rule="evenodd"></path></g></svg></span></a></div></div></div>
+                            </div>
+                    {% else %}
+                        <span>{{ section.settings.social_sharing_products_code }}</span>
+                    {%- endif -%}
+                </div>
+                {%- endif -%}
+                {%- if section.settings.sharing_right_side != blank %}<div class="prd-block_link"><span>{{ section.settings.sharing_right_side }}</span></div>{% endif -%}
+        </div>
+    </div>
+{%- endif -%}
+{%- if settings_tabs_position == 'under' -%}
+<div class="holder mt-2 mt-md-5" {%- if section.settings.open_tab_mobile -%}data-open-mobile="true"{%- endif -%}>
+    <div class="container" {% if settings_container_width_true %}style="max-width: {{ settings_container_width }}px"{% endif %}>
+        {%- if settings_tabs_style == 'vertical' -%}
+            {% include 'product-tabs' %}
+        {%- else -%}
+            {% include 'product-tabs-horizontal' %}
+        {%- endif -%}
+    </div>
+</div>
+{%- endif -%}
+
+{% unless product == empty %}
+  <script type="application/json" id="ProductJson-{{ section.id }}">
+    {{ product | json }}
+  </script>
+{% endunless %}
+
+<style>
+    {%- assign swatchW = settings_swatches_width -%}
+    .prd-block ul.color-list li.active img, .prd-block ul.color-list li:not(.absent-option):hover img {
+        width: {{ swatchW | plus: 2 }}px;
+        min-width: {{ swatchW | plus: 2 }}px;
+        height: {{ swatchW | plus: 2 }}px;
+    }
+    .prd-block ul.color-list li a span.value {
+        width: {{ swatchW }}px;
+        max-width: {{ swatchW }}px;
+        height: {{ swatchW }}px;
+        -ms-flex: 0 0 {{ swatchW }}px;
+        flex: 0 0 {{ swatchW }}px;
+    }
+    {%- if settings_gallery_width_yes -%}
+    @media (min-width: 992px) {
+        .col-lg-custom {
+            max-width: {{ settings_gallery_width }}%!important;
+            flex: 0 0 {{ settings_gallery_width }}%!important;
+        }
+        .col-lg-custom-rigth {
+            max-width: {{ 100 | minus: settings_gallery_width }}%!important;
+            flex: 0 0 {{ 100 | minus: settings_gallery_width }}%!important;
+        }
+    }
+    {%- endif -%}
+</style>
+{%- if settings_gallery_width_yes -%}
+<script>
+	$('html').css('--settings_gallery_width', {{ settings_gallery_width }} + '%');
+</script>
+{%- endif -%}
+{% schema %}
+{
+"name": "Product pages",
+"settings": [
+{
+"type": "paragraph",
+"content": "[Documentation](http://big-skins.com/foxic/manuals/#Product)"
+},
+{
+"type": "header",
+"content": "General"
+},
+{
+"type":      "checkbox",
+"id":        "container_width_true",
+"label":     "Use product container maximum width",
+"default":   true
+},
+{
+"type":   "range",
+"id":     "container_width",
+"min":    1000,
+"max":    1800,
+"step":   50,
+"unit":   "px",
+"label":  "Product container maximum width",
+"default": 1400
+},
+{
+"type":      "checkbox",
+"id":        "gallery_width_yes",
+"label":     "Use product gallery maximum width",
+"default":   true
+},
+{
+"type":   "range",
+"id":     "gallery_width",
+"min":    30,
+"max":    70,
+"step":   1,
+"unit":   "%",
+"label":  "Product gallery maximum width",
+"default": 40
+},
+{
+   "type":      "checkbox",
+   "id":        "gallery_previews",
+   "label":     "Product gallery previews",
+   "default":   true
+},
+{
+"type":      "select",
+"id":        "gallery_previews_pos",
+"label":     "Product gallery previews position",
+"options": [
+{ "value": "prd-block--prv-left prd-block--prv-double", "label": "Left 2 Columns (if > 4 previews)" },
+{ "value": "prd-block--prv-left", "label": "Left 1 Column" },
+{ "value": "prd-block--prv-right prd-block--prv-double", "label": "Right 2 Columns (if > 4 previews)" },
+{ "value": "prd-block--prv-right", "label": "Right 1 Column" },
+{ "value": "prd-block--prv-bottom prd-block--prv-double", "label": "Bottom 2 Rows (if > 4 previews)" },
+{ "value": "prd-block--prv-bottom", "label": "Bottom 1 Row" },
+{ "value": "grid", "label": "Grid" }
+],
+"default":   "prd-block--prv-bottom"
+},
+{
+"type":      "select",
+"id":        "video_preview",
+"label":     "Video Preview",
+"options": [
+{ "value": "icon", "label": "Play Icon + Video Thumbnail" },
+{ "value": "poster", "label": "Video Thumbnail" },
+{ "value": "none", "label": "Disable Video Preview" }
+],
+"default": "icon",
+"info": "Read more about product video here [Product media types](https://help.shopify.com/en/manual/products/product-media/product-media-types#videos)"
+},
+{
+"type": "checkbox",
+"id": "show_title_top",
+"label": "Show product Title on the top",
+"default": false
+},
+{
+"type": "checkbox",
+"id": "show_quantity_selector",
+"label": "Show quantity selector",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "always_visible_previews",
+"label": "Make all product images visible on mobile under the main photo",
+"default": false
+},
+{
+   "type":      "checkbox",
+   "id":        "tax_included",
+   "label":     "Tax Included",
+   "default":   true
+},
+{
+"type": "checkbox",
+"id": "zoom",
+"label": "Zoom main photo",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "product_prev_next",
+"label": "Prev Next products",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "vendor",
+"label": "Show vendor",
+"default": false
+},
+{
+"type": "checkbox",
+"id": "barcode",
+"label": "Show barcode",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "collections",
+"label": "Show collections",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "product_sku",
+"label": "Show SKU",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "product_rating",
+"label": "Show rating stars",
+"default": true,
+"info":"[install reviews app](http://big-skins.com/foxic/manuals/#ProductReviewsApp)"
+},
+{
+"type": "checkbox",
+"id": "product_availability",
+"label": "Show availability",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "show_you_save",
+"label": "Show 'You save $%%'",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "show_inform",
+"label": "Show 'Inform me' link",
+"default": true
+},
+{
+"type":      "header",
+"content":   "Labels"
+},
+{
+"type": "checkbox",
+"id": "show_label_new",
+"label": "Show Label New",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "show_label_sale",
+"label": "Show Label Sale",
+"default": true
+},
+{
+"type": "select",
+"id": "label_sale_style",
+"label": "Label Sale Text",
+"options": [
+{
+"value": "all",
+"label": "Percent + Text"
+},
+{
+"value": "text",
+"label": "Only text"
+},
+{
+"value": "percent",
+"label": "Only percent"
+}
+],
+"default": "all"
+},
+{
+"type":      "header",
+"content":   "Short Description"
+},
+{
+"type": "checkbox",
+"id": "description_yes",
+"label": "Show Short Description",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "description_mobile_hide",
+"label": "Hide Short Description for mobile",
+"default": false
+},
+{
+"type": "paragraph",
+"content": "[Documentation](http://big-skins.com/foxic/manuals/#ShortDescription)"
+},
+{
+"type": "checkbox",
+"id": "global_description_yes",
+"label": "Show Global Description for all products",
+"default": false
+},
+{
+"type": "textarea",
+"id": "global_description",
+"label": "Description",
+"default": "Paste Description Text Here"
+},
+{
+"type":      "header",
+"content":   "Quantity of gallery previews per column"
+},
+{
+"type": "checkbox",
+"id": "per_col_custom",
+"label": "Set quantity of items for Left or Right gallery column",
+"default": false
+},
+{
+"type": "select",
+"id": "per_col_desktop",
+"label": "Desktop:",
+"default": "6",
+"options": [
+{ "value": "7", "label": "7" },
+{ "value": "6", "label": "6" },
+{ "value": "5", "label": "5" },
+{ "value": "4", "label": "4" },
+{ "value": "3", "label": "3" }
+]
+},
+{
+"type": "select",
+"id": "per_col_tablet",
+"label": "Small Desktop (<1400):",
+"default": "5",
+"options": [
+{ "value": "6", "label": "6" },
+{ "value": "5", "label": "5" },
+{ "value": "4", "label": "4" },
+{ "value": "3", "label": "3" }
+]
+},
+{
+"type":      "header",
+"content":   "Product Variant Options"
+},
+{
+"type":      "select",
+"id":        "options_style",
+"label":     "Options style",
+"options": [
+{ "value": "dropdowns", "label": "Dropdowns" },
+{ "value": "swatches", "label": "Swatches" }
+],
+"default":   "swatches"
+},
+
+{
+"type":      "paragraph",
+"content":   "if 'Swatches' selected:"
+},
+{
+"type":      "select",
+"id":        "color_swatches_style",
+"label": "Color swatches style",
+"options": [
+{"value": "default", "label": "Default"},
+{"value": "colorpics", "label": "Color pics"},
+{"value": "variants", "label": "Variants images"}
+],
+"default":   "default",
+"info":      "how upload color pics is described in the [documentation](http://big-skins.com/foxic/manuals/#ColorizedProduct)"
+},
+{
+"type":      "text",
+"id":        "color_options_name",
+"label":     "Color option name",
+"default":   "Color",
+"info":      "How did you name color option in the product options? Copy from admin panel and paste here, because we have to determine where to load color pics"
+},
+{
+    "type":   "range",
+    "id":     "swatches_width",
+    "min":    30,
+    "max":    100,
+    "step":   2,
+    "unit":   "px",
+    "label":  "Swatches width",
+    "default": 50
+},
+{
+"type":"page",
+"id":"size_guide",
+"label":"Size Guide"
+},
+{
+"type":"text",
+"id":"size_guide_icon",
+"label":"Icon for Size Guide",
+"default": "icon-size-guide",
+"info": "Select icon name here [Theme Icons Library](http://big-skins.com/frontend/foxic-html-demo/icon-foxic/demo.html)"
+},
+{
+"type":"page",
+"id":"delivery_and_return",
+"label":"Delivery and Return"
+},
+{
+"type":"text",
+"id":"delivery_and_return_icon",
+"label":"Icon for Delivery and Return",
+"default": "icon-delivery-1",
+"info": "Select icon name here [Theme Icons Library](http://big-skins.com/frontend/foxic-html-demo/icon-foxic/demo.html)"
+},
+{
+"type": "checkbox",
+"id": "ask_about_this_product",
+"label": "Ask about this product",
+"default": true
+},
+{
+"type":"text",
+"id":"ask_about_this_product_icon",
+"label":"Icon for Ask about ...",
+"default": "icon-email-1",
+"info": "Select icon name here [Theme Icons Library](http://big-skins.com/frontend/foxic-html-demo/icon-foxic/demo.html)"
+},
+{
+"type":"page",
+"id":"custom_link",
+"label":"Custom Link"
+},
+{
+"type":"text",
+"id":"custom_link_icon",
+"label":"Icon for Custom Link",
+"default": "icon-box",
+"info": "Select icon name here [Theme Icons Library](http://big-skins.com/frontend/foxic-html-demo/icon-foxic/demo.html)"
+},
+{
+"type": "checkbox",
+"id": "enable_payment_button",
+"label": "Show dynamic checkout button",
+"info":"Each customer will see their preferred payment method from those available on your store, such as PayPal or Apple Pay. [Learn more](https://help.shopify.com/manual/using-themes/change-the-layout/dynamic-checkout)",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "safe_checkout_image_yes",
+"label": "Safe checkout image",
+"default": true
+},
+{
+"type": "image_picker",
+"id": "safe_checkout_image",
+"label": "Safe checkout image"
+},
+{
+"type":      "header",
+"content":   "Sharing section"
+},
+{
+"type": "checkbox",
+"id": "social_sharing_products",
+"label": "Enable",
+"default": true
+},
+{
+"type": "textarea",
+"id": "social_sharing_products_code",
+"label": "Paste sharing code here",
+"default": "Paste Sharing Code Here",
+"info": "Go to [www.addthis.com/dashboard](http://www.addthis.com/dashboard) to generate your code"
+},
+{
+   "type":      "text",
+   "id":        "sharing_left_side",
+   "label":     "Left Side Html",
+   "default":   "<i class='icon-call-center'></i>24/7 Support"
+},{
+   "type":      "text",
+   "id":        "sharing_right_side",
+   "label":     "Right Side Html",
+   "default":   "<i class='icon-delivery-truck'></i> Fast Shipping"
+},
+{
+"type":      "header",
+"content":   "Promotion"
+},
+{
+"type":      "checkbox",
+"id":        "real_time_users",
+"label":     "Real time users",
+"default":   true,
+"info":      "it has js random values"
+},
+{
+   "type":      "text",
+   "id":        "avarage_users_text",
+   "label":     "Count Text",
+   "default":   "Real time N1 visitor right now!",
+   "info":      "do not delete N1"
+},{
+   "type":      "text",
+   "id":        "avarage_users_count",
+   "label":     "Avarage users count",
+   "default":   "20",
+   "info":      "script shows +-5 users"
+},
+{
+"type":      "paragraph",
+"content": "…………………………………………………………"
+},
+{
+"type":      "checkbox",
+"id":        "promo_view_enable",
+"label":     "This product was viewed",
+"default":   true,
+"info":      "it has js random values"
+},
+{
+"type":      "text",
+"id":        "promo_view_text",
+"label":     "'This product was viewed' text",
+"default":   "This product was viewed N1 times within",
+"info":      "do not delete N1"
+},{
+"type":      "text",
+"id":        "promo_view_range",
+"label":     "Range",
+"default":   "last hour"
+},
+{
+"type":      "paragraph",
+"content": "…………………………………………………………"
+},
+{
+"type":      "checkbox",
+"id":        "left_in_stock_enable",
+"label":     "Hurry Up! Left N1 in stock",
+"default":   false,
+"info":      "it has js random values"
+},
+{
+"type":      "paragraph",
+"content": "…………………………………………………………"
+},
+{
+   "type":      "checkbox",
+   "id":        "order_delivery_time",
+   "label":     "Order delivery time",
+   "default":   true
+},
+{
+"type":      "text",
+"id":        "order_delivery_text",
+"label":     "Order in the next  N1 to get it by N2",
+"default":   "Order in the next  N1 to get it by N2",
+"info":      "do not delete N1 and N2, where N1 = hours and N2 = final delivery date"
+},
+{
+    "type":   "range",
+    "id":     "order_delivery_days",
+    "min":    1,
+    "max":    7,
+    "step":   1,
+    "unit":   "day",
+    "label":  "Days",
+    "default":4
+},
+{
+"type": "header",
+"content": "Tabs"
+},
+{
+   "type":      "select",
+   "id":        "tabs_position",
+   "label":     "Position",
+   "options": [
+     {"value": "inner", "label": "Inner in the content"},
+     {"value": "under", "label": "Under the content"}
+   ],
+   "default":   "under"
+},
+{
+   "type":      "select",
+   "id":        "tabs_style",
+   "label":     "Style",
+   "options": [
+     {"value": "vertical", "label": "Vertical"},
+     {"value": "horizontal", "label": "Horizontal"}
+   ],
+   "default":   "horizontal"
+},
+{
+"type":"checkbox",
+"id":"open_tab_mobile",
+"label":"Open First Tab on Mobile",
+"default":true
+}
+],
+"blocks":
+[
+{
+"type": "tab_description",
+"name": "Tab Product Description",
+"settings":
+[
+{
+"type":"checkbox",
+"id":"enable",
+"label":"Enable",
+"default":true
+},
+{
+"type":"checkbox",
+"id":"open_yes",
+"label":"Open from start",
+"default":true
+},
+{
+"type":"text",
+"id":"title",
+"label":"Title",
+"default":"Full Description"
+}
+]
+},
+{
+"type": "tab_page",
+"name": "Tab Article Content",
+"settings":
+[
+{
+"type":"checkbox",
+"id":"enable",
+"label":"Enable",
+"default":true
+},
+{
+"type":"page",
+"id":"page",
+"label":"Article",
+"info":"For example Size Guide"
+}
+]
+},
+{
+"type": "tab_tags",
+"name": "Tab Product Tags",
+"settings":
+[
+{
+"type":"checkbox",
+"id":"enable",
+"label":"Enable",
+"default":true
+},{
+"type":"text",
+"id":"title",
+"label":"Title",
+"default":"Assigned tags"
+}
+]
+},
+{
+"type": "tab_reviews",
+"name": "Tab Reviews",
+"settings":
+[
+{
+"type":"checkbox",
+"id":"enable",
+"label":"Enable",
+"default":true
+},{
+"type":"text",
+"id":"title",
+"label":"Title",
+"default":"Reviews"
+},
+{
+"type":"checkbox",
+"id":"reviews",
+"label":"Reviews",
+"info":"[Install app](https://apps.shopify.com/product-reviews) or any other. Change default reviews shortcode in the file snippets/reviews-shortcode.liquid"
+}
+]
+},
+{
+"type": "tab_metafield",
+"name": "Tab Metafield",
+"settings":
+[
+{
+"type":"checkbox",
+"id":"enable",
+"label":"Enable",
+"default":true
+},
+{
+"type":"select",
+"id":"title",
+"label":"Choose tab metafield",
+"options":[
+{"value":"custom_tab_title_1","label":"custom_tab_title_1"},
+{"value":"custom_tab_title_2","label":"custom_tab_title_2"},
+{"value":"custom_tab_title_3","label":"custom_tab_title_3"},
+{"value":"custom_tab_title_4","label":"custom_tab_title_4"},
+{"value":"custom_tab_title_5","label":"custom_tab_title_5"},
+{"value":"custom_tab_title_6","label":"custom_tab_title_6"},
+{"value":"custom_tab_title_7","label":"custom_tab_title_7"},
+{"value":"custom_tab_title_8","label":"custom_tab_title_8"},
+{"value":"custom_tab_title_9","label":"custom_tab_title_9"},
+{"value":"custom_tab_title_10","label":"custom_tab_title_10"}
+],
+"default":"custom_tab_title_1"
+}
+]
+}
+],
+"presets": [{
+"name": "Product page",
+"blocks": [
+{
+"type": "tab_description"
+},
+{
+"type": "tab_tags"
+},
+{
+"type": "tab_reviews"
+}
+]
+}]
+}
+{% endschema %}

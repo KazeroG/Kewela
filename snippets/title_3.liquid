@@ -1,0 +1,2 @@
+{%- assign title_split = link.title | split:'::' -%}
+{{ title_split | first }}{% if title_split[1] != blank %}<span class="menu-label" style="background-color:#{{ title_split[1] | split:'#' | last }}">{{ title_split[1] | split:'#' | first }}</span>{% endif %}

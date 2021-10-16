@@ -1,0 +1,255 @@
+<div class="holder {{ section.settings.outer_margin }}">
+    <div class="data-slick overflow-hidden" data-slick='{"infinite": true, "adaptiveHeight": true, "fade": true}'>
+        {%- assign block_count = 0 -%}
+        {%- for block in section.blocks -%}
+        {%- if block.settings.enable -%}
+            {%- assign block_count = block_count | plus: 1 -%}
+        {%- endif -%}
+        {%- endfor -%}
+        {%- for block in section.blocks -%}
+        {%- if block.settings.enable -%}
+            {%- assign collection = collections[block.settings.collection] -%}
+            {%- if block.settings.limit != blank -%}
+                {%- assign product_limit = block.settings.limit -%}
+            {%- endif -%}
+            <div class="slide-lookbook-wrap slide-lookbook-{{ block.id }}">
+                <div class="slide-lookbook {% unless block.settings.bg_image != blank %}slide-lookbook-bg-placeholder{% endunless %}">
+                    {%- if block.settings.bg_image -%}
+                    <div class="slide-lookbook-bg">
+                        <img data-srcset="{{ block.settings.bg_image | img_url:'master' }}" class="lazyload fade-up" alt="">
+                    </div>
+                    {% else %}
+                    <div class="slide-lookbook-bg">{%- render 'image-placeholder-aspect-ratio', width: 1920, height: 725, text: '' -%}</div>
+                    {% endif %}
+                    {%- if collection != blank -%}
+                    <div class="container">
+                        <div class="row flex-column align-items-end">
+                            <div class="prd-carousel-vert-wrap">
+                                <div class="prd-carousel-vert-arrows js-prd-carousel-vert-arrows"></div>
+                                <div class="overflow-hidden">
+                                    <div class="prd-carousel-vert js-prd-carousel-vert-2">
+                                        {% for product in collection.products limit: product_limit %}{% include 'product-card-hor' %}{% else %}{% include 'empty-carousel' %}{% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            {%- if section.settings.bnr_button and block_count > 1 -%}
+                            <div class="prd-carousel-vert-button">
+                                <a href="#" class="btn js-carousel-next {% if  section.settings.bnr_button_lg %}btn--lg{% endif %}">{{  section.settings.bnr_button_text }}</a>
+                            </div>
+                            {%- endif -%}
+                        </div>
+                    </div>
+                    {%- else -%}
+                            <div class="alert alert-warning col-6 mx-auto text-center">
+                                Select Collection
+                            </div>
+                    {%- endif -%}
+                </div>
+            </div>
+        {%- endif -%}
+        {%- endfor -%}
+    </div>
+</div>
+<script>
+    jQuery(document).ready(function () {
+        $('.js-carousel-next').on('click', function (e) {
+            $(this).closest('.slick-slider').slick('slickNext');
+            e.preventDefault();
+        });
+    })
+</script>
+<style>
+    {%- if section.settings.bnr_button -%}
+    {%- unless section.settings.bnr_button_theme -%}
+    #shopify-section-{{ section.id }} .btn:not(.hovered):not(:hover) {
+        {%- if section.settings.button_bgcolor != blank and section.settings.button_bgcolor != 'rgba(0,0,0,0)' -%}background-color:{{ section.settings.button_bgcolor }};{%- endif -%}
+        {%- if section.settings.button_color != blank and section.settings.button_color != 'rgba(0,0,0,0)' -%}color:{{ section.settings.button_color }};{%- endif -%}
+    }
+    {%- endunless -%}
+    #shopify-section-{{ section.id }} .btn:hover {
+        {%- if section.settings.button_bgcolor_hover != blank and section.settings.button_bgcolor_hover != 'rgba(0,0,0,0)' -%}background-color:{{ section.settings.button_bgcolor_hover }}!important;{%- endif -%}
+        {%- if section.settings.button_color_hover != blank and section.settings.button_color_hover != 'rgba(0,0,0,0)' -%}color:{{ section.settings.button_color_hover }}!important;{%- endif -%}
+    }
+    {%- endif -%}
+</style>
+
+{% schema %}
+    {
+    "name": "Product Carousel + BG",
+    "class": "index-section",
+    "presets": [
+    {
+    "name": "Product Carousel + BG",
+    "category": "Products",
+    "blocks": [
+    {
+    "type": "collection"
+    },
+    {
+    "type": "collection"
+    }
+    ]
+    }
+    ],
+    "settings": [
+    {
+    "type": "header",
+    "content": "Layout"
+    },
+    {
+    "type": "select",
+    "id": "outer_margin",
+    "label": "Outer top margin",
+    "options":[
+    {"value":"mt-0","label":"None"},
+    {"value":"holder-mt-xsmall","label":"XSmall"},
+    {"value":"holder-mt-small","label":"Small"},
+    {"value":"holder-mt-medium","label":"Medium (default)"},
+    {"value":"holder-mt-large","label":"Large"}
+    ],
+    "default": "holder-mt-medium"
+    },
+    {
+    "type": "header",
+    "content": "Heading"
+    },
+    {
+    "type": "checkbox",
+    "id": "enable_text",
+    "label": "Enable",
+    "default": false
+    },
+    {
+    "type": "text",
+    "id": "title",
+    "label": "Title",
+    "default":"Product Carousel + Background"
+    },
+    {
+    "type": "select",
+    "id": "title_size",
+    "label": "Title Font Size",
+    "default": "h2-style",
+    "options": [
+    { "value": "h-lg-style", "label": "Large" },
+    { "value": "h1-style", "label": "Normal" },
+    { "value": "h2-style", "label": "Small" }
+    ]
+    },
+    {
+    "type": "select",
+    "id": "text_alignment",
+    "label": "Text Alignment",
+    "default": "center",
+    "options": [
+    { "value": "left", "label": "Left" },
+    { "value": "center", "label": "Center" },
+    { "value": "right", "label": "Right" }
+    ]
+    },
+    {
+    "type": "text",
+    "id": "subtitle",
+    "label": "Sub Heading"
+    },
+    {
+    "type": "text",
+    "id": "bgtitle",
+    "label": "Background Heading"
+    },
+    {
+    "type":"header",
+    "content":"Next Button"
+    },
+    {
+    "type": "checkbox",
+    "id": "bnr_button",
+    "default": true,
+    "label": "Enable"
+    },
+    {
+    "type": "checkbox",
+    "id": "bnr_button_lg",
+    "default": true,
+    "label": "Large Button"
+    },
+    {
+    "type":"text",
+    "id":"bnr_button_text",
+    "label":"Text",
+    "default":"Next Collection"
+    },
+    {
+    "type": "checkbox",
+    "id": "bnr_button_theme",
+    "default": true,
+    "label": "Use Theme Button Color"
+    },
+    {
+    "type":"color",
+    "id": "button_color",
+    "label": "Color"
+    },
+    {
+    "type":"color",
+    "id": "button_bgcolor",
+    "label": "Bg Color"
+    },
+    {
+    "type":"color",
+    "id": "button_color_hover",
+    "label": "Hover Color"
+    },
+    {
+    "type":"color",
+    "id": "button_bgcolor_hover",
+    "label": "Hover Bg Color"
+    }
+    ],
+    "blocks": [
+    {
+    "type": "collection",
+    "name": "collection",
+    "settings": [
+    {
+    "type":"checkbox",
+    "id":"enable",
+    "label":"Enable",
+    "default":true
+    },
+    {
+    "type": "header",
+    "content": "General"
+    },
+    {
+    "type":      "paragraph",
+    "content":   "Collection"
+    },
+    {
+    "id": "collection",
+    "type": "collection",
+    "label": "Collection"
+    },
+    {
+    "id": "limit",
+    "type": "text",
+    "label": "Products limit",
+    "default":"4"
+    },
+    {
+    "type":"color",
+    "id":"bg_color",
+    "label":"Section Background Color",
+    "default":"#f8f8f8"
+    },
+    {
+    "type":"image_picker",
+    "id":"bg_image",
+    "label":"Background Image",
+    "info":"(Recommended size 1920x725 px)"
+    }
+    ]
+    }
+    ]
+    }
+{% endschema %}

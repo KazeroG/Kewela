@@ -1,0 +1,146 @@
+{%- if section.settings.enable -%}
+    <div class="holder">
+    <div class="container">
+        {%- unless section.settings.title == '' and section.settings.subtitle == '' -%}
+        {% case section.settings.title_size %}
+        {% when 'h-lg-style' %}
+        {%- assign title_size = 'title-lg' -%}
+        {% when 'h1-style' %}
+        {%- assign title_size = 'title-md' -%}
+        {% else %}
+        {%- assign title_size = 'title-sm' -%}
+        {% endcase %}
+        <div class="page-title title-wrap {{ title_size }} text-{{ section.settings.text_alignment }}">
+            {%- if section.settings.title != '' -%}<h2 class="{{ section.settings.title_size }}{% if settings.heading_sub_first %} mb-0{% endif %}">{{ section.settings.title }}</h2>{%- endif -%}
+            {%- if section.settings.subtitle != '' -%}<div class="h-sub maxW-825{% if settings.heading_sub_first %} h-sub--first{% endif %}">{{ section.settings.subtitle }}</div>{%- endif -%}
+        </div>
+        {%- endunless -%}
+        <div class="row justify-content-center">
+            <div class="col-lg-{{ section.settings.col_lg }} col-xl-{{ section.settings.col_xl }}">
+                {%- if section.blocks.size > 0 -%}
+                    <div class="faq-item-wrap{% unless section.settings.enable_border %} faq-item-wrap--noborder{% endunless %}">
+                        {%- for block in section.blocks -%}
+                            <div class="faq-item">
+                                {%- if block.settings.title != '' -%}<h3 class="faq-item-title">{{ block.settings.title }}</h3>{%- endif -%}
+                                {%- if block.settings.answer != '' -%}
+                                    <div class="faq-item-content">
+                                        {{ block.settings.answer }}
+                                    </div>
+                                {%- endif -%}
+                            </div>
+                        {%- endfor -%}
+                    </div>
+                {%- endif -%}
+            </div>
+        </div>
+    </div>
+</div>
+{%- endif -%}
+
+{% schema %}
+{
+"name": "FAQ",
+"settings": [
+{
+"type": "checkbox",
+"id": "enable",
+"label": "Enable",
+"default": true
+},
+{
+"type": "header",
+"content": "Layout"
+},
+{
+"type":"checkbox",
+"id":"enable_border",
+"label":"Use Border Divider",
+"default":true
+},
+{
+"type":"select",
+"id":"col_xl",
+"label":"Width for Desktop",
+"options":[
+{"value":"9","label":"50%"},
+{"value":"12","label":"66.67%"},
+{"value":"18","label":"100%"}
+],
+"default":"9"
+},
+{
+"type":"select",
+"id":"col_lg",
+"label":"Width for Tablet",
+"options":[
+{"value":"9","label":"50%"},
+{"value":"12","label":"66.67%"},
+{"value":"18","label":"100%"}
+],
+"default":"12"
+},
+{
+"type": "header",
+"content": "Headings"
+},
+{
+"type": "text",
+"id": "title",
+"label": "Title",
+"default":"FAQ’S"
+},
+{
+"type": "select",
+"id": "title_size",
+"label": "Title Font Size",
+"default": "h1-style",
+"options": [
+{ "value": "h1-style", "label": "Large" },
+{ "value": "h2-style", "label": "Normal" },
+{ "value": "h3-style", "label": "Small" }
+]
+},
+{
+"type": "richtext",
+"id": "subtitle",
+"label": "Add custom text below",
+"default": "<p>Add your text here</p>"
+},
+{
+"type": "select",
+"id": "text_alignment",
+"label": "Text Alignment",
+"default": "center",
+"options": [
+{ "value": "left", "label": "Left" },
+{ "value": "center", "label": "Center" },
+{ "value": "right", "label": "Right" }
+]
+}
+],
+"blocks": [
+{
+"type": "item",
+"name": "Question. Answer.",
+"settings": [
+{
+"type":"checkbox",
+"id":"enable",
+"label":"Enable",
+"default":true
+},{
+"type":"textarea",
+"id":"title",
+"label":"Answer",
+"default":"Why Choose Shopify?"
+},{
+"type":"richtext",
+"id":"answer",
+"label":"Answer",
+"default":"<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p><p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.</p>"
+}
+]
+}
+]
+}
+{% endschema %}

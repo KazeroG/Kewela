@@ -1,0 +1,429 @@
+{%- if section.settings.enable -%}
+    <div class="holder {{ section.settings.outer_margin }}" id="holder-{{ section.id }}">
+        <div class="{% if section.settings.block_width == "boxed" %}container{% else %}container-fluid px-0{% endif %}">
+            {% include 'section-headings' %}
+            <div class="row {% if section.settings.nopads %}no-gutters{% else %}vert-margin-small{% endif %} justify-content-{{ section.settings.block_alignment }}">
+                {%- for block in section.blocks -%}
+                    {%- if block.settings.enable -%}
+                        <div class="col-sm">
+                            <{% if block.settings.link != blank %}a href="{{ block.settings.link }}"{% else %}div{% endif %} class="shop-feature-bg lazyload row shop-feature-bg--column"  {%- if block.settings.bg_image != blank -%}data-bgset="{% include 'bgset', image: block.settings.bg_image %}" data-sizes="auto"{%- endif -%}>
+                                <div class="shop-feature-icon col-auto">
+                                    {%- if block.settings.icon_type == 'svg' -%}
+                                        {{ block.settings.svg }}
+                                    {%- else -%}
+                                        <i class="{% if block.settings.icon_type == 'theme' %}{{ block.settings.icon }}{% else %}{{ block.settings.icon_name }}{% endif %}"></i>
+                                    {%- endif -%}
+                                </div>
+                                <div class="shop-feature-text col">
+                                    <div class="shop-feature-title heading-font">{{ block.settings.text1 }}</div>
+                                </div>
+                                </{% if block.settings.link != blank %}a{% else %}div{% endif %}>
+                        </div>
+                    {%- endif -%}
+                {%- endfor -%}
+            </div>
+        </div>
+    </div>
+    <style>
+        #holder-{{ section.id }} .shop-feature-bg {
+            background-color: transparent;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center center;
+        }
+
+        #holder-{{ section.id }} .shop-feature-bg--column {
+            padding: 50px 20px;
+        }
+
+        #holder-{{ section.id }} .shop-feature-bg .shop-feature-title {
+            font-size: {{ section.settings.block_title_size }}px;
+            font-weight: {{ section.settings.block_title_fontweight }};
+            line-height: 1.25em;
+            margin-bottom: 0;
+        }
+
+        #holder-{{ section.id }} .shop-feature-bg .shop-feature-icon {
+            font-size: 40px;
+        }
+
+        #holder-{{ section.id }} .shop-feature-bg .shop-feature-icon svg {
+            width: 40px;
+            height: 40px;
+        }
+
+        @media (max-width: 1199px) {
+            .shop-feature-bg .shop-feature-icon {
+                font-size: 40px;
+            }
+
+            .shop-feature-bg .shop-feature-icon svg {
+                width: 40px;
+                height: 40px;
+            }
+        }
+
+        {%- if section.settings.scale != 100 -%}
+        #holder-{{ section.id }} .shop-feature-bg .shop-feature-icon {
+            font-size:{{ section.settings.scale | times: 0.7 }}px;
+        }
+        #holder-{{ section.id }} .shop-feature-bg .shop-feature-icon svg {
+            width:{{ section.settings.scale | times: 0.7 }}px;
+            height:{{ section.settings.scale | times: 0.7 }}px;
+        }
+        @media (max-width: 575px) {
+            #holder-{{ section.id }} .shop-feature-bg .shop-feature-icon {
+                font-size:{{ section.settings.scale | times: 0.4 }}px;
+            }
+
+            #holder-{{ section.id }} .shop-feature-bg .shop-feature-icon svg {
+                width:{{ section.settings.scale | times: 0.5 }}px;
+                height:{{ section.settings.scale | times: 0.5 }}px;
+            }
+        }
+        @media (max-width: 1199px) {
+            #holder-{{ section.id }} .shop-feature-bg .shop-feature-icon {
+                font-size:{{ section.settings.scale | times: 0.5 }}px;
+            }
+
+            #holder-{{ section.id }} .shop-feature-bg .shop-feature-icon svg {
+                width:{{ section.settings.scale | times: 0.4 }}px;
+                height:{{ section.settings.scale | times: 0.4 }}px;
+            }
+        }
+        {%- endif -%}
+
+        {%- unless section.settings.icons_color == '' or section.settings.icons_color contains 'rgba(0,0,0,0)' -%}
+        #holder-{{ section.id }} .shop-feature-bg .shop-feature-icon {
+            color: {{ section.settings.icons_color }}
+        }
+
+        {%- endunless -%}
+        {%- unless section.settings.icons_color_hover == '' or section.settings.icons_color_hover contains 'rgba(0,0,0,0)' -%}
+        #holder-{{ section.id }} .shop-feature-bg:hover .shop-feature-icon {
+            color: {{ section.settings.icons_color_hover }}
+        }
+
+        {%- endunless -%}
+
+        {%- unless section.settings.block_color == '' or section.settings.block_color contains 'rgba(0,0,0,0)' -%}
+        #holder-{{ section.id }} .shop-feature-bg .shop-feature-text {
+            color: {{ section.settings.block_color }}
+        }
+
+        {%- endunless -%}
+        {%- unless section.settings.block_color_hover == '' or section.settings.block_color_hover contains 'rgba(0,0,0,0)' -%}
+        #holder-{{ section.id }} .shop-feature-bg:hover .shop-feature-text {
+            color: {{ section.settings.block_color_hover }}
+        }
+
+        {%- endunless -%}
+
+        {%- for block in section.blocks -%}
+        {%- if block.settings.enable -%}
+        {%- unless block.settings.icon_color == '' or block.settings.icon_color contains 'rgba(0,0,0,0)' -%}
+        #holder-{{ section.id }} .col-sm:nth-child({{ forloop.index }}) .shop-feature-bg .shop-feature-icon {
+            color: {{ block.settings.icon_color }}
+        }
+
+        {%- endunless -%}
+        {%- unless block.settings.icon_color_hover == '' or block.settings.icon_color_hover contains 'rgba(0,0,0,0)' -%}
+        #holder-{{ section.id }} .col-sm:nth-child({{ forloop.index }}) .shop-feature-bg:hover .shop-feature-icon {
+            color: {{ block.settings.icon_color_hover }}
+        }
+
+        {%- endunless -%}
+
+        {%- unless block.settings.block_color == '' or block.settings.block_color contains 'rgba(0,0,0,0)' -%}
+        #holder-{{ section.id }} .col-sm:nth-child({{ forloop.index }}) .shop-feature-bg .shop-feature-text {
+            color: {{ block.settings.block_color }}
+        }
+
+        {%- endunless -%}
+        {%- unless block.settings.block_color_hover == '' or block.settings.block_color_hover contains 'rgba(0,0,0,0)' -%}
+        #holder-{{ section.id }} .col-sm:nth-child({{ forloop.index }}) .shop-feature-bg:hover .shop-feature-text {
+            color: {{ block.settings.block_color_hover }}
+        }
+
+        {%- endunless -%}
+        {%- endif -%}
+        {%- endfor -%}
+
+    </style>
+{%- endif -%}
+
+{% schema %}
+{
+"name": "Shop Info + Image BG",
+"settings": [
+{
+"type": "checkbox",
+"id": "enable",
+"label": "Enable",
+"default": true
+},
+{
+"type": "header",
+"content": "Layout"
+},
+{
+"type":"select",
+"id":"block_width",
+"label":"Width",
+"options":[
+{"value":"boxed","label":"Boxed"},
+{"value":"fullwidth","label":"Fullwidth"}
+],
+"default":"boxed"
+},
+{
+"type": "select",
+"id": "outer_margin",
+"label": "Outer top margin",
+"options":[
+{"value":"mt-0","label":"None"},
+{"value":"holder-mt-xsmall","label":"XSmall"},
+{"value":"holder-mt-small","label":"Small"},
+{"value":"holder-mt-medium","label":"Medium (default)"},
+{"value":"holder-mt-large","label":"Large"}
+],
+"default": "mt-0"
+},
+{
+"type":"checkbox",
+"id":"nopads",
+"label":"Remove padding between items",
+"default":false
+},
+{
+"type": "header",
+"content": "Headings"
+},
+{
+"type": "checkbox",
+"id": "enable_text",
+"label": "Enable",
+"default": false
+},
+{
+"type": "text",
+"id": "title",
+"label": "Title",
+"default":"Title"
+},
+{
+"type": "select",
+"id": "title_size",
+"label": "Title Font Size",
+"default": "h1-style",
+"options": [
+{ "value": "h-lg-style", "label": "Large" },
+{ "value": "h1-style", "label": "Normal" },
+{ "value": "h2-style", "label": "Small" }
+]
+},
+{
+"type": "text",
+"id": "subtitle",
+"label": "Sub Heading",
+"default": "Sub Heading"
+},
+{
+"type": "text",
+"id": "bgtitle",
+"label": "Background Heading"
+},
+{
+"type": "select",
+"id": "text_alignment",
+"label": "Text Alignment",
+"default": "center",
+"options": [
+{ "value": "left", "label": "Left" },
+{ "value": "center", "label": "Center" },
+{ "value": "right", "label": "Right" }
+]
+},
+{
+"type": "header",
+"content": "All Blocks Settings"
+},
+{
+"type": "select",
+"id": "block_alignment",
+"label": "Blocks Alignment",
+"default": "center",
+"options": [
+{ "value": "start", "label": "Left" },
+{ "value": "center", "label": "Center" },
+{ "value": "end", "label": "Right" }
+]
+},
+{
+"type":"range",
+"id":"scale",
+"min":10,
+"max":300,
+"step":10,
+"label":"Scale Icons",
+"unit":"%",
+"default": 100
+},
+{
+"type":"range",
+"id":"block_title_size",
+"min":10,
+"max":40,
+"step":1,
+"label":"Block Text Font Size",
+"unit":"px",
+"default":20
+},
+{
+"type":"select",
+"id": "block_title_fontweight",
+"label": "Block Text Font Weight",
+"options": [
+{ "value": "100", "label": "Thin" },
+{ "value": "300", "label": "Light" },
+{ "value": "400", "label": "Regular" },
+{ "value": "500", "label": "Medium" },
+{ "value": "600", "label": "Semibold" },
+{ "value": "700", "label": "Bold" },
+{ "value": "900", "label": "Black" }
+],
+"default":"600"
+},
+{
+"type":"color",
+"id":"block_color",
+"label":"All Blocks Text Color"
+},
+{
+"type":"color",
+"id":"icons_color",
+"label":"All Icons Color"
+},
+{
+"type":"color",
+"id":"block_color_hover",
+"label":"All Blocks Hover Text Color"
+},
+{
+"type":"color",
+"id":"icons_color_hover",
+"label":"All Icons Hover Color"
+}
+],
+"blocks":[
+{
+"type":"text",
+"name":"Icon + Text",
+"limit": 4,
+"settings":[
+{
+"type":"checkbox",
+"id":"enable",
+"label":"Enable",
+"default":true
+},
+{
+"type":"textarea",
+"id":"text1",
+"label":"Text",
+"default": "Lorem Ipsum<br>Dolor Sit Amet"
+},
+{
+"type": "url",
+"id": "link",
+"label": "Link"
+},
+{
+"type": "radio",
+"id": "icon_type",
+"label": "Icon Source",
+"options":[
+{"value":"theme","label":"Section Icons Set (recommended)"},
+{"value":"name","label":"Custom Icon Name (Theme Icons Library)"},
+{"value":"svg","label":"Custom SVG code"}
+]
+},
+{
+"type": "select",
+"id": "icon",
+"label": "Section Icons Set",
+"default": "icon-box-1",
+"options":[
+{"value":"icon-box-1","label":"Box"},
+{"value":"icon-call-center","label":"Call Center"},
+{"value":"icon-speech-bubble","label":"Chat"},
+{"value":"icon-watch","label":"Clock"},
+{"value":"icon-credit-card-1","label":"Credit Card"},
+{"value":"icon-delivery-truck","label":"Delivery Truck"},
+{"value":"icon-shopping-1","label":"Hand"},
+{"value":"icon-gift","label":"Gift"},
+{"value":"icon-gift-card","label":"Gift Card"},
+{"value":"icon-guarantee","label":"Guarantee"},
+{"value":"icon-location","label":"Location"},
+{"value":"icon-return","label":"Return"},
+{"value":"icon-ribbon","label":"Ribbon"},
+{"value":"icon-tag","label":"Tag"},
+{"value":"icon-wallet","label":"Wallet"},          {"value":"icon-award","label":"Award"},          {"value":"icon-diplom","label":"Document"}
+]
+},
+{
+"type":"text",
+"id":"icon_name",
+"label":"Custom Icon Name",
+"default": "icon-gift",
+"info": "Select icon name here [Theme Icons Library](http://big-skins.com/frontend/foxic-html-demo/icon-foxic/demo.html)"
+},
+{
+"type":"textarea",
+"id":"svg",
+"label":"Custom SVG code"
+},
+{
+"type": "image_picker",
+"id": "bg_image",
+"label":"Block Background Image"
+},
+{
+"type":"color",
+"id":"block_color",
+"label":"Block Text Color"
+},
+{
+"type":"color",
+"id":"icon_color",
+"label":"Icon Color"
+},
+{
+"type":"color",
+"id":"block_color_hover",
+"label":"Block Hover Text Color"
+},
+{
+"type":"color",
+"id":"icon_color_hover",
+"label":"Icon Hover Color"
+}
+]
+}],
+"presets": [{
+"name": "Shop Info + Image BG",
+"category": "Info Blocks",
+"blocks": [
+{
+"type": "text"
+},
+{
+"type": "text"
+},
+{
+"type": "text"
+}
+]
+}]
+}
+{% endschema %}

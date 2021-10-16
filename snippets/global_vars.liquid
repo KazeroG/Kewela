@@ -1,0 +1,5 @@
+{%- assign demo = false -%}
+{%- assign home = false -%}
+{%- if template == 'index' or template contains 'page.home-page-' -%}
+    {%- assign home = true -%}
+{%- endif -%}

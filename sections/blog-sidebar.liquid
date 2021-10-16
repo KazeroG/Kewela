@@ -1,0 +1,342 @@
+{% assign show_sidebar = section.settings.blog_show_sidebar %}
+{%- if show_sidebar -%}
+    <div class="aside-content">
+        {%- if section.blocks.size> 0 -%}
+        {%- for block in section.blocks -%}
+            {%- if block.settings.enable -%}
+                <div class="aside-block">
+                    <h2>{{ block.settings.title }}</h2>
+                    {%- case block.type -%}
+                    {%- when 'recent' -%}
+                    {%- assign recent_blog = blogs[block.settings.blog] -%}
+                    {%- for recent_article in recent_blog.articles limit: block.settings.blog_limit -%}
+                        {%- assign recent_article = recent_article[handle] -%}
+                        <div class="post-prw-simple-sm">
+                            {%- if recent_article.image -%}
+                                <a href="{{ recent_article.url }}" class="post-prw-img image-hover-scale image-container" style="padding-bottom: 74%">
+                                    <img class="lazyload fade-up"
+                                         data-src="{{ recent_article.image | img_url: '540x400', crop: 'center' }}"
+                                         data-aspectratio="1.35"
+                                         data-sizes="auto"
+                                         alt="{{ recent_article.title }}">
+                                </a>
+                            {%- endif -%}
+                            {%- if block.settings.blog_show_date or block.settings.blog_show_author%}
+                                <div class="post-prw-links">
+                                    {%- if block.settings.blog_show_date -%}
+                                        <div class="post-prw-date"><i class="icon-calendar1"></i>{{ recent_article.published_at | time_tag: format: 'date' }}</div>
+                                    {%- endif -%}
+                                    {%- if block.settings.blog_show_author -%}
+                                        <div class="post-prw-author">{{ 'blogs.article.by_author' | t: author: recent_article.author }}</div>
+                                    {%- endif -%}
+                                </div>
+                            {%- endif -%}
+                            <h4 class="post-prw-title"><a href="{{ recent_article.url }}">{{ recent_article.title }}</a></h4>
+                            {%- if block.settings.blog_show_comments and recent_article.comments_count > 0 -%}
+                                <a href="{{ recent_article.url }}" class="post-prw-comments"><i class="icon-chat"></i>{{ 'blogs.comments.comments_with_count' | t: count: recent_article.comments_count }}</a>
+                            {%- endif -%}
+                        </div>
+                    {%- endfor -%}
+                    {%- when 'popular' -%}
+                    {%- assign popular_posts = block.settings.text | replace:' ','' | split:',' -%}
+                    {%- for handle in popular_posts -%}
+                        {%- assign article_popular = articles[handle] -%}
+                        {%- if article_popular.id != article.id -%}
+                        <div class="post-prw-simple-sm">
+                            {%- if article_popular.image -%}
+                                <a href="{{ article_popular.url }}" class="post-prw-img image-hover-scale image-container" style="padding-bottom: 74%">
+                                    <img class="lazyload fade-up"
+                                         data-src="{{ article_popular.image | img_url: '540x400', crop: 'center' }}"
+                                         data-aspectratio="1.35"
+                                         data-sizes="auto"
+                                         alt="{{ article_popular.title }}">
+                                </a>
+                            {%- endif -%}
+                            {%- if block.settings.blog_show_date or block.settings.blog_show_author%}
+                                <div class="post-prw-links">
+                                    {%- if block.settings.blog_show_date -%}
+                                    <div class="post-prw-date"><i class="icon-calendar1"></i>{{ article_popular.published_at | time_tag: format: 'date' }}</div>
+                                    {%- endif -%}
+                                    {%- if block.settings.blog_show_author -%}
+                                    <div class="post-prw-author">{{ 'blogs.article.by_author' | t: author: article_popular.author }}</div>
+                                    {%- endif -%}
+                                </div>
+                            {%- endif -%}
+                            <h4 class="post-prw-title"><a href="{{ article_popular.url }}">{{ article_popular.title }}</a></h4>
+                            {%- if block.settings.blog_show_comments and article_popular.comments_count > 0 -%}
+                            <a href="{{ article_popular.url }}" class="post-prw-comments"><i class="icon-chat"></i>{{ 'blogs.comments.comments_with_count' | t: count: article_popular.comments_count }}</a>
+                            {%- endif -%}
+                        </div>
+                        {%- else -%}
+                            {%- if popular_posts.size == 1 -%}
+                                {%- for article in blog.articles limit: 1 -%}
+                                {%- assign article_popular = article -%}
+                                <div class="post-prw-simple-sm">
+                                    {%- if article_popular.image -%}
+                                        <a href="{{ article_popular.url }}" class="post-prw-img image-hover-scale image-container" style="padding-bottom: 74%">
+                                            <img class="lazyload fade-up"
+                                                 data-src="{{ article_popular.image | img_url: '540x400', crop: 'center' }}"
+                                                 data-aspectratio="1.35"
+                                                 data-sizes="auto"
+                                                 alt="{{ article_popular.title }}">
+                                        </a>
+                                    {%- endif -%}
+                                    {%- if block.settings.blog_show_date or block.settings.blog_show_author%}
+                                        <div class="post-prw-links">
+                                            {%- if block.settings.blog_show_date -%}
+                                                <div class="post-prw-date"><i class="icon-calendar1"></i>{{ article_popular.published_at | time_tag: format: 'date' }}</div>
+                                            {%- endif -%}
+                                            {%- if block.settings.blog_show_author -%}
+                                                <div class="post-prw-author">{{ 'blogs.article.by_author' | t: author: article_popular.author }}</div>
+                                            {%- endif -%}
+                                        </div>
+                                    {%- endif -%}
+                                    <h4 class="post-prw-title"><a href="{{ article_popular.url }}">{{ article_popular.title }}</a></h4>
+                                    {%- if block.settings.blog_show_comments and article_popular.comments_count > 0 -%}
+                                        <a href="{{ article_popular.url }}" class="post-prw-comments"><i class="icon-chat"></i>{{ 'blogs.comments.comments_with_count' | t: count: article_popular.comments_count }}</a>
+                                    {%- endif -%}
+                                </div>
+                                {%- endfor -%}
+                            {%- endif -%}
+                        {%- endif -%}
+                    {%- endfor -%}
+                    {%- when 'tags' -%}
+                    <ul class="tags-list">
+                        {%- for tag in blog.all_tags -%}
+                            {%- if current_tags contains tag -%}
+                                <li class="active">{{ tag  | link_to_remove_tag: tag }}</li>
+                            {%- else -%}
+                                <li>{{ tag  | link_to_add_tag: tag }}</li>
+                            {%- endif -%}
+                        {%- endfor -%}
+                    </ul>
+                    {%- when 'text' -%}
+                    {{ block.settings.text }}
+                    {%- when 'list' -%}
+                    <ul class="list list--nomarker">
+                        {{ block.settings.text }}
+                    </ul>
+                    {%- endcase -%}
+                </div>
+            {%- endif -%}
+        {%- endfor -%}
+    {%- else -%}
+        <div class="alert alert-warning">
+            To add content to the<br><b>Blog's Sidebar</b>:<br>
+            1. Open 'Blog sidebar' section in the admin panel<br>
+            2. Add content<br>
+            3. Save
+        </div>
+    {%- endif -%}
+    </div>
+{%- endif -%}
+{% assign position = section.settings.position_sidebar %}
+<style>
+    #shopify-section-{{ section.id }} {
+        order: {{ position }};
+    }
+    {%- unless show_sidebar -%}
+        #shopify-section-{{ section.id }} {
+            display: none;
+        }
+    {%- endunless -%}
+    @media (min-width: 992px){
+        #shopify-section-{{ section.id }} {
+            {%-  if position == '2' -%}
+                padding-left: 45px;
+            {%- else -%}
+                padding-right: 45px;
+            {%- endif -%}
+        }
+    }
+</style>
+
+{% schema %}
+{
+"name":"Blog sidebar",
+"class": "col-md-4 aside aside--sidebar aside--sticky js-sticky-collision",
+"tag": "div",
+"settings": [
+{
+"type": "checkbox",
+"id": "blog_show_sidebar",
+"label": "Show Sidebar",
+"default": true
+},
+{
+"type": "radio",
+"id": "position_sidebar",
+"label": "Sidebar Position",
+"default": "2",
+"options": [
+{
+"value": "0",
+"label": "Left"
+},
+{
+"value": "2",
+"label": "Right"
+}
+]
+}
+],
+"blocks":[
+{
+"type":"recent",
+"name":"Recent Posts",
+"settings":[
+{
+"type":"checkbox",
+"id":"enable",
+"label":"Enable",
+"default":true
+},
+{
+"type":"text",
+"id":"title",
+"label":"Heading",
+"default":"Recent Post"
+},
+{
+"type": "blog",
+"id": "blog",
+"label": "Blog category"
+},
+{
+"type": "range",
+"id": "blog_limit",
+"label": "Limit posts",
+"min": 1,
+"max": 5,
+"step": 1,
+"default": 1
+},
+{
+"type": "checkbox",
+"id": "blog_show_author",
+"label": "Show author",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "blog_show_date",
+"label": "Show date",
+"default": false
+},
+{
+"type": "checkbox",
+"id": "blog_show_comments",
+"label": "Show comments count",
+"default": true
+}
+]
+},
+{
+"type":"popular",
+"name":"Popular Posts",
+"settings":[
+{
+"type":"checkbox",
+"id":"enable",
+"label":"Enable",
+"default":true
+},
+{
+"type":"text",
+"id":"title",
+"label":"Heading",
+"default":"Popular Posts"
+},
+{
+"type":"textarea",
+"id":"text",
+"label": "Popular Posts Handles",
+"info": "Write separated by coma posts handles. For example: news\/test-post-1,news\/test-post-2"
+},
+{
+"type": "checkbox",
+"id": "blog_show_author",
+"label": "Show author",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "blog_show_date",
+"label": "Show date",
+"default": false
+},
+{
+"type": "checkbox",
+"id": "blog_show_comments",
+"label": "Show comments count",
+"default": true
+}
+]
+},
+{
+"type":"tags",
+"name":"Tags",
+"settings":[
+{
+"type":"checkbox",
+"id":"enable",
+"label":"Enable",
+"default":true
+},
+{
+"type":"text",
+"id":"title",
+"label":"Heading",
+"default":"Tags"
+}
+]
+},
+{
+"type":"list",
+"name":"List",
+"settings":[
+{
+"type":"checkbox",
+"id":"enable",
+"label":"Enable",
+"default":true
+},
+{
+"type":"text",
+"id":"title",
+"label":"Title",
+"default":"Heading"
+},
+{
+"type":"textarea",
+"id":"text",
+"label":"Text"
+}
+]
+},
+{
+"type":"Text",
+"name":"Text",
+"settings":[
+{
+"type":"checkbox",
+"id":"enable",
+"label":"Enable",
+"default":true
+},
+{
+"type":"text",
+"id":"title",
+"label":"Title",
+"default":"Heading"
+},
+{
+"type":"textarea",
+"id":"text",
+"label":"Text"
+}
+]
+}
+]
+}
+{% endschema %}

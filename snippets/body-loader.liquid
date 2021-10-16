@@ -1,0 +1,37 @@
+{% if settings.body_loader or settings.body_loader_product %}
+<div class="body-preloader">
+    <div class="foxic-body-loader">
+        {%- assign image_width = '60x' -%}
+        {% if request.page_type == 'product' and settings.body_loader_product %}
+            {%- assign loader_image = product.selected_or_first_available_variant.featured_image | default: product.featured_image -%}
+            <img srcset="{{ loader_image | img_url: image_width }} 1x,{{ loader_image | img_url: image_width, scale:2 }} 2x" class="body-loader-image" alt="Loader">
+        {% elsif settings.body_loader %}
+            {%- if settings.body_loader_source == 'svg' -%}
+                {{ settings.body_loader_svg }}
+            {%- else if settings.body_loader_source == 'image' -%}
+                {%- if settings.body_loader_image -%}
+                     <img src="{{ settings.body_loader_image | img_url: image_width }}" class="body-loader-image" alt="Loader">
+                {%- endif -%}
+            {%- endif -%}
+            {%- if settings.body_loader_circle_yes -%}
+            <div class="preloader-circle-1">
+                <div class="preloader-circle-2">
+                     <div class="preloader-circle-3"></div>
+                </div>
+            </div>
+            {%- endif -%}
+        {% endif %}
+    </div>
+    {%- if settings.body_loader_color != blank and settings.body_loader_color != 'rgba(0,0,0,0)' -%}
+        <style>
+            .foxic-body-loader .preloader-circle-3:after, .foxic-body-loader .preloader-circle-3:before {
+                background-color: {{ settings.body_loader_color }};
+            }
+            .foxic-body-loader .preloader-circle-3 {
+                border-top-color: {{ settings.body_loader_color }};
+                border-right-color: {{ settings.body_loader_color }};
+            }
+        </style>
+    {%- endif -%}
+</div>
+{% endif %}

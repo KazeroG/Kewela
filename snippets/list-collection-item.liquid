@@ -1,0 +1,50 @@
+{% if collection_custom_image %}
+    {%- assign collection_image = collection_custom_image -%}
+    {% elsif collection.image %}
+    {%- assign collection_image = collection.image -%}
+    {% elsif collection.products.first and collection.products.first.images != empty %}
+    {%- assign collection_image = collection.products.first.featured_image -%}
+{% else %}
+    {% assign collection_image = blank %}
+{% endif %}
+{% if section.settings.collection_image_aspect != blank %}
+    {%- assign aspect_ratio = section.settings.collection_image_aspect | times: 100 -%}
+    {%- assign h = aspect_ratio | minus: 1 -%}
+{% else %}
+    {%- assign aspect_ratio = false -%}
+{% endif %}
+<div class="collection-grid-2-item w-100 text-center">
+    <a href="{{ collection.url }}" class="bnr-wrap collection-grid-2-item-inside" {% if bg != blank %}style="background-color: {{ bg }}"{% else %}style="background-color: transparent"{% endif %}>
+        {% unless aspect_ratio == false %}
+            <div class="collection-grid-2-img image-container image-hover-scale" style="padding-bottom: {{ aspect_ratio }}%">
+                {%- if collection_image != blank -%}
+                    <img class="lazyload fade-up"
+                         data-src="{{ collection_image | img_url: collection_image_size }}"
+                         alt="{{ collection.title }}">
+                {%- else -%}
+                    {%- render 'image-placeholder-aspect-ratio', width: 100, height: h, text: 'image' -%}
+                {%- endif -%}
+            </div>
+        {% else %}
+        {%- if collection_image != blank -%}
+            <div class="collection-grid-2-img image-container image-hover-scale" style="padding-bottom: {{ 1 | divided_by: collection_image.aspect_ratio | times: 100 }}%">
+                <img class="lazyload fade-up"
+                     data-src="{{ collection_image | img_url: collection_image_size }}"
+                     alt="{{ collection.title }}">
+            </div>
+        {%- else -%}
+            {%- render 'image-placeholder-aspect-ratio', width: 100, height: 100, text: 'image' -%}
+        {%- endif -%}
+        {% endunless %}
+        {%- if section.settings.title_show -%}
+            <h3 class="collection-grid-2-title">
+                {%- if name != blank and custom_title -%}{{ name }}{%- else -%}
+                    {%- if collection.title != blank -%}{{ collection.title }}{%- else -%}Collection{%- endif -%}
+                {%- endif -%}
+            </h3>
+        {%- endif -%}
+        {% assign t_item =  'theme.general.item' | t %}
+        {% assign t_items = 'theme.general.items_c' | t %}
+        {%- if section.settings.qty_show -%}<h5 class="collection-item-qty">{{ collection.all_products_count }} {{ collection.all_products_count | pluralize: t_item, t_items }}</h5>{%- endif -%}
+    </a>
+</div>

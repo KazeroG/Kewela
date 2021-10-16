@@ -1,0 +1,274 @@
+{%- if section.settings.enable -%}
+    <div class="holder {{ section.settings.outer_margin }}">
+        <div class="container">
+            <div class="row vert-margin">
+                <div class="{%- if section.settings.map_yes -%}col-sm-9{%- else -%}col-18{%- endif -%}">
+                    <div class="row vert-margin-middle">
+                        {%- for block in section.blocks -%}
+                            {%- if block.settings.enable -%}
+                                <div class="{%- if section.settings.map_yes -%}col-lg-6{%- else -%}col-lg-3 col-md-6{%- endif -%}">
+                                    <h4 class="h-icon">
+                                    {%- if block.settings.icon_type == 'svg' -%}
+                                        {{ block.settings.svg }}
+                                    {%- else -%}
+                                        <i class="{% if block.settings.icon_type == 'theme' %}{{ block.settings.icon }}{% else %}{{ block.settings.icon_name }}{% endif %}"></i>
+                                    {%- endif -%}
+                                    <span>{{ block.settings.heading }}</span></h4>
+                                    {{ block.settings.text }}
+                                </div>
+                            {%- endif -%}
+                        {%- endfor -%}
+                    </div>
+                    {%- if section.settings.text != '' -%}<div class="mt-3"></div><div>{{ section.settings.text }}</div>{%- endif -%}
+                    <div class="mt-3"></div>
+                    {%- if section.settings.title != '' -%}<h2 class="{{ section.settings.title_size }}{% if settings.heading_sub_first %} mb-0{% endif %}">{{ section.settings.title }}</h2>{%- endif -%}
+                        {%- assign formId = 'ContactForm03' -%}
+                        {%- form 'contact', id: formId, data-toggle: "validator" -%}
+                        {%- include 'form-status', form_id: formId -%}
+                        {% if form.posted_successfully? %}
+                            {%- include 'form-contact-notification' -%}
+                        {% endif %}
+                        <div class="form-group">
+                            <div class="row row--md-pad vert-margin-middle">
+                                <div class="col-lg">
+                                    <input class="form-control form-control--sm{% if form.errors contains "author" %} is-invalid"{% endif %}" type="text" name="contact[name]" placeholder="{{ "contact.form.name" | t }}" id="{{ formId }}Name" value="{% if form[name] %}{{ form[name] }}{% elsif customer %}{{ customer.name }}{% endif %}"/>
+                                    {%- if form.errors contains 'author' -%}
+                                        <div class="invalid-feedback">{{ form.errors.translated_fields['author'] | capitalize }} {{ form.errors.messages['author'] }}.</div>
+                                    {%- endif -%}
+                                </div>
+                                <div class="col-lg">
+                                    <input class="form-control form-control--sm{% if form.errors contains "email" %} is-invalid"{% endif %}" type="email" name="contact[email]" placeholder="{{ "contact.form.email" | t }}" id="{{ formId }}Email" value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}" required/>
+                                    {%- if form.errors contains 'email' -%}
+                                        <div class="invalid-feedback">{{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}.</div>
+                                    {%- endif -%}
+                                </div>
+                                <div class="col-lg">
+                                    <input class="form-control form-control--sm{% if form.errors contains "phone" %} is-invalid"{% endif %}" type="tel" id="{{ formId }}Phone" name="contact[phone]" placeholder="{{ 'contact.form.phone' | t }}" pattern="[0-9\-]*" value="{% if form[phone] %}{{ form[phone] }}{% elsif customer %}{{ customer.phone }}{% endif %}">
+                                    {%- if form.errors contains 'phone' -%}
+                                        <div class="invalid-feedback">{{ form.errors.translated_fields['phone'] | capitalize }} {{ form.errors.messages['phone'] }}.</div>
+                                    {%- endif -%}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <textarea class="form-control form-control--sm  textarea--height-170 {% if form.errors contains "body" %}is-invalid{% endif %}" name="contact[body]" id="{{ formId }}Body" placeholder="{{ "contact.form.message" | t }}">{% if form.body %}{{ form.body }}{% endif %}</textarea>
+                            {%- if form.errors contains 'body' -%}
+                                <div class="invalid-feedback">{{ form.errors.translated_fields['body'] | capitalize }} {{ form.errors.messages['body'] }}.</div>
+                            {%- endif -%}
+                        </div>
+                        <button class="btn btn-submit" type="submit" {% unless section.settings.bnr_button_theme %}style="background-color:{{ section.settings.button_bgcolor }}; color:{{ section.settings.button_color }};" data-color="{{ section.settings.button_color }}" data-hover-color="{{ section.settings.button_color_hover }}" data-bgcolor="{{ section.settings.button_bgcolor }}" data-hover-bgcolor="{{ section.settings.button_bgcolor_hover }}"{% endunless %}>{{ 'contact.form.submit' | t }}</button>
+                        {%- endform -%}
+                </div>
+                {%- if section.settings.map_yes -%}
+                    <div class="col-sm-9">
+                        <div class="contact-map bg-cover lazyload" {%- if section.settings.map_type == 'image' -%}{% if section.settings.map_image != blank %}data-bgset="{% include 'bgset', image: section.settings.map_image %}" data-sizes="auto" style="background-position: {{ section.settings.map_image_position }}"{% endif %}{%- endif -%}>
+                            {%- if section.settings.map_type == 'google' -%}{{ section.settings.google_map }}{%- endif -%}
+                        </div>
+                    </div>
+                {%- endif -%}
+            </div>
+        </div>
+    </div>
+{%- endif -%}
+
+{% schema %}
+{
+"name": "Contact Form - Map",
+"settings": [
+{
+"type": "checkbox",
+"id": "enable",
+"label": "Enable",
+"default": true
+},
+{
+"type": "header",
+"content": "Layout"
+},
+{
+"type": "select",
+"id": "outer_margin",
+"label": "Outer top margin",
+"options":[
+{"value":"mt-0","label":"None"},
+{"value":"holder-mt-xsmall","label":"XSmall"},
+{"value":"holder-mt-small","label":"Small"},
+{"value":"holder-mt-medium","label":"Medium (default)"},
+{"value":"holder-mt-large","label":"Large"}
+],
+"default": "holder-mt-medium"
+},
+{
+"type": "header",
+"content": "Headings"
+},
+{
+"type": "text",
+"id": "title",
+"label": "Title",
+"default":"WRITE TO US"
+},
+{
+"type": "select",
+"id": "title_size",
+"label": "Title Font Size",
+"default": "h2-style",
+"options": [
+{ "value": "h-lg-style", "label": "Large" },
+{ "value": "h1-style", "label": "Normal" },
+{ "value": "h2-style", "label": "Small" }
+]
+},
+{
+"type": "textarea",
+"id": "text",
+"label": "Custom text",
+"default": "Add your text here"
+},
+{
+"type": "header",
+"content": "Map"
+},
+{
+"type": "checkbox",
+"id": "map_yes",
+"label": "Enable",
+"default": true
+},
+{
+"type": "radio",
+"id": "map_type",
+"label": "Map Source",
+"options":[
+{"value":"google","label":"Google Maps"},
+{"value":"image","label":"Custom Image"}
+]
+},
+{
+"type": "textarea",
+"id": "google_map",
+"label": "Google maps Embed code",
+"default": "<iframe src='https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d10887.233029391118!2d-77.94517490061943!3d34.23848636904559!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sua!4v1573217807041!5m2!1sen!2sua'></iframe>",
+"info": "Go to [maps.google.com](https://maps.google.com) > Find location > Menu > Share or Embed > Copy Embed code"
+},
+{
+"type":"image_picker",
+"id":"map_image",
+"label":"Map Image",
+"info":"(Recommended size 1000x1600px)"
+},
+{
+"type": "select",
+"id": "map_image_position",
+"label": "Image position",
+"default": "center center",
+"options": [
+{"value": "top left", "label": "Top left"},
+{"value": "top center", "label": "Top center"},
+{"value": "top right", "label": "Top right"},
+{"value": "center left", "label": "Center left"},
+{"value": "center center", "label": "Center center"},
+{"value": "center right", "label": "Center right"},
+{"value": "bottom left", "label": "Bottom left"},
+{"value": "bottom center", "label": "Bottom center"},
+{"value": "bottom right", "label": "Bottom right"}
+]
+}
+],
+"blocks":[
+{
+"type":"text",
+"name":"Icon + Text",
+"limit": 3,
+"settings":[
+{
+"type":"checkbox",
+"id":"enable",
+"label":"Enable",
+"default":true
+},
+{
+"type":"textarea",
+"id":"heading",
+"label":"Heading",
+"default": "Heading"
+},
+{
+"type":"textarea",
+"id":"text",
+"label":"Text",
+"default": "Add your text here"
+},
+{
+"type": "radio",
+"id": "icon_type",
+"label": "Icon Source",
+"options":[
+{"value":"theme","label":"Section Icons Set (recommended)"},
+{"value":"name","label":"Custom Icon Name (Theme Icons Library)"},
+{"value":"svg","label":"Custom SVG code"}
+]
+},
+{
+"type": "select",
+"id": "icon",
+"label": "Section Icons Set",
+"default": "icon-info",
+"options":[
+{"value":"icon-info","label":"Information"},
+{"value":"icon-phone","label":"Phone"},
+{"value":"icon-envelope","label":"Envelope 1"},
+{"value":"icon-envelope-2","label":"Envelope 2"},
+{"value":"icon-box-1","label":"Box"},
+{"value":"icon-call-center","label":"Call Center"},
+{"value":"icon-speech-bubble","label":"Chat"},
+{"value":"icon-watch","label":"Clock"},
+{"value":"icon-credit-card-1","label":"Credit Card"},
+{"value":"icon-delivery-truck","label":"Delivery Truck"},
+{"value":"icon-shopping-1","label":"Hand"},
+{"value":"icon-gift","label":"Gift"},
+{"value":"icon-gift-card","label":"Gift Card"},
+{"value":"icon-guarantee","label":"Guarantee"},
+{"value":"icon-location","label":"Location"},
+{"value":"icon-return","label":"Return"},
+{"value":"icon-ribbon","label":"Ribbon"},
+{"value":"icon-tag","label":"Tag"},
+{"value":"icon-wallet","label":"Wallet"},          {"value":"icon-award","label":"Award"},          {"value":"icon-diplom","label":"Document"}
+]
+},
+{
+"type":"text",
+"id":"icon_name",
+"label":"Custom Icon Name",
+"default": "icon-gift",
+"info": "Select icon name here [Theme Icons Library](http://big-skins.com/frontend/foxic-html-demo/icon-foxic/demo.html)"
+},
+{
+"type":"textarea",
+"id":"svg",
+"label":"Custom SVG code"
+},
+{
+"type":"color",
+"id":"icon_color",
+"label":"Icon Color"
+}
+]
+}],
+"presets": [{
+"name": "Contact Form - Map - Style 3",
+"category": "Contact Us",
+"blocks": [
+{
+"type": "text"
+},
+{
+"type": "text"
+},
+{
+"type": "text"
+}
+]
+}]
+}
+{% endschema %}

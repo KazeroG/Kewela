@@ -1,0 +1,301 @@
+{%- comment -%}
+Comments will not appear right after they are submitted, either to be checked for spam
+or to await moderation. When a comment is submitted, the browser is redirected to a page
+that includes the new comment id in its URL.
+Example: http://shopname.myshopify.com/blogs/news/2022072-my-post?comment=3721372
+{%- endcomment -%}
+
+{%- if comment.status == 'pending' -%}
+    {%- assign number_of_comments = article.comments_count | plus: 1 -%}
+{%- else -%}
+    {%- assign number_of_comments = article.comments_count -%}
+{%- endif -%}
+
+<div class="post-full">
+    <h2 class="post-title h-lg-style">{{ article.title }}</h2>
+    <div class="post-links">
+        {%- if section.settings.blog_show_date -%}
+            <div class="post-date"><i class="icon-calendar1"></i>{{ article.published_at | time_tag: format: 'date' }}</div>
+        {%- endif -%}
+        {%- if section.settings.blog_show_author -%}
+            <span class="post-link">{{ 'blogs.article.by_author' | t: author: article.author }}</span>
+        {%- endif -%}
+        {%- if section.settings.blog_show_comments and number_of_comments > 0 -%}
+        <a href="#postComments" class="js-scroll-to"><i class="icon-chat"></i>{{ 'blogs.comments.comments_with_count' | t: count: number_of_comments }}</a>
+        {%- endif -%}
+    </div>
+    {%- if article.image -%}
+    {%- assign aspect_ratio = 1 | divided_by: article.image.aspect_ratio -%}
+    <div class="post-img image-container" style="padding-bottom: {{ aspect_ratio | times: 100 }}%">
+        {%- assign img_url = article.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+           <img class="lazyload fade-up-fast"
+             data-src="{{ img_url }}"
+             data-widths="[180, 360, 540, 720, 905, 1090, 1296, 1512, 1728, 2048]"
+             data-sizes="auto"
+             alt="{{ article.title }}">
+    </div>
+    {%- endif -%}
+    <div class="post-text">
+        {{ article.content }}
+    </div>
+    <div class="post-bot">
+        {%- if article.tags.size > 0 and section.settings.blog_show_tags -%}
+            <ul class="tags-list post-tags-list">
+                {%- for tag in article.tags -%}
+                    <li><a href="{{ blog.url }}/tagged/{{ tag | handle }}">{{ tag }}</a></li>
+                {%- endfor -%}
+            </ul>
+        {%- endif -%}
+        {%- if section.settings.blog_show_sharing -%}
+        <div class="post-share">
+            {{ section.settings.blog_addthis_id }}
+            <div class="addthis_inline_share_toolbox"></div>
+        </div>
+        {%- endif -%}
+    </div>
+    {%- if section.settings.blog_show_prev_next -%}
+        {%- if blog.previous_article != nil or blog.next_article != nil -%}
+        <div class="blogs-next-prev">
+            <div class="row flex-nowrap {% if blog.previous_article == nil %}justify-content-end{% endif %}">
+                {%- if blog.previous_article != nil -%}
+                <div class="col"><a href="{{ blog.previous_article }}" class="btn btn--grey" title="{{ blog.previous_article.title }}"><i class="icon-arrow-left"></i><span>{{ "theme.general.post_prev" | t }}</span></a></div>
+                {%- endif -%}
+                {%- if blog.next_article != nil -%}
+                <div class="col-auto"> <a href="{{ blog.next_article }}" class="btn btn-grey" title="{{ blog.next_article.title }}"><span>{{ "theme.general.post_next" | t }}</span><i class="icon-arrow-right"></i></a></div>
+                {%- endif -%}
+            </div>
+        </div>
+        {%- endif -%}
+    {%- endif -%}
+    {%- if section.settings.blog_show_popular -%}
+    <div class="related-posts mt-4 mt-md-6 mt-lg-8">
+        {% include 'section-headings-arrows' %}
+        {%- if section.settings.blog_popular_posts_handles != blank -%}
+        <div class="post-prws post-prws-carousel js-post-prws-carousel"
+             data-slick='{"slidesToShow": 1, "responsive": [{"breakpoint": 1024,"settings": {"slidesToShow": 1}},{"breakpoint": 768,"settings": {"slidesToShow": 1}},{"breakpoint": 480,"settings": {"slidesToShow": 1}}]}'>
+            {%- assign popular_posts = section.settings.blog_popular_posts_handles | replace:' ','' | split:',' -%}
+            {%- for handle in popular_posts -%}
+                {%- assign article_related = articles[handle] -%}
+                {%- if article_related.id != article.id -%}
+                <div class="post-prw">
+                    <div class="{% if article_related.image %}row{% endif %} vert-margin-middle">
+                        {%- if article_related.image != blank -%}
+                        {%- assign h = article_related.image.height -%}
+                        {%- if h < 712 -%}{%- capture size -%}{{ h }}x{{ h }}{%- endcapture -%}{%- else -%}{%- assign size = '712x712' -%}{%- endif -%}
+                        <div class="post-prw-img col-md-7">
+                            <a href="{{ article_related.url }}" class="post-img image-hover-scale image-container" style="padding-bottom: 100%">
+                                <img class="lazyload"
+                                     data-src="{{ article_related.image | img_url: size, crop: 'center' }}"
+                                     data-aspectratio="1"
+                                     data-sizes="auto"
+                                     alt="{{ article_related.url }}">
+                            </a>
+                        </div>
+                        {%- endif -%}
+                        <div class="post-prw-text  {% if article_related.image %}col-md-11{% else %}py-3{% endif %}">
+                            <h4 class="post-prw-title"><a href="{{ article_related.url }}">{{ article_related.title }}</a></h4>
+                            {%- if section.settings.blog_show_date or  section.settings.blog_popular_show_comments %}
+                                <div class="post-prw-links">
+                                    {%- if section.settings.blog_popular_date -%}
+                                    <div class="post-prw-date"><i class="icon-calendar1"></i>{{ article_related.published_at | time_tag: format: 'date' }}</div>
+                                    {%- endif -%}
+                                    {%- if section.settings.blog_popular_show_comments -%}
+                                    <div class="post-prw-date"><i class="icon-chat"></i>{{ 'blogs.comments.comments_with_count' | t: count: article_related.comments_count }}</div>
+                                    {%- endif -%}
+                                </div>
+                            {%- endif -%}
+                            {%- if article_related.excerpt.size > 0 -%}
+                                {{ article_related.excerpt }}
+                            {%- else -%}
+                                <p class="post-prw-teaser"> {{ article_related.content | strip_html | truncate: 150 }}</p>
+                            {%- endif -%}
+                            <div class="post-prw-btn">
+                                <a href="{{ article_related.url }}" class="btn btn--md">{{ "blogs.article.read_more" | t }}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {%- endif -%}
+            {%- endfor -%}
+        </div>
+            {%- if settings.arrows_style == "arrows-style2" -%}<div class="carousel-arrows carousel-arrows--bottom"></div>{%- endif -%}
+        {%- else -%}
+            <div class="alert alert-warning">
+                To add posts:<br>
+                1. Open 'Post content' section in the admin panel<br>
+                2. Add post's link in the 'Popular Posts Handles' textarea<br>
+                3. Save
+            </div>
+        {%- endif -%}
+    </div>
+    {%- endif -%}
+</div>
+
+{%- if blog.comments_enabled? -%}
+    {%- if number_of_comments > 0 -%}
+        <div class="post-comments mt-4 mt-md-6 mt-lg-8" id="postComments">
+            <h3 class="h1-style">{{ "theme.general.post_comments" | t }}</h3>
+            {%- paginate article.comments by section.settings.blog_comments_per_page -%}
+            <div class="post-comments-grid">
+                {%- if comment.status == 'pending' -%}
+                    {%- render 'comment', comment: comment -%}
+                {%- endif -%}
+
+                {%- for comment in article.comments -%}
+                    {%- render 'comment', comment: comment -%}
+                {%- endfor -%}
+
+                {%- if paginate.pages > 1 -%}
+                    <div class="pagination-wrap d-flex mt-4">
+                        {%- render 'pagination' -%}
+                    </div>
+                {%- endif -%}
+            </div>
+            {%- endpaginate -%}
+        </div>
+    {%- endif -%}
+    <div class="post-comment-form mt-4 mt-md-6 mt-lg-8">
+        <h3 class="h1-style">{{ "blogs.comments.title" | t }}</h3>
+        {%- assign post_message = 'blogs.comments.success' -%}
+        {%- if blog.moderated? and comment.status == 'pending' -%}
+            {%- assign post_message = 'blogs.comments.success_moderated' -%}
+            {%- elsif comment.status == 'unapproved' or comment.status == 'spam' -%}
+            {%- assign post_message = 'blogs.comments.unapproved' -%}
+        {%- endif -%}
+        {%- form "new_comment", article, class: "comment-form" -%}
+        {%- assign formId = 'CommentForm' -%}
+        {%- render 'form-status', form_id: formId, success_message: post_message -%}
+        <div class="row vert-margin-middle">
+            <div class="col-sm">
+                <div class="form-group">
+                    <input class="form-control form-control--sm{% if form.errors contains "author" %} is-invalid"{% endif %}" type="text" name="comment[author]" placeholder="{{ "blogs.comments.name" | t }}" id="{{ formId }}Author" value="{{ form.author }}"/>
+                    {%- if form.errors contains 'author' -%}
+                        <div class="invalid-feedback">{{ form.errors.translated_fields['author'] | capitalize }} {{ form.errors.messages['author'] }}.</div>
+                    {%- endif -%}
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="form-group">
+                    <input class="form-control form-control--sm{% if form.errors contains "email" %} is-invalid"{% endif %}" type="email" name="comment[email]" placeholder="{{ "blogs.comments.email" | t }}" id="{{ formId }}Email" value="{{ form.email }}"/>
+                    {%- if form.errors contains 'email' -%}
+                        <div class="invalid-feedback">{{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}.</div>
+                    {%- endif -%}
+                </div>
+            </div>
+        </div>
+        <div class="mt-2 mt-md-3">
+            <div class="form-group">
+                <textarea class="form-control form-control--sm  textarea--height-200 {% if form.errors contains "body" %}is-invalid{% endif %}" name="comment[body]" id="{{ formId }}Body" placeholder="{{ "blogs.comments.message" | t }}">{{ form.body }}</textarea>
+                {%- if form.errors contains 'body' -%}
+                    <div class="invalid-feedback">{{ form.errors.translated_fields['body'] | capitalize }} {{ form.errors.messages['body'] }}.</div>
+                {%- endif -%}
+            </div>
+            <button class="btn btn--md mt-md-1">{{ "blogs.comments.post" | t }}</button>
+        </div>
+        {%- if blog.moderated? -%}
+            <div class="mt-1">
+                <small>{{ "blogs.comments.moderated" | t }}</small>
+            </div>
+        {%- endif -%}
+        {%- endform -%}
+    </div>
+{%- endif -%}
+
+{% schema %}
+{
+"name": "Post content",
+"class": "aside aside--content col-md-14",
+"tag": "div",
+"settings": [
+{
+"type": "header",
+"content": "Post"
+},
+{
+"type": "checkbox",
+"id": "blog_show_author",
+"label": "Show author",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "blog_show_date",
+"label": "Show date",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "blog_show_comments",
+"label": "Show comments count",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "blog_show_tags",
+"label": "Show Blog Tags",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "blog_show_sharing",
+"label": "Show AddThis Sharing",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "blog_show_prev_next",
+"label": "Show Previous/Next Post buttons",
+"default": true
+},
+{
+"type": "textarea",
+"id": "blog_addthis_id",
+"label": "AddThis code",
+"info": "Get AddThis code on the [site](https://www.addthis.com). *Save after changing."
+},
+{
+"type": "range",
+"id": "blog_comments_per_page",
+"label": "Number of Comments per page",
+"min": 1,
+"max": 50,
+"step": 1,
+"default": 5
+},
+{
+"type": "header",
+"content": "Popular Posts"
+},
+{
+"type": "checkbox",
+"id": "blog_show_popular",
+"label": "Show Popular Posts",
+"default": false
+},
+{
+"type": "text",
+"id": "blog_popular_posts_title",
+"label": "Popular Posts Title",
+"default": "POPULAR POSTS"
+},
+{
+"type": "textarea",
+"id": "blog_popular_posts_handles",
+"label": "Popular Posts Handles",
+"info": "Write separated by coma posts handles. For example: news\/test-post-1,news\/test-post-2"
+},
+{
+"type": "checkbox",
+"id": "blog_popular_date",
+"label": "Show date",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "blog_popular_show_comments",
+"label": "Show comments count",
+"default": true
+}
+]
+}
+{% endschema %}

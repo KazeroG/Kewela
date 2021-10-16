@@ -1,0 +1,28 @@
+{%- if section.settings.enable_text -%}
+  {%- unless section.settings.title == '' and section.settings.subtitle == '' -%}
+    {% case section.settings.title_size %}
+    {% when 'h-lg-style' %}
+    {%- assign title_size = 'title-lg' -%}
+    {% when 'h1-style' %}
+    {%- assign title_size = 'title-md' -%}
+    {% else %}
+    {%- assign title_size = 'title-sm' -%}
+    {% endcase %}
+      <div class="title-wrap {{ title_size }} text-{{ section.settings.text_alignment }} {% if bottom >= 0 %}mb-{{ bottom | divided_by: 10 }}{% endif %} {% if section.settings.bgtitle != '' %}title-with-behind{% endif %} {{ class }}">
+        {%- if section.settings.title != '' -%}
+            {%- if collection.url != blank -%}
+              <h2 class="{{ section.settings.title_size }} {% if settings.heading_sub_first %} mb-0{% endif %}"><a href="{{ collection.url }}" title="{{ 'collections.general.view_all' | t }}">{{ section.settings.title }}</a></h2>
+            {%- else -%}
+            <h2 class="{{ section.settings.title_size }}{% if settings.heading_sub_first %} mb-0{% endif %}">{{ section.settings.title }}</h2>
+            {%- endif -%}
+        {%- endif -%}
+        {%- if section.settings.bgtitle != '' -%}
+          <div class="h-behind">{{ section.settings.bgtitle }}</div>
+        {%- endif -%}
+          {% include 'section-headings-line' %}
+        {%- if section.settings.subtitle != '' -%}
+          <div class="h-sub maxW-825{% if settings.heading_sub_first %} h-sub--first{% endif %}">{{ section.settings.subtitle }}</div>
+        {%- endif -%}
+      </div>
+  {%- endunless -%}
+{%- endif -%}

@@ -1,0 +1,21 @@
+<!doctype html>
+<html class="no-js" lang="{{ shop.locale }}">
+<head>
+     {% include 'head' %}
+     {{ content_for_header }}
+</head>
+{%- assign settings_maxwidth = settings.maxwidth -%}
+<body class="template-{{ request.page_type | handle }} page-{{ template.suffix }} {% if settings.equal_height %}equal-height{% endif %} {% if settings.ajax_cart %}ajax_cart{% endif %} {% if settings.rtl or template contains 'rtl' %}rtl{% endif %} {% if settings.rounded_elements %}has-rounded-elements{% endif %}  {% if template contains 'collection' %}{% if settings_filter_style == 'hidden_horizontal' or settings_filter_style == 'visible_horizontal'%}has-horizontal-filter{% endif %}{% endif %} {% if settings.product_style_swatch == 'square' %}has-squared-color-swatch{% endif %} {% unless settings.button_round %}has-squared-btns{% endunless %} {% unless settings.button_uppercase %}has-btn-not-upper{% endunless %} {% if settings.button_round %}{{ settings.button_round_style }}{% endif %}  {% if settings.image_loader == 'background' %}has-loader-bg{% endif %} {% if settings_maxwidth < 1600 %}has-sm-container{% endif %} {% if settings.minicart_auto_open %}minicart_auto_open{% endif %}  {% if settings.maxwidth < 1400 %}body-not-wide{% endif %}" data-time-locale="{{ 'theme.countdown.days' | t }}/{{ 'theme.countdown.hours' | t }}/{{ 'theme.countdown.minutes' | t }}/{{ 'theme.countdown.seconds' | t }}">
+{% render 'body-loader' %}
+{% section 'header' %}
+<div class="page-content">
+    {% include 'breadcrumbs' %}
+    {{ content_for_layout }}
+</div>
+{% section 'footer' %}
+{% include 'side-left-right' %}
+{% section 'promo-products' %}
+{% include 'before-body-js' %}
+</body>
+
+</html>

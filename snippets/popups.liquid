@@ -1,0 +1,254 @@
+<div class="footer-sticky">
+    <!--added to cart-->
+    <div class="popup-addedtocart js-popupAddToCart closed" data-close="20000">
+        <div class="container">
+            <div class="row">
+                <div class="popup-addedtocart-close js-popupAddToCart-close"><i class="icon-close"></i></div>
+                <div class="popup-addedtocart-cart js-open-drop" data-panel="#dropdnMinicart"><i class="icon-basket"></i></div>
+                {%- if settings.popup_logo != blank -%}
+                <div class="col-auto popup-addedtocart_logo">
+                    <a href="{{ routes.root_url }}" class="logo">
+                        <img class="lazyload"
+                             data-src="{{ settings.popup_logo | img_url: '107x' }}"
+                             data-srcset="{{ settings.popup_logo | img_url: '107x' }} 1x, {{ settings.popup_logo | img_url: '107x', scale: 2 }} 2x"
+                             data-sizes="auto"
+                             alt="{{ logo_alt | escape }}" style="width: 107px">
+                        </span>
+                    </a>
+                </div>
+                {%- endif -%}
+                <div class="col popup-addedtocart_info">
+                    <div class="row">
+                        <a href="#" class="col-auto popup-addedtocart_image js-open-drop" data-panel="#dropdnMinicart"><span class="image-container"><img src="" alt=""></span></a>
+                        <div class="col popup-addedtocart_text">
+                            <a href="#" class="popup-addedtocart_title js-open-drop" data-panel="#dropdnMinicart"></a>
+                            <span class="popup-addedtocart_message">{{ 'theme.add_to_cart.added_to_cart' | t }}</span>
+                            <span class="popup-addedtocart_error_message"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-auto popup-addedtocart_actions {% if settings.agreement_checkout_yes and settings.agreement_checkout_yes_popup %}has-agreement{% endif %}">
+                    <span>{{ 'theme.general.you_can' | t }}</span>
+                    {%- if settings.agreement_checkout_yes and settings.agreement_checkout_yes_popup -%}
+                        <div class="minicart-checkout-agree" data-agree>
+                            {% render 'agreement-checkbox', button: '.minicart-checkout-popup', name: 'agreementCheckboxPopup' %}
+                        </div>
+                    {%- endif -%}
+                    <a href="#" class="btn btn--grey btn--sm js-open-drop" data-panel="#dropdnMinicart"><i class="icon-basket"></i><span>{{ 'theme.general.open_cart' | t }}</span></a><span>{{ 'theme.general.or' | t }}</span>
+                    <a href="{{ routes.cart_url }}" class="btn btn--invert btn--sm minicart-checkout-popup"><i class="icon-checkout"></i><span>{{ 'cart.general.checkout' | t }}</span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {%- if request.page_type == 'product' -%}
+        {%- assign image_preview = '58x58' -%}
+        {%- assign image_scale = 2 -%}
+        {%- assign on_sale = false -%}
+        {% if product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price %}
+            {%- assign on_sale = true -%}
+        {% endif %}
+        {%- assign variant_name = "" -%}
+        {% unless product.has_only_default_variant %}
+        {% if in_the_product %}
+            {%- assign variant_name = product.selected_or_first_available_variant.title -%}
+        {% endif %}
+        {% endunless %}
+        {%- assign id = product.selected_or_first_available_variant.id -%}
+        {%- assign name = product.title -%}
+        {%- if product.has_only_default_variant -%}
+            {%- assign url = product.url | within: collection -%}
+        {%- else -%}
+            {%- assign url = product.selected_or_first_available_variant.url | within: collection -%}
+        {%- endif -%}
+        {%- assign path = product.selected_or_first_available_variant.featured_image.src | default: product.featured_image | img_url: image_preview, scale:image_scale -%}
+        {%- assign aspect_ratio = product.featured_image.aspect_ratio -%}
+        {% capture price %}{{ product.selected_or_first_available_variant.price | money | replace:'"money"','money' | replace:"'money'","money" }}{% endcapture %}
+        {% capture price_old %}{{ product.selected_or_first_available_variant.compare_at_price | money | replace:'"money"','money' | replace:"'money'","money" }}{% endcapture %}
+        {%- assign main_image = product.featured_image.src | img_url: image_preview, scale:image_scale -%}
+        {%- assign path_image_big = product.featured_image.src | img_url: 'master' -%}
+        {%- assign variant_first_name = product.selected_or_first_available_variant.title -%}
+        {%- if settings.show_sticky_addtocart -%}
+            <form method="post" action="{{ routes.cart_add_url }}">
+                <div class="sticky-addcart popup-selectoptions {% if product.has_only_default_variant %}options-off{% endif %} js-stickyAddToCart closed">
+                    <div class="container">
+                        <div class="row">
+                            <div class="popup-selectoptions-close js-stickyAddcart-close"><i class="icon-close"></i></div>
+                            <div class="col-auto sticky-addcart_image sticky-addcart_image--zoom js-stickyAddcart-zoom">
+                                <a href="{{ path_image_big }}" data-caption="{{ name }}">
+                                    {%- assign aspect_ratio_after = 1 | divided_by: aspect_ratio -%}
+                                    <span class="image-container" style="padding-bottom: {{ aspect_ratio_after | times: 100 }}%">
+                                    <img src="{{ path }}" alt=""/>
+                                </span>
+                                </a>
+                            </div>
+                            <div class="{% if product.has_only_default_variant %}col-auto d-none d-sm-block{% else %}col col-sm-5 col-lg-4 col-xl-5{% endif %} sticky-addcart_info">
+                                <h1 class="sticky-addcart_title"><a href="{{ url }}">{{ name }}</a></h1>
+                                <div class="sticky-addcart_price">
+                                    <span class="sticky-addcart_price--actual">{{ price }}</span>
+                                    <span class="sticky-addcart_price--old">{{ price_old }}</span>
+                                </div>
+                            </div>
+                            {%- if product.has_only_default_variant and settings.popup_custom_yes -%}
+                                <div class="col d-sm-none">
+                                    <div class="sticky-addcart_price">
+                                        <span class="sticky-addcart_price--actual">{{ price }}</span>
+                                        <span class="sticky-addcart_price--old">{{ price_old }}</span>
+                                    </div>
+                                </div>
+                                <div class="d-none d-lg-flex flex-grow-1 justify-content-center">
+                                    <div class="prd-block_shopping-info-wrap">
+                                        {%- if settings.popup_sharing_left_side != blank %}<div class="prd-block_shopping-info-compact">{{ settings.popup_sharing_left_side }}</div>{% endif -%}
+                                        {%- if settings.popup_sharing_center_side != blank %}<div class="prd-block_shopping-info-compact">{{ settings.popup_sharing_center_side }}</div>{% endif -%}
+                                        {%- if settings.popup_sharing_right_side != blank %}<div class="prd-block_shopping-info-compact">{{ settings.popup_sharing_right_side }}</div>{% endif -%}
+                                    </div>
+                                </div>
+                                <input type="hidden"  name="id" value="{{ product.selected_or_first_available_variant.id }}" />
+                            {%- else -%}
+                                <div class="col-auto sticky-addcart_options prd-block prd-block_info--style1">
+                                    <div class="select-wrapper">
+                                        <select class="form-control form-control--sm sticky-addcart_options_select" name="id">
+                                            {% for variant in product.variants %}
+                                                {% assign variant_on_sale = false %}
+                                                {% if variant.compare_at_price > variant.price %}
+                                                    {% assign variant_on_sale = true %}
+                                                {% endif %}
+                                                {%- assign variant_id = variant.id -%}
+                                                {%- assign variant_name = variant.title -%}
+                                                {%- assign variant_url = variant.url -%}
+                                                {%- assign path_variant = variant.featured_image.src | img_url: image_preview, scale:image_scale -%}
+                                                {%- assign path_variant_big = variant.featured_image.src | img_url: 'master' -%}
+                                                {%- assign temp_price = variant.compare_at_price | money | replace:'"money"','money' | replace:"'money'","money"-%}
+                                                {%- assign variant_price_old = temp_price | json -%}
+                                                {%- assign temp_price = variant.price | money | replace:'"money"','money' | replace:"'money'","money" -%}
+                                                {%- assign variant_price_actual = temp_price | json -%}
+                                                {%- assign variant_disabled = variant.available -%}
+                                                {%- capture info -%}{% unless variant.available %} - {{ 'products.product.sold_out' | t }} {% endunless %} {% if variant_on_sale %} ({{ 'products.product.sale_price' | t }}){% endif %}{% endcapture %}
+                                                {% capture data_variant %}{"id":"{{ variant_id }}", "name": "{{ name }}", "variant_name": "{{ variant_name }}", "aspect_ratio":"{{ variant.featured_image.aspect_ratio | default:aspect_ratio }}", "main_image":"{{ main_image }}", "main_image_big":"{{ path_image_big }}", "path":"{{ path_variant }}", "path_image_big":"{{ path_variant_big }}", "url":"{{ variant_url }}", "price_old":{{ variant_price_old }}, "price_actual":{{ variant_price_actual }}, "disabled":{{ variant_disabled }}, "info":"{{ info }}"}{% endcapture %}
+                                                {% assign variants = variants | append:option_json %}
+                                                {% unless forloop.last %}{% assign variants = variants | append:',' %}{% endunless %}
+                                                {%- if variant.available -%}
+                                                    <option value="{{ variant_id }}" {% if product.selected_or_first_available_variant.id == variant_id %}selected{% endif %} data-variant='{{ data_variant }}'>{{ variant_name }} {% if variant_on_sale %} ({{ 'products.product.sale_price' | t }}){% endif %}</option>
+                                                {%- else -%}
+                                                    <option value="{{ variant_id }}" {% if product.selected_or_first_available_variant.id == variant_id %}selected{% endif %} disabled>{{ variant_name }} - {{ 'products.product.sold_out' | t }}</option>
+                                                {%- endif -%}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            {%- endif -%}
+                            <div class="col-auto sticky-addcart_actions" data-addtocart="Add to cart">
+                                {%- if settings.show_quantity_selector -%}
+                                    {% render 'product-qty' %}
+                                {%- endif -%}
+                                <div class="btn-wrap">
+                                    {% render 'product-add-to-cart' with product as product, in_the_product:true %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        {%- endif -%}
+    {% endif %}
+        <!--  select options -->
+        <form method="post" action="{{ routes.cart_add_url }}">
+            <div class="sticky-addcart popup-selectoptions js-popupSelectOptions closed" data-close="15000">
+                <div class="container">
+                    <div class="row">
+                        <div class="popup-selectoptions-close js-popupSelectOptions-close"><i class="icon-close"></i></div>
+                        <div class="col-auto sticky-addcart_image sticky-addcart_image--zoom js-popupSelectOptions-zoom">
+                           <a href="#" data-caption="">
+                               <span class="image-container"><img src="" alt=""/></span>
+                            </a>
+                        </div>
+                        <div class="col col-sm-5 col-lg-4 col-xl-5 sticky-addcart_info">
+                            <h1 class="sticky-addcart_title"><a href="#"></a></h1>
+                            <div class="sticky-addcart_price">
+                                <span class="sticky-addcart_price--actual"></span>
+                                <span class="sticky-addcart_price--old"></span>
+                            </div>
+                        </div>
+                        <div class="col-auto sticky-addcart_options prd-block prd-block_info--style1">
+                            <div class="select-wrapper">
+                                <select class="form-control form-control--sm sticky-addcart_options_select" name="id">
+                                </select>
+                                <div class="invalid-feedback">Can't be blank</div>
+                            </div>
+                        </div>
+                        <div class="col-auto sticky-addcart_actions">
+                            {%- if settings.show_quantity_selector -%}
+                                {% render 'product-qty' %}
+                            {%- endif -%}
+                            <div class="btn-wrap">
+                                <button class="btn js-add-to-cart" title="{{ 'products.product.add_to_cart' | t }}">{{ 'products.product.add_to_cart' | t }}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    {%- if settings.back_to_top_desktop -%}
+        <!-- back to top -->
+        <a class="back-to-top js-back-to-top compensate-for-scrollbar" href="#" title="{{ 'theme.general.scroll_to_top' | t }}">
+            <i class="icon icon-angle-up"></i>
+        </a>
+    {%- endif -%}
+    <!-- loader -->
+    <div class="loader-horizontal js-loader-horizontal">
+        <div class="progress">
+            <div class="progress-bar progress-bar-striped progress-bar-animated w-100"></div>
+        </div>
+    </div>
+</div>
+
+{%- assign agreement_show = false -%}
+{%- if settings.agreement_checkout_yes and template contains 'cart' -%}
+    {%- assign agreement_show = true -%}
+{%- endif -%}
+{%- if settings.agreement_checkout_yes_ppage and template contains 'product' -%}
+    {%- assign agreement_show = true -%}
+{%- endif -%}
+{%- if settings.agreement_checkout_yes_minicart or settings.agreement_checkout_yes_popup -%}
+    {%- assign agreement_show = true -%}
+{%- endif -%}
+
+{%- if agreement_show -%}
+    <div id="agreementInfo" style="display: none;" class="modal-info-content modal-info-content-lg">
+        {%- assign page = settings.agreement_checkout_page -%}
+        {%- if page != blank -%}
+            {%- if settings.agreement_checkout_page_title_yes -%}
+                <div class="modal-info-heading">
+                    <div><i class="icon-shield"></i></div>
+                    <h2>{{ pages[page].title }}</h2>
+                </div>
+            {%-  endif -%}
+            <br>
+            {{ pages[page].content }}
+        {%- else -%}
+            <div class="alert alert-warning my-2 text-center">
+                Select page content in the Theme Settings / General - Global Settings
+            </div>
+        {%- endif -%}
+    </div>
+{%- endif -%}
+
+<div id="whenArrives" style="display: none;" class="modal-info-content">
+    <div class="modal-info-heading">
+        <div><i class="icon-envelope"></i></div>
+        <h2>{{ 'theme.modals.inform_me' | t }}</h2>
+    </div>
+    {%- assign formId = 'contactForm' -%}
+    {%- form 'contact', id: formId, class:'contact-form', data-toggle: "validator" -%}
+    {% if form.posted_successfully? %}
+        {%- include 'form-contact-notification' -%}
+    {% endif %}
+    <div class="form-group">
+        <input type="text" name="contact[email]" class="form-control form-control--sm" placeholder="{{ "contact.form.email" | t }}" required>
+    </div>
+    <div class="form-group">
+        <textarea class="form-control textarea--height-170" name="contact[body]" hidden placeholder="{{ "contact.form.message" | t }}" required>{{ 'theme.modals.send_inform' | t }} "{{ product.title }}" </textarea>
+    </div>
+    <button class="btn w-100" type="submit">{{ 'theme.modals.send_inform' | t }}</button>
+    {%- endform -%}
+    <div data-fancybox-close class="fancybox-close-small modal-close"><i class="icon-close"></i></div>
+</div>

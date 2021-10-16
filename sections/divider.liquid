@@ -1,0 +1,95 @@
+{%- if section.settings.enable -%}
+    <div class="holder {{ section.settings.enable_device }} {{ section.settings.outer_margin }} {% if section.settings.enable_bg %}holder-with-bg {{ section.settings.padding-t }} {% endif %}" {%- if section.settings.enable_bg -%}{% unless section.settings.bg_color == blank or section.settings.bg_color contains 'rgba(0,0,0,0)' -%}style="background-color: {{ section.settings.bg_color }}"{% endunless %}{% endif %}>
+        <div class="{% if section.settings.block_width == "boxed" %}container{% else %}container-fluid px-0{% endif %}">
+            <div class="line-divider" {% unless section.settings.color == '' or section.settings.color_main contains 'rgba(0,0,0,0)' %}
+                 style="border-color:{{ section.settings.color }}"
+                    {% endunless %}></div>
+        </div>
+    </div>
+{%- endif -%}
+
+{% schema %}
+{
+"name": "Divider",
+"settings": [
+{
+"type": "checkbox",
+"id": "enable",
+"label": "Enable",
+"default": true
+},
+{
+"type": "header",
+"content": "Layout"
+},
+{
+"type":"select",
+"id":"block_width",
+"label":"Width",
+"options":[
+{"value":"boxed","label":"Boxed"},
+{"value":"fullwidth","label":"Fullwidth"}
+],
+"default":"boxed"
+},
+{
+"type": "select",
+"id": "outer_margin",
+"label": "Outer top margin",
+"options":[
+{"value":"mt-0","label":"None"},
+{"value":"holder-mt-xsmall","label":"XSmall"},
+{"value":"holder-mt-small","label":"Small"},
+{"value":"holder-mt-medium","label":"Medium (default)"},
+{"value":"holder-mt-large","label":"Large"}
+],
+"default": "holder-mt-medium"
+},
+{
+"type": "select",
+"id": "enable_device",
+"label": "Show on Devices",
+"default": "show-all",
+"options": [
+{ "value": "show-all", "label": "Mobile & Desktop" },
+{ "value": "d-none d-md-block", "label": "Only Desktop" },
+{ "value": "d-md-none", "label": "Only Mobile" }
+]
+},
+{
+"type": "checkbox",
+"id": "enable_bg",
+"label": "Add background",
+"default": false
+},
+{
+"type": "select",
+"id": "padding-t",
+"label": "Top Padding",
+"options":[
+{"value":"pt-0","label":"None"},
+{"value":"holder-pt-xsmall","label":"XSmall"},
+{"value":"holder-pt-small","label":"Small"},
+{"value":"holder-pt-medium","label":"Medium (default)"},
+{"value":"holder-pt-large","label":"Large"}
+],
+"default": "pt-0"
+},
+{
+"type":"color",
+"id":"bg_color",
+"label":"Background Color",
+"default":"#f8f8f8"
+},
+{
+"type": "color",
+"id": "color",
+"label": "Line Color"
+}
+],
+"presets": [{
+"name": "Divider",
+"category": "Info Blocks"
+}]
+}
+{% endschema %}

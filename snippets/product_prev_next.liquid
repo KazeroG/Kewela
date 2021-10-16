@@ -1,0 +1,19 @@
+{% if section.settings.product_prev_next %}
+    {% if collection %}
+        <div class="prd-block-prevnext">
+            {%- assign _img_size = '62x' -%}
+            {%- if collection.previous_product -%}
+                {%- assign _img = collection.previous_product.featured_image -%}
+                {% if _img %} <a href="{{ collection.previous_product.url }}" title="{{ 'theme.product.prev' | t }}: {{ collection.previous_product.title | strip_html }}"   data-toggle="tooltip" data-placement="bottom"><span><img class="lazyload" data-srcset="{{ _img | img_url: _img_size }} 1x, {{ _img | img_url: _img_size, scale: 2 }} 2x" data-aspectratio="{{ _img.aspect_ratio }}" data-sizes="auto" alt="{{ collection.previous_product.title | strip_html }}"><i class="icon-arrow-left"></i></span></a>{%- endif -%}
+            {%- endif -%}
+            {%- if collection.previous_product and collection.next_product -%}
+                {%- assign _img = product.featured_image -%}
+                {% if _img %} <a title="{{ 'theme.product.current' | t }}" data-toggle="tooltip" data-placement="bottom"><span><img class="lazyload" data-srcset="{{ _img | img_url: _img_size }} 1x, {{ _img | img_url: _img_size, scale: 2 }} 2x" data-aspectratio="{{ _img.aspect_ratio }}" data-sizes="auto" alt="{{ product.title | strip_html }}"></span></a>{%- endif -%}
+            {%- endif -%}
+            {%- if collection.next_product -%}
+                {%- assign _img = collection.next_product.featured_image -%}
+                {% if _img %} <a href="{{ collection.next_product.url }}" title="{{ 'theme.product.next' | t }}: {{ collection.next_product.title | strip_html }}"   data-toggle="tooltip" data-placement="bottom"><span><img class="lazyload" data-srcset="{{ _img | img_url: _img_size }} 1x, {{ _img | img_url: _img_size, scale: 2 }} 2x" data-aspectratio="{{ _img.aspect_ratio }}" data-sizes="auto" alt="{{ collection.next_product.title | strip_html }}"><i class="icon-arrow-right"></i></span></a>{%- endif -%}
+            {%- endif -%}
+        </div>
+    {% endif %}
+{% endif %}

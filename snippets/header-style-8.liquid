@@ -1,0 +1,68 @@
+{%- assign demo = true -%}
+<div class="hdr hdr-style2 {% if section.settings.transparent and template == 'index' %}{{ section.settings.header_outer_margin }}{% endif %}">
+    {%- if section.settings.topbar_enable -%}
+    <div class="hdr-topline {{ settings.color_topline_style }} js-hdr-top">
+        <div class="container">
+            <div class="row">
+                <div class="col hdr-topline-left">
+                    <ul class="social-list list-unstyled">
+                        {% include 'social-media-links' %}
+                    </ul>
+                </div>
+                {%- if section.settings.topline_enable -%}
+                    <div class="col text-center py-0">
+                        {% include 'topline' %}
+                    </div>
+                {%- endif -%}
+                <div class="col hdr-topline-right hide-mobile">
+                    <div class="hdr-inline-link {% if section.settings.icon_small_space %}hdr-inline-link--compact{% endif %} {% if section.settings.icon_small %}hdr-inline-link--sm{% endif %}">
+                        {% include 'header-services' %}
+                        {% include 'header-languages' %}
+                        {% include 'header-currencies' %}
+                        <div class="hdr_container_desktop">
+                            {% include 'header-account' %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {%- endif -%}
+    <div class="hdr-content">
+        <div class="container">
+            <div class="row justify-content-between">
+                <div class="col-auto show-mobile">
+                    {% include 'header-burger' %}
+                </div>
+                {%- if section.settings.phone_1 != blank and section.settings.phone_1_yes -%}
+                    <div class="col col-7 hdr-phone justify-content-start{% if settings.color_header_phone_font %} heading-font{% endif %}">
+                        {%- if settings.color_header_phone_icon -%}<i class="icon-phone"></i>{%- endif -%}<span>{{ section.settings.phone_1 }}</span>
+                    </div>
+                {%- endif -%}
+                <div class="hdr-logo">
+                    {% include 'header-logo' %}
+                </div>
+                <div class="col col-lg-7 hdr-links-wrap ml-0">
+                    <div class="hdr-links">
+                        <div class="hdr-inline-link {% if section.settings.icon_small_space %}hdr-inline-link--compact{% endif %} {% if section.settings.icon_small %}hdr-inline-link--sm{% endif %}">
+                            {% include 'header-search' %}
+                            {% include 'header-wishlist' %}
+                            {% include 'header-compare' %}
+                            <div class="hdr_container_mobile show-mobile">
+                                {% include 'header-account' %}
+                            </div>
+                            {% include 'header-cart' %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="hdr-navline hide-mobile {% unless demo %}{{ settings.color_navline_style }}{% else %}hdr-navline--dark{% endunless %}">
+        <!--navigation-->
+        <div class="hdr-nav nav-holder {{ section.settings.nav_alignment }}">
+            {% include 'header-navigation' %}
+        </div>
+        <!--//navigation-->
+    </div>
+</div>

@@ -1,0 +1,387 @@
+{%- if section.settings.enable -%}
+    <div class="holder {{ section.settings.outer_margin }} {%- if section.settings.enable_bg -%}holder-with-bg {{ section.settings.padding-t }} {{ section.settings.padding-b }}  bg-cover lazyload" data-expand="-500"
+            {%- if section.settings.bg_image != blank -%}data-bgset="{% include 'bgset', image: section.settings.bg_image %}" data-sizes="auto"{%- endif -%}
+            {%- if section.settings.bg_color != blank and section.settings.bg_color != 'rgba(0,0,0,0)' -%}style="background-color: {{ section.settings.bg_color }}"{%- endif -%}
+            {%- else -%}"{%- endif -%}>
+        <div class="container" {%- if section.settings.text_color != blank and section.settings.text_color != 'rgba(0,0,0,0)' -%}style="color:{{ section.settings.text_color }}"{%- endif -%}>
+            {% include 'section-headings' %}
+            <div class="row fact-blocks-row justify-content-{{ section.settings.block_alignment }} lazyload">
+                {%- for block in section.blocks -%}
+                    {%- if block.settings.enable -%}
+                        <div class="{% if block.size <= 4 %}col-sm-6{% else %}col-9 col-sm-up-quarter{% endif %}">
+                            <div class="fact-block">
+                                {%- assign number = block.settings.number | times: 1 -%}
+                                <div class="number" {%- if block.settings.number_color != blank and block.settings.number_color != 'rgba(0,0,0,0)' -%}style="color:{{ block.settings.number_color }}"{%- else -%}{%- if section.settings.number_color != blank and section.settings.number_color != 'rgba(0,0,0,0)' -%}style="color:{{ section.settings.number_color }}"{%- endif -%}{%- endif -%}><span data-count="{{ number }}">0</span><span class="number-suffix">{{ block.settings.number_suffix }}</span></div>
+                                {%- if block.settings.title != blank -%}<div class="title" {%- if block.settings.subnumber_color != blank and block.settings.subnumber_color != 'rgba(0,0,0,0)' -%}style="color:{{ block.settings.subnumber_color }}"{%- else -%}{%- if section.settings.subnumber_color != blank and section.settings.subnumber_color != 'rgba(0,0,0,0)' -%}style="color:{{ section.settings.subnumber_color }}"{%- endif -%}{%- endif -%}>{{ block.settings.title }}</div>{%- endif -%}
+                                {%- if block.settings.text != blank -%}<div class="text">{{ block.settings.text }}</div> {%- endif -%}
+                            </div>
+                        </div>
+                    {%- endif -%}
+                {%- endfor -%}
+            </div>
+        </div>
+    </div>
+{%- endif -%}
+<style>
+    {%- if section.settings.typography_yes -%}
+    #shopify-section-{{ section.id }} .number-suffix {
+        font-size: {{ section.settings.number_unit_size }}px;
+    }
+    #shopify-section-{{ section.id }} .number {
+        font-size: {{ section.settings.number_size }}px;
+        line-height: {{ section.settings.number_lineheight }}em;
+        font-weight: {{ section.settings.number_weight }};
+    }
+    #shopify-section-{{ section.id }} .title {
+        font-size: {{ section.settings.subtitle_size }}px;
+        line-height: {{ section.settings.subtitle_lineheight }}em;
+        font-weight: {{ section.settings.subtitle_weight }};
+    }
+    #shopify-section-{{ section.id }} .text {
+        font-size: {{ section.settings.title_item_size }}px;
+        line-height: {{ section.settings.title_lineheight }}em;
+        font-weight: {{ section.settings.title_item_weight }};
+    }
+    {%- endif -%}
+</style>
+{% schema %}
+{
+"name": "About Us - Number Counter",
+"settings": [
+{
+    "type": "checkbox",
+    "id": "enable",
+    "label": "Enable",
+    "default": true
+},
+{
+    "type": "header",
+    "content": "Layout"
+},
+{
+    "type": "select",
+    "id": "outer_margin",
+    "label": "Outer top margin",
+    "options":[
+        {"value":"mt-0","label":"None"},
+        {"value":"holder-mt-xsmall","label":"XSmall"},
+        {"value":"holder-mt-small","label":"Small"},
+        {"value":"holder-mt-medium","label":"Medium (default)"},
+        {"value":"holder-mt-large","label":"Large"}
+    ],
+    "default": "holder-mt-small"
+},
+{
+    "type": "checkbox",
+    "id": "enable_bg",
+    "label": "Add background",
+    "default": true
+},
+{
+"type": "select",
+"id": "padding-t",
+"label": "Top Padding",
+"options":[
+{"value":"pt-0","label":"None"},
+{"value":"holder-pt-xsmall","label":"XSmall"},
+{"value":"holder-pt-small","label":"Small"},
+{"value":"holder-pt-medium","label":"Medium (default)"},
+{"value":"holder-pt-large","label":"Large"}
+],
+"default": "holder-pt-medium"
+},
+{
+"type": "select",
+"id": "padding-b",
+"label": "Bottom Padding",
+"options":[
+{"value":"pb-0","label":"None"},
+{"value":"holder-pb-xsmall","label":"XSmall"},
+{"value":"holder-pb-small","label":"Small"},
+{"value":"holder-pb-medium","label":"Medium (default)"},
+{"value":"holder-pb-large","label":"Large"}
+],
+"default": "holder-pb-medium"
+},
+{
+    "type":"color",
+    "id":"bg_color",
+    "label":"Section Background Color",
+    "default":"#f8f8f8"
+},
+{
+    "type":"image_picker",
+    "id":"bg_image",
+    "label":"Section Background Image",
+    "info":"(Recommended size 1920x700 px)"
+},
+{
+"type": "select",
+"id": "block_alignment",
+"label": "Content Block horizontal position",
+"default": "center",
+"options": [
+{ "value": "start", "label": "Left" },
+{ "value": "center", "label": "Center" },
+{ "value": "end", "label": "Right" }
+]
+},
+{
+    "type": "header",
+    "content": "Headings"
+},
+{
+    "type": "checkbox",
+    "id": "enable_text",
+    "label": "Enable",
+    "default": true
+},
+{
+    "type": "text",
+    "id": "title",
+    "label": "Title",
+    "default":"FACTS ABOUT US"
+},
+{
+    "type": "select",
+    "id": "title_size",
+    "label": "Title Font Size",
+    "default": "h1-style",
+    "options": [
+        { "value": "h-lg-style", "label": "Large" },
+        { "value": "h1-style", "label": "Normal" },
+        { "value": "h2-style", "label": "Small" }
+    ]
+},
+    {
+    "type": "text",
+    "id": "subtitle",
+    "label": "Sub Heading",
+    "default": "Sub Heading"
+    },
+    {
+    "type": "text",
+    "id": "bgtitle",
+    "label": "Background Heading"
+    },
+{
+    "type": "select",
+    "id": "text_alignment",
+    "label": "Text Alignment",
+    "default": "center",
+    "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+    ]
+},
+{
+    "type":"color",
+    "id":"text_color",
+    "label":"Text Color"
+},
+{
+"type":"header",
+"content":"Typography"
+},
+{
+"type": "checkbox",
+"id": "typography_yes",
+"label": "Use Custom Typography",
+"default": false
+},
+{
+"type":"range",
+"id":"number_size",
+"min":20,
+"max":110,
+"step":1,
+"label":"Number Font Size",
+"unit":"px",
+"default": 70
+},
+{
+"type":"range",
+"id":"number_unit_size",
+"min":10,
+"max":110,
+"step":1,
+"label":"Number Unit Font Size",
+"unit":"px",
+"default": 19
+},
+{
+"type":"range",
+"id":"number_lineheight",
+"min":1,
+"max":2,
+"step":0.1,
+"label":"Number Line Height",
+"unit":"em",
+"default":1.5
+},
+{
+"type":"select",
+"id": "number_weight",
+"label": "Number Weight",
+"options": [
+{ "value": "100", "label": "Thin" },
+{ "value": "300", "label": "Light" },
+{ "value": "400", "label": "Regular" },
+{ "value": "500", "label": "Medium" },
+{ "value": "600", "label": "Semibold" },
+{ "value": "700", "label": "Bold" },
+{ "value": "800", "label": "Black" }
+],
+"default":"500"
+},
+{
+"type":"range",
+"id":"title_item_size",
+"min":14,
+"max":60,
+"step":1,
+"label":"Subtitle Font Size",
+"unit":"px",
+"default": 18
+},
+{
+"type":"range",
+"id":"title_lineheight",
+"min":1,
+"max":2,
+"step":0.1,
+"label":"Subtitle Line Height",
+"unit":"em",
+"default":1.5
+},
+{
+"type":"select",
+"id": "title_weight",
+"label": "Subtitle Weight",
+"options": [
+{ "value": "100", "label": "Thin" },
+{ "value": "300", "label": "Light" },
+{ "value": "400", "label": "Regular" },
+{ "value": "500", "label": "Medium" },
+{ "value": "600", "label": "Semibold" },
+{ "value": "700", "label": "Bold" },
+{ "value": "800", "label": "Black" }
+],
+"default":"600"
+},
+{
+"type":"range",
+"id":"subtitle_size",
+"min":10,
+"max":40,
+"step":1,
+"label":"Text Font Size",
+"unit":"px",
+"default": 16
+},
+{
+"type":"range",
+"id":"subtitle_lineheight",
+"min":1,
+"max":2,
+"step":0.1,
+"label":"Text Line Height",
+"unit":"em",
+"default":1.8
+},
+{
+"type":"select",
+"id": "subtitle_weight",
+"label": "Subtitle Weight",
+"options": [
+{ "value": "100", "label": "Thin" },
+{ "value": "300", "label": "Light" },
+{ "value": "400", "label": "Regular" },
+{ "value": "500", "label": "Medium" },
+{ "value": "600", "label": "Semibold" },
+{ "value": "700", "label": "Bold" },
+{ "value": "800", "label": "Black" }
+],
+"default":"600"
+},
+{
+"type": "header",
+"content": "Color"
+},
+{
+    "type":"color",
+    "id":"number_color",
+    "label":"All Number Color"
+},
+{
+    "type":"color",
+    "id":"subnumber_color",
+    "label":"All Number Subtitle Color"
+}
+],
+"blocks":[
+    {
+    "type":"text",
+    "name":"Number + Text",
+    "limit": 4,
+    "settings":[
+    {
+        "type":"checkbox",
+        "id":"enable",
+        "label":"Enable",
+        "default":true
+    },
+    {
+        "type":"text",
+        "id":"number",
+        "label":"Number",
+        "default": "100"
+    },
+    {
+        "type":"text",
+        "id":"number_suffix",
+        "label":"Number Units",
+        "default": "%"
+    },
+    {
+        "type":"color",
+        "id":"number_color",
+        "label":"Number Color"
+    },
+    {
+        "type":"textarea",
+        "id":"title",
+        "label":"Number Subtitle",
+        "default": "Add your text here"
+    },
+    {
+        "type":"color",
+        "id":"subnumber_color",
+        "label":"Number Subtitle Color"
+    },
+    {
+        "type":"textarea",
+        "id":"text",
+        "label":"Text",
+        "default": "Add your text here"
+    }
+    ]
+    }],
+    "presets": [{
+    "name": "About Us - Number Counter",
+    "category": "Info Blocks",
+    "blocks": [
+        {
+            "type": "text"
+        },
+        {
+            "type": "text"
+        },
+        {
+            "type": "text"
+        }
+    ]
+}]
+}
+{% endschema %}

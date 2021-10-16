@@ -1,0 +1,62 @@
+<div class="holder {{ section.settings.outer_margin }} py-3 py-lg-4 bg-fullheight" {%- if section.settings.bg != blank -%}style="background-color: {{ section.settings.bg }};"{%- endif -%}>
+    {%- if section.settings.decor -%}
+    <div class="circle_decor_wrap">
+        {% include 'decor' style:'width: 50%; transform: translate(-74%, -48%) rotate(3deg); opacity: .3', classes:'circle_decor--tl' %}
+    </div>
+    {%- endif -%}
+    <div class="container">
+        <div class="search-full" {%- if section.settings.bg_inside != blank -%}style="background-color: {{ section.settings.bg_inside }};"{%- endif -%}>
+            <form action="{{ routes.search_url }}" method="get" role="search">
+                <div class="form-inline">
+                    <input type="hidden" name="type" value="product" />
+                    <input type="search" name="q" class="form-control" placeholder="{{ 'theme.general.what_are_you_looking_for' | t }}">
+                    <button class="btn btn--grey">{{ 'general.search.placeholder' | t }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% schema %}
+{
+"name": "Search",
+"settings": [
+{
+"type": "header",
+"content": "Layout"
+},
+{
+"type": "select",
+"id": "outer_margin",
+"label": "Outer top margin",
+"options":[
+{"value":"mt-0","label":"None"},
+{"value":"holder-mt-xsmall","label":"XSmall"},
+{"value":"holder-mt-small","label":"Small"},
+{"value":"holder-mt-medium","label":"Medium (default)"},
+{"value":"holder-mt-large","label":"Large"}
+],
+"default": "holder-mt-xsmall"
+},
+{
+"type":"color",
+"id":"bg",
+"label":"Background"
+},
+{
+"type":"color",
+"id":"bg_inside",
+"label":"Form Outer Background"
+},
+{
+"type":"checkbox",
+"id":"decor",
+"label":"Show Decor Circles",
+"default":true
+}
+],
+"presets": [{
+"name": "Search",
+"category": "Info Blocks"
+}]
+}
+{% endschema %}

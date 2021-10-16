@@ -1,0 +1,38 @@
+{%- if form.posted_successfully? -%}
+  <p class="form-message form-message--success text-success mb-3">
+    {{ success_message | default: 'contact.form.post_success' | t }}
+  </p>
+{%- endif -%}
+{% comment %} We need to add this so the errors are output in the right order {% endcomment %}
+{% assign error_order = "author, email, body, password, form" | split: ", " %}
+{%- if form.errors -%}
+  <div class="form-message form-message--error mb-3">
+    <h5 class="mb-1">{{ 'contact.form.error_heading' | t }}</h5>
+    <ul class="list-unstyled ">
+      {% for error in error_order %}
+        {% for field in form.errors %}
+          {% if error == field %}
+            {% capture field_label %}
+              {% case field %}
+                {% when 'author' %}
+                  {{ 'contact.form.name' | t }}
+                {% when 'body' %}
+                  {{ 'contact.form.message' | t }}
+                {% else %}
+                  {{ form.errors.translated_fields[field] }}
+              {% endcase %}
+            {% endcapture %}
+            <li class="text-danger">
+              {%- if field == 'form' -%}
+                {{ form.errors.messages[field] }}
+              {%- else -%}
+                {% comment %} the href should match the input's id {% endcomment %}
+                <a class="text-danger" href="#{{ form_id }}-{{ field }}">{{ field_label | strip | capitalize }} {{ form.errors.messages[field] }}</a>
+              {%- endif -%}
+            </li>
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
+    </ul>
+  </div>
+{%- endif -%}

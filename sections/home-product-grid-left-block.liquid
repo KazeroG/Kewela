@@ -1,0 +1,93 @@
+{%- assign collection = collections[section.settings.collection] -%}
+{% if section.settings.limit != blank %}
+    {%- assign product_limit = section.settings.limit -%}
+{% endif %}
+{%- assign collection = collections[section.settings.collection] -%}
+<div class="holder">
+    <div class="container">
+        <div class="row vert-margin justify-content-md-center">
+            <div class="col-sm-9 js-sticky-collision">
+                <div class="bnr-sticky">
+                    <a href="{{ collection.url }}" class="bnr bnr--middle bnr--center" data-fontratio="8.7">
+                        <div class="bnr-img"><img data-aspectratio="0.562" data-srcset="{{ 'banner-index-09.png' | asset_url }}" class="lazyload" alt=""></div>
+                        <div class="circle_decor_wrap">
+                            {% include 'decor1' classes:'circle_decor--tr', style:'width: 140%; transform: translate(64%, -74%) rotate(45deg)' %}
+                            {% include 'decor1' classes:'circle_decor--bl', style:'width: 140%; transform: translate(-64%, 74%) rotate(45deg)' %}
+                        </div>
+                        <div class="bnr-caption" style="padding: 4% 12%;">
+                            <div class="bnr-text7 heading-font" style="font-weight: 700;">{{ section.settings.title }}</div>
+                            <div class="bnr-p">{{ section.settings.subtitle }}</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-sm-9">
+                <div class="prd-grid data-to-show-2 data-to-show-md-2 data-to-show-sm-2 data-to-show-xs-1">
+                    {% for product in collection.products limit: product_limit %}{% include 'product-card' grid_image_width:'504x' %}{% else %}{% include 'empty-carousel' %}{% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% schema %}
+{
+"name": "Products Grid + Block",
+"class": "index-section",
+"presets": [
+{
+"name": "Products Grid + Block",
+"category": "Products"
+}
+],
+"settings": [
+{
+"type": "header",
+"content": "Layout"
+},
+{
+"type": "select",
+"id": "outer_margin",
+"label": "Outer top margin",
+"options":[
+{"value":"mt-0","label":"None"},
+{"value":"holder-mt-xsmall","label":"XSmall"},
+{"value":"holder-mt-small","label":"Small"},
+{"value":"holder-mt-medium","label":"Medium (default)"},
+{"value":"holder-mt-large","label":"Large"}
+],
+"default": "holder-mt-medium"
+},
+{
+"type": "header",
+"content": "General"
+},
+{
+"type": "header",
+"content": "Heading"
+},
+{
+"type": "text",
+"id": "title",
+"label": "Title",
+"default":"Heading"
+},
+{
+"type": "text",
+"id": "subtitle",
+"label": "Sub Heading",
+"default": "Sub Heading"
+},
+{
+"id": "collection",
+"type": "collection",
+"label": "Collection"
+},
+{
+"id": "limit",
+"type": "text",
+"label": "Products limit",
+"default":"4"
+}
+]
+}
+{% endschema %}

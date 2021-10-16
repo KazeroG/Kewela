@@ -1,0 +1,326 @@
+{%- if section.settings.enable -%}
+    <div class="holder {{ section.settings.outer_margin }}">
+        <div class="container">
+            {% include 'section-headings' %}
+            <div class="row person-row justify-content-{{ section.settings.block_alignment }}">
+                {%- for block in section.blocks -%}
+                    {%- if block.settings.enable -%}
+                        <div class="person-item {% if section.settings.enable_hover %} image-hover-dark-scale{% endif %}">
+                            <div class="person-item-image bnr-img">
+                                {%- if block.settings.image != blank -%}
+                                    {%- assign img_url = block.settings.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+                                    <img id="img-{{ block.settings.image.id }}"
+                                         class="lazyload"
+                                         data-src="{{ img_url }}"
+                                         data-widths="[360, 540, 720]"
+                                         data-aspectratio=".8"
+                                         data-sizes="auto"
+                                         alt="{{ block.settings.name | escape }}">
+                                {%- else -%}
+                                    {% include 'image-placeholder' size: '420x600' %}
+                                {%- endif -%}
+                            </div>
+                            <div class="person-item-info bnr-caption">
+                                <div class="person-item-title" {%- if block.settings.name_color != blank and block.settings.name_color != 'rgba(0,0,0,0)' -%}style="color:{{ block.settings.name_color }}"{%- else -%}{%- if section.settings.name_color != blank and section.settings.name_color != 'rgba(0,0,0,0)' -%}style="color:{{ section.settings.name_color }}"{%- endif -%}{%- endif -%}>
+                                    {{ block.settings.name }}
+                                </div>
+                                <div class="person-item-post" {%- if block.settings.position_color != blank and block.settings.position_color != 'rgba(0,0,0,0)' -%}style="color:{{ block.settings.position_color }}"{%- else -%}{%- if section.settings.position_color != blank and section.settings.position_color != 'rgba(0,0,0,0)' -%}style="color:{{ section.settings.position_color }}"{%- endif -%}{%- endif -%}>
+                                    {{ block.settings.position }}
+                                </div>
+                                {%- for i in (1..3) -%}
+                                {%- endfor -%}
+                                {%- if block.settings.social -%}
+                                    <div class="person-item-socials">
+                                        <ul class="social-list list-unstyled">
+                                            {%- for i in (1..4) -%}
+                                                {%- capture source -%}social_{{ i }}{%- endcapture -%}
+                                                {%- capture link -%}social_{{ i }}_link{%- endcapture -%}
+                                                {%- if block.settings[source] != 'none' -%}
+                                                    <li>
+                                                        <a href="{{ block.settings[link] }}" target="_blank"><i class="icon-{{ block.settings[source] }}"></i></a>
+                                                    </li>
+                                                {%- endif -%}
+                                            {%- endfor -%}
+                                        </ul>
+                                    </div>
+                                {%- endif -%}
+                            </div>
+                        </div>
+                    {%- endif -%}
+                {%- endfor -%}
+            </div>
+        </div>
+    </div>
+{%- endif -%}
+
+{% schema %}
+{
+"name": "About Us - Team",
+"settings": [
+{
+"type": "checkbox",
+"id": "enable",
+"label": "Enable",
+"default": true
+},
+{
+"type": "header",
+"content": "Layout"
+},
+{
+"type": "select",
+"id": "outer_margin",
+"label": "Outer top margin",
+"options":[
+{"value":"mt-0","label":"None"},
+{"value":"holder-mt-xsmall","label":"XSmall"},
+{"value":"holder-mt-small","label":"Small"},
+{"value":"holder-mt-medium","label":"Medium (default)"},
+{"value":"holder-mt-large","label":"Large"}
+],
+"default": "holder-mt-medium"
+},
+{
+"type": "checkbox",
+"id": "enable_hover",
+"label": "Image Hover Effect",
+"default": true
+},
+{
+"type": "header",
+"content": "Headings"
+},
+{
+"type": "checkbox",
+"id": "enable_text",
+"label": "Enable",
+"default": true
+},
+{
+"type": "text",
+"id": "title",
+"label": "Title",
+"default":"OUT TEAM"
+},
+{
+"type": "select",
+"id": "title_size",
+"label": "Title Font Size",
+"default": "h1-style",
+"options": [
+{ "value": "h-lg-style", "label": "Large" },
+{ "value": "h1-style", "label": "Normal" },
+{ "value": "h2-style", "label": "Small" }
+]
+},
+    {
+    "type": "text",
+    "id": "subtitle",
+    "label": "Sub Heading",
+    "default": "Sub Heading"
+    },
+    {
+    "type": "text",
+    "id": "bgtitle",
+    "label": "Background Heading"
+    },
+{
+"type": "select",
+"id": "text_alignment",
+"label": "Text Alignment",
+"default": "center",
+"options": [
+{ "value": "left", "label": "Left" },
+{ "value": "center", "label": "Center" },
+{ "value": "right", "label": "Right" }
+]
+},
+{
+"type": "header",
+"content": "Person"
+},
+{
+"type":"color",
+"id":"name_color",
+"label":"All Person Name Color"
+},
+{
+"type":"color",
+"id":"position_color",
+"label":"All Person Position Color"
+},
+{
+"type": "select",
+"id": "block_alignment",
+"label": "Content Block horizontal position",
+"default": "center",
+"options": [
+{ "value": "start", "label": "Left" },
+{ "value": "center", "label": "Center" },
+{ "value": "end", "label": "Right" }
+]
+}
+],
+"blocks":[
+{
+"type":"text",
+"name":"Person",
+"settings":[
+{
+"type": "image_picker",
+"id": "image",
+"label": "Image",
+"info":"Recommended size 430x610px"
+},
+{
+"type":"checkbox",
+"id":"enable",
+"label":"Enable",
+"default":true
+},
+{
+"type":"text",
+"id":"name",
+"label":"Name",
+"default": "Name"
+},
+{
+"type":"color",
+"id":"name_color",
+"label":"Name Color"
+},
+{
+"type":"text",
+"id":"position",
+"label":"Position",
+"default": "Position"
+},
+{
+"type":"color",
+"id":"position_color",
+"label":"Position Color"
+},
+{
+"type": "header",
+"content": "Social Media Links"
+},
+{
+"type":"checkbox",
+"id":"social",
+"label":"Enable",
+"default":true
+},
+{
+"type": "select",
+"id": "social_1",
+"label": "Social Media Site 1",
+"default": "facebook",
+"options": [
+{ "value": "none", "label": "none" },
+{ "value": "facebook", "label": "facebook" },
+{ "value": "twitter", "label": "twitter" },
+{ "value": "instagram", "label": "instagram" },
+{ "value": "linkedin", "label": "linkedin" },
+{ "value": "google", "label": "google" },
+{ "value": "skype", "label": "skype" },
+{ "value": "snapchat", "label": "snapchat" },
+{ "value": "tumblr", "label": "tumblr" }
+],
+"info": "Select icon of social media link"
+},
+{
+"type":"text",
+"id":"social_1_link",
+"label":"Link 1",
+"default": "https://www.facebook.com/"
+},
+{
+"type": "select",
+"id": "social_2",
+"label": "Social Media Site 2",
+"default": "twitter",
+"options": [
+{ "value": "none", "label": "none" },
+{ "value": "facebook", "label": "facebook" },
+{ "value": "twitter", "label": "twitter" },
+{ "value": "instagram", "label": "instagram" },
+{ "value": "linkedin", "label": "linkedin" },
+{ "value": "google", "label": "google" },
+{ "value": "skype", "label": "skype" },
+{ "value": "snapchat", "label": "snapchat" },
+{ "value": "tumblr", "label": "tumblr" }
+],
+"info": "Select icon of social media link"
+},
+{
+"type":"text",
+"id":"social_2_link",
+"label":"Link 2",
+"default": "https://www.twitter.com/"
+},
+{
+"type": "select",
+"id": "social_3",
+"label": "Social Media Site 3",
+"default": "instagram",
+"options": [
+{ "value": "none", "label": "none" },
+{ "value": "facebook", "label": "facebook" },
+{ "value": "twitter", "label": "twitter" },
+{ "value": "instagram", "label": "instagram" },
+{ "value": "linkedin", "label": "linkedin" },
+{ "value": "google", "label": "google" },
+{ "value": "skype", "label": "skype" },
+{ "value": "snapchat", "label": "snapchat" },
+{ "value": "tumblr", "label": "tumblr" }
+],
+"info": "Select icon of social media link"
+},
+{
+"type":"text",
+"id":"social_3_link",
+"label":"Link 3",
+"default": "https://www.instagram.com/"
+},
+{
+"type": "select",
+"id": "social_4",
+"label": "Social Media Site 4",
+"default": "none",
+"options": [
+{ "value": "none", "label": "none" },
+{ "value": "facebook", "label": "facebook" },
+{ "value": "twitter", "label": "twitter" },
+{ "value": "instagram", "label": "instagram" },
+{ "value": "linkedin", "label": "linkedin" },
+{ "value": "google", "label": "google" },
+{ "value": "skype", "label": "skype" },
+{ "value": "snapchat", "label": "snapchat" },
+{ "value": "tumblr", "label": "tumblr" }
+],
+"info": "Select icon of social media link"
+},
+{
+"type":"text",
+"id":"social_4_link",
+"label":"Link 4"
+}
+]
+}],
+"presets": [{
+"name": "About Us - Team",
+"category": "Info Blocks",
+"blocks": [
+{
+"type": "text"
+},
+{
+"type": "text"
+},
+{
+"type": "text"
+}
+]
+}]
+}
+{% endschema %}

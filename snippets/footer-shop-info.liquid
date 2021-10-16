@@ -1,0 +1,45 @@
+<div class="footer-shop-info" style="background-color: {{ settings.shop_info_bg_color }}">
+    <div class="container">
+        <div class="text-icn-blocks-bg-row" style="background-color: {{ settings.shop_info_bg_color }}">
+            <a {% if settings.shop_info_caption_1_link != blank %}href="{{ settings.shop_info_caption_1_link }}"{% endif %} class="text-icn-block-footer">
+                <div class="icn">
+                    {%- if settings.shop_info_caption_1_icon_type == 'svg' -%}
+                        {{ settings.shop_info_caption_1_svg }}
+                    {%- else -%}
+                        <i class="{% if settings.shop_info_caption_1_icon_type == 'theme' %}{{ settings.shop_info_caption_1_icon }}{% else %}{{ settings.shop_info_caption_1_icon_name }}{% endif %}"></i>
+                    {%- endif -%}
+                </div>
+                <div class="text">
+                    <h4>{{ settings.shop_info_caption_1_1_text }}</h4>
+                    <p>{{ settings.shop_info_caption_1_2_text }}</p>
+                </div>
+            </a>
+            <a {% if settings.shop_info_caption_2_link != blank %}href="{{ settings.shop_info_caption_2_link }}"{% endif %} class="text-icn-block-footer">
+                <div class="icn">
+                    {%- if settings.shop_info_caption_2_icon_type == 'svg' -%}
+                        {{ settings.shop_info_caption_2_svg }}
+                    {%- else -%}
+                        <i class="{% if settings.shop_info_caption_2_icon_type == 'theme' %}{{ settings.shop_info_caption_2_icon }}{% else %}{{ settings.shop_info_caption_2_icon_name }}{% endif %}"></i>
+                    {%- endif -%}
+                </div>
+                <div class="text">
+                    <h4>{{ settings.shop_info_caption_2_1_text }}</h4>
+                    <p>{{ settings.shop_info_caption_2_2_text }}</p>
+                </div>
+            </a>
+            <a {% if settings.shop_info_caption_3_link != blank %}href="{{ settings.shop_info_caption_3_link }}"{% endif %} class="text-icn-block-footer">
+                <div class="icn">
+                    {%- if settings.shop_info_caption_3_icon_type == 'svg' -%}
+                        {{ settings.shop_info_caption_3_svg }}
+                    {%- else -%}
+                        <i class="{% if settings.shop_info_caption_3_icon_type == 'theme' %}{{ settings.shop_info_caption_3_icon }}{% else %}{{ settings.shop_info_caption_3_icon_name }}{% endif %}"></i>
+                    {%- endif -%}
+                </div>
+                <div class="text">
+                    <h4>{{ settings.shop_info_caption_3_1_text }}</h4>
+                    <p>{{ settings.shop_info_caption_3_2_text }}</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>

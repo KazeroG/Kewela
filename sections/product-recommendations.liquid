@@ -1,0 +1,135 @@
+{%- if section.settings.show_product_recommendations -%}
+  {%- if recommendations.performed -%}
+    {%- if recommendations.products_count > 0 -%}
+      {% if section.settings.limit != blank %}
+        {%- assign product_limit = section.settings.limit -%}
+      {% endif %}
+      <div class="holder {{ section.settings.outer_margin }}">
+        <div class="container">
+            {% include 'section-headings-arrows' %}
+          <div class="prd-grid prd-carousel js-prd-carousel data-to-show-{{ section.settings.per_row_desktop }} data-to-show-md-2 data-to-show-sm-2 data-to-show-xs-{{ section.settings.per_row_mobile }}" {% if settings.arrows_style == "arrows-style3" %}data-slick='{"arrows": false, "dots": true}'{% endif %}>
+            {%- for product in recommendations.products limit:product_limit %}{% include 'product-card' %}{% endfor -%}
+          </div>
+            {%- if settings.arrows_style == "arrows-style2" -%}<div class="carousel-arrows carousel-arrows--bottom"></div>{%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+  {%- else  -%}
+    <div class="page-width" data-product-id="{{ product.id }}" data-section-id="{{ section.id }}" data-section-type="product-recommendations"></div>
+  {%- endif -%}
+{%- endif -%}
+
+{% schema %}
+{
+"name": "Product recommendations",
+"settings": [
+{
+"type": "header",
+"content": "Layout"
+},
+{
+"type": "select",
+"id": "outer_margin",
+"label": "Outer top margin",
+"options":[
+{"value":"mt-0","label":"None"},
+{"value":"holder-mt-xsmall","label":"XSmall"},
+{"value":"holder-mt-small","label":"Small"},
+{"value":"holder-mt-medium","label":"Medium (default)"},
+{"value":"holder-mt-large","label":"Large"}
+],
+"default": "holder-mt-medium"
+},
+{
+"type": "header",
+"content": "General"
+},
+{
+"type": "checkbox",
+"id": "show_product_recommendations",
+"label": "Show dynamic recommendations",
+"info": "Dynamic recommendations change and improve with time. [Learn more](https://help.shopify.com/en/themes/development/recommended-products)",
+"default": false
+},
+{
+"type": "header",
+"content": "Heading"
+},
+{
+"type": "checkbox",
+"id": "enable_text",
+"label": "Enable",
+"default": true
+},
+{
+"type": "text",
+"id": "title",
+"label": "Title",
+"default":"You may also like"
+},
+{
+"type": "select",
+"id": "title_size",
+"label": "Title Font Size",
+"default": "h2-style",
+"options": [
+{ "value": "h-lg-style", "label": "Large" },
+{ "value": "h1-style", "label": "Normal" },
+{ "value": "h2-style", "label": "Small" }
+]
+},
+{
+"type": "select",
+"id": "text_alignment",
+"label": "Text Alignment",
+"default": "center",
+"options": [
+{ "value": "left", "label": "Left" },
+{ "value": "center", "label": "Center" }
+]
+},
+{
+"type": "text",
+"id": "subtitle",
+"label": "Sub Heading"
+},
+{
+"type": "text",
+"id": "bgtitle",
+"label": "Background Heading"
+},
+{
+"id": "limit",
+"type": "text",
+"label": "Products limit",
+"default":"7"
+},
+{
+"type": "paragraph",
+"content": "Products per row:"
+},
+{
+"type": "select",
+"id": "per_row_desktop",
+"label": "Desktop",
+"default": "5",
+"options": [
+{ "value": "4", "label": "4" },
+{ "value": "5", "label": "5" },
+{ "value": "6", "label": "6" }
+]
+},
+{
+"type": "select",
+"id": "per_row_mobile",
+"label": "Mobile:",
+"default": "2",
+"options": [
+{ "value": "1", "label": "1" },
+{ "value": "2", "label": "2" }
+],
+"info": "products per row"
+}
+]
+}
+{% endschema %}

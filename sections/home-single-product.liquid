@@ -1,0 +1,355 @@
+<div class="holder {{ section.settings.outer_margin }} py-5 py-md-10 bg-cover lazyload" {% if section.settings.bg_image != blank %}data-bgset="{% include 'bgset', image: section.settings.bg_image %}" data-sizes="auto"{% endif %} {%- if section.settings.enable_bg -%}{% unless section.settings.bg_color == blank or section.settings.bg_color contains 'rgba(0,0,0,0)' -%}style="background-color: {{ section.settings.bg_color }}"{% endunless %}{% endif %}>
+    <div class="container">
+        {% include 'section-headings' %}
+        {%- if section.settings.product != blank -%}
+        <div class="prd-single-wrap {% if section.settings.enable_text %}mt-4 mt-md-6{% endif %}">
+            <div class="prd-single">
+                {%- assign product = all_products[section.settings.product] -%}
+                {%- assign grid_image_width = '500x' -%}
+                {%- assign product_card_image = product.featured_image.src -%}
+                <div class="prd-img-area">
+                    <a href="{{ product.url }}" title="{{ product.title }}"><img class="js-prd-img fade-up lazyload"
+                         data-src="{{ product_card_image | img_url: grid_image_width }}"
+                         alt="{{ product.featured_image.alt | escape }}"></a>
+                    <div class="prd-custom-over">
+                        {%- for block in section.blocks -%}
+                            {%- if block.settings.enable -%}
+                                <div class="prd-custom-over-item">
+                                    <div class="prd-custom-over-item-icon">
+                                        {%- if block.settings.icon_type == 'svg' -%}
+                                            {{ block.settings.svg }}
+                                        {%- else -%}
+                                            <i class="{% if block.settings.icon_type == 'theme' %}{{ block.settings.icon }}{% else %}{{ block.settings.icon_name }}{% endif %}"></i>
+                                        {%- endif -%}
+                                    </div>
+                                    <div class="prd-custom-over-item-text">
+                                        {{ block.settings.text }}
+                                    </div>
+                                </div>
+                            {%- endif -%}
+                        {%- endfor -%}
+                    </div>
+                    {% if settings.product_previews_colors %}
+                        <!-- Color Swatch -->
+                        {% assign has_color = false %}
+                        {% assign index_color = 0 %}
+                        {% for option in product.options %}
+                            {% capture downcased_option %}{{ option | downcase }}{% endcapture %}
+                            {% if downcased_option contains 'color' %}
+                                {% assign has_color = true %}
+                                {% assign index_color = forloop.index0 %}
+                            {% endif %}
+                        {% endfor %}
+                        {% if has_color %}
+                            {% assign colors_count = 0 %}
+                            <div class="colorswatch-label js-prd-colorswatch {% if settings.color_swatches_style == 'variants' %}colorswatch-label--variants{% endif %}">
+                                <ul>
+                                    {% assign colors = '' %}
+                                    {% for variant in product.variants %}
+                                        {% if variant.available %}
+                                            {% capture color %}{{ variant.options[index_color] }}{% endcapture %}
+                                            {% capture wrapped_color %},{{ color }},{% endcapture %}
+                                            {% unless colors contains wrapped_color %}
+                                            {% assign colors_count = colors_count | plus: 1 %}
+                                                {% if colors_count < 6 %}
+                                                    {%- if settings.color_swatches_style == 'variants' -%}
+                                                        {% if variant.image.src %}
+                                                            <li data-variant-id="{{ variant.id }}" data-price="{{ variant.price }}" data-compare-price="{{ variant.compare_at_price }}" data-image="{{ variant.image.src | img_url: grid_image_width, scale: grid_image_scale }}"><a href="#" class="js-color-toggle" data-original-title="{{ color }}" data-toggle="tooltip" data-placement="left">
+                                                                    {% assign _img = variant.image %}
+                                                                    {% assign _img_size = '40x' %}
+                                                                    {% if _img %}
+                                                                        <img class="lazyload blur-up"
+                                                                             data-src="{{ _img | img_url: _img_size }}"
+                                                                             alt="{{ color }}">
+                                                                    {%- endif -%}
+                                                                </a></li>
+                                                        {% endif %}
+                                                    {%- else -%}
+                                                        {%- if variant.image.src -%}
+                                                            <li data-variant-id="{{ variant.id }}" data-price="{{ variant.price }}" data-compare-price="{{ variant.compare_at_price }}" data-image="{{ variant.image.src | img_url: grid_image_width, scale: grid_image_scale }}">
+                                                                <a href="#" class="js-color-toggle" data-original-title="{{ color }}" data-toggle="tooltip" data-placement="left">
+                                                                    <img class="lazyload blur-up {% if color contains 'White' %}color-bordered{% endif %}" data-src="{{ color | handle | prepend:'color-' | append: '.png' | file_url | downcase }}" alt="{{ color }}">
+                                                                </a>
+                                                            </li>
+                                                        {%- endif -%}
+                                                    {%- endif -%}
+                                                {% endif %}
+                                                {% capture colors %}{{ colors }}{{ wrapped_color }}{% endcapture %}
+                                            {% endunless %}
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <!-- /Color Swatch -->
+                        {% endif %}
+                    {% endif %}
+                    <div class="foxic-loader"></div>
+                </div>
+                <div class="prd-info">
+                    {%- if section.settings.show_title -%}
+                    <h2 class="product-title">
+                        <a href="{{ product.url }}" title="{{ product.title }}">{{ product.title }}</a>
+                    </h2>
+                    {%- endif -%}
+                    {%- if section.settings.show_price -%}
+                    <div class="prd-price">
+                        {% render 'product-price' with product as product %}
+                    </div>
+                    {%- endif -%}
+                    {%- if section.settings.show_addtocart -%}
+                    <div class="prd-action">
+                        {%- if settings.add_to_cart_enable -%}
+                            <form method="post" action="{{ routes.cart_add_url }}">
+                                {% render 'product-add-to-cart' with product as product %}
+                            </form>
+                        {%- endif -%}
+                    </div>
+                    {%- endif -%}
+                </div>
+            </div>
+        </div>
+        {%- else -%}
+            <div class="row">
+                <div class="alert alert-warning col-md-6 mx-auto text-center">
+                    Select Product
+                </div>
+            </div>
+        {%- endif -%}
+    </div>
+</div>
+<style>
+    #shopify-section-{{ section.id }} {
+    {%- unless section.settings.icon_color == '' or section.settings.icon_color contains 'rgba(0,0,0,0)' -%}
+        border-color: {{ section.settings.icon_color }};
+        color: {{ section.settings.icon_color }};
+    {%- endunless -%}
+    }
+</style>
+{% schema %}
+    {
+    "name": "Product carousel",
+    "class": "index-section",
+    "presets": [
+    {
+    "name": "Product carousel",
+    "category": "Products"
+    }
+    ],
+    "settings": [
+    {
+    "type":      "checkbox",
+    "id":        "enable",
+    "label":     "Enable",
+    "default":   true
+    },
+    {
+    "type": "header",
+    "content": "Layout"
+    },
+    {
+    "type": "select",
+    "id": "outer_margin",
+    "label": "Outer top margin",
+    "options":[
+    {"value":"mt-0","label":"None"},
+    {"value":"holder-mt-xsmall","label":"XSmall"},
+    {"value":"holder-mt-small","label":"Small"},
+    {"value":"holder-mt-medium","label":"Medium (default)"},
+    {"value":"holder-mt-large","label":"Large"}
+    ],
+    "default": "holder-mt-medium"
+    },
+    {
+    "type": "checkbox",
+    "id": "enable_bg",
+    "label": "Add background",
+    "default": true
+    },
+    {
+    "type": "select",
+    "id": "padding-t",
+    "label": "Top Padding",
+    "options":[
+    {"value":"pt-0","label":"None"},
+    {"value":"holder-pt-xsmall","label":"XSmall"},
+    {"value":"holder-pt-small","label":"Small"},
+    {"value":"holder-pt-medium","label":"Medium (default)"},
+    {"value":"holder-pt-large","label":"Large"}
+    ],
+    "default": "holder-pt-medium"
+    },
+    {
+    "type": "select",
+    "id": "padding-b",
+    "label": "Bottom Padding",
+    "options":[
+    {"value":"pb-0","label":"None"},
+    {"value":"holder-pb-xsmall","label":"XSmall"},
+    {"value":"holder-pb-small","label":"Small"},
+    {"value":"holder-pb-medium","label":"Medium (default)"},
+    {"value":"holder-pb-large","label":"Large"}
+    ],
+    "default": "holder-pb-medium"
+    },
+    {
+    "type":"color",
+    "id":"bg_color",
+    "label":"Section Background Color",
+    "default":"#f8f8f8"
+    },
+    {
+    "type":"image_picker",
+    "id":"bg_image",
+    "label":"Section Background Image",
+    "info":"(Recommended size 1920x700 px)"
+    },
+    {
+    "type": "header",
+    "content": "Heading"
+    },
+    {
+    "type": "text",
+    "id": "title",
+    "label": "Title",
+    "default":"Heading"
+    },
+    {
+    "type": "checkbox",
+    "id": "enable_text",
+    "label": "Enable",
+    "default": true
+    },
+    {
+    "type": "select",
+    "id": "title_size",
+    "label": "Title Font Size",
+    "default": "h2-style",
+    "options": [
+    { "value": "h-lg-style", "label": "Large" },
+    { "value": "h1-style", "label": "Normal" },
+    { "value": "h2-style", "label": "Small" }
+    ]
+    },
+    {
+    "type": "select",
+    "id": "text_alignment",
+    "label": "Text Alignment",
+    "default": "center",
+    "options": [
+    { "value": "left", "label": "Left" },
+    { "value": "center", "label": "Center" }
+    ]
+    },
+    {
+    "type": "header",
+    "content": "Product"
+    },
+    {
+    "type": "product",
+    "id": "product",
+    "label": "Select Product"
+    },
+    {
+    "type": "checkbox",
+    "id": "show_title",
+    "label": "Show Product name",
+    "default": true
+    },
+    {
+    "type": "checkbox",
+    "id": "show_price",
+    "label": "Show Price",
+    "default": false
+    },
+    {
+    "type": "checkbox",
+    "id": "show_addtocart",
+    "label": "Show Add To Cart button",
+    "default": true
+    }
+    ],
+    "blocks":[
+    {
+    "type":"text",
+    "name":"Label Icon + Text",
+    "limit": 3,
+    "settings":[
+    {
+    "type":"checkbox",
+    "id":"enable",
+    "label":"Enable",
+    "default":true
+    },
+    {
+    "type":"textarea",
+    "id":"text",
+    "label":"Text",
+    "default": "Add your text here"
+    },
+    {
+    "type": "radio",
+    "id": "icon_type",
+    "label": "Icon Source",
+    "options":[
+    {"value":"theme","label":"Section Icons Set (recommended)"},
+    {"value":"name","label":"Custom Icon Name (Theme Icons Library)"},
+    {"value":"svg","label":"Custom SVG code"}
+    ]
+    },
+    {
+    "type": "select",
+    "id": "icon",
+    "label": "Section Icons Set",
+    "default": "icon-box-1",
+    "options":[
+    {"value":"icon-box-1","label":"Box"},
+    {"value":"icon-call-center","label":"Call Center"},
+    {"value":"icon-speech-bubble","label":"Chat"},
+    {"value":"icon-watch","label":"Clock"},
+    {"value":"icon-credit-card-1","label":"Credit Card"},
+    {"value":"icon-delivery-truck","label":"Delivery Truck"},
+    {"value":"icon-shopping-1","label":"Hand"},
+    {"value":"icon-gift","label":"Gift"},
+    {"value":"icon-gift-card","label":"Gift Card"},
+    {"value":"icon-guarantee","label":"Guarantee"},
+    {"value":"icon-location","label":"Location"},
+    {"value":"icon-return","label":"Return"},
+    {"value":"icon-ribbon","label":"Ribbon"},
+    {"value":"icon-tag","label":"Tag"},
+    {"value":"icon-wallet","label":"Wallet"},
+    {"value":"icon-award","label":"Award"},
+    {"value":"icon-diplom","label":"Document"}
+    ]
+    },
+    {
+    "type":"text",
+    "id":"icon_name",
+    "label":"Custom Icon Name",
+    "default": "icon-gift",
+    "info": "Select icon name here [Theme Icons Library](http://big-skins.com/frontend/foxic-html-demo/icon-foxic/demo.html)"
+    },
+    {
+    "type":"textarea",
+    "id":"svg",
+    "label":"Custom SVG code"
+    }
+    ]
+    }],
+    "presets": [
+    {
+    "name": "Single Product",
+    "category": "Products",
+    "blocks": [
+    {
+    "type": "text"
+    },
+    {
+    "type": "text"
+    },
+    {
+    "type": "text"
+    }
+    ]
+    }]
+    }
+{% endschema %}

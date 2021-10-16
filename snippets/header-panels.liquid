@@ -1,0 +1,246 @@
+{% unless template == 'cart' or settings.catalog_mode %}
+    {% if settings.minicart_enable %}
+        <div class="dropdn-content minicart-drop" id="dropdnMinicart">
+    <div class="dropdn-content-block">
+        <div class="dropdn-close d-flex"><span class="dropdn-close-clear {% if cart.item_count == 0 %}d-none{% endif %} js-minicart-clear"><i class="icon-recycle"></i><span>{{ 'theme.general.clear_cart' | t }}</span></span><span class="js-dropdn-close ml-auto">{{ 'general.accessibility.close_modal' | t }}</span></div>
+        <div class="minicart-drop-content js-dropdn-content-scroll">
+            <div class="minicart-drop-content-inside">
+                <div class="minicart-empty js-minicart-empty {% unless cart.item_count == 0 %}d-none{% endunless %}">
+                    <div class="minicart-empty-text heading-font">{{ 'cart.general.empty' | t }}</div>
+                    {%- if settings.empty_icon_yes -%}
+                    <div class="minicart-empty-icon">
+                        {%- if settings.empty_icon_type == 'svg' -%}
+                            <i class="icon minicart-empty-svg">{{ settings.empty_icon_svg }}</i>
+                        {%- else -%}
+                            <i class="{% if settings.empty_icon_type == 'theme' %}{{ settings.empty_icon }}{% else %}{{ settings.empty_icon_name }}{% endif %}"></i>
+                        {%- endif -%}
+                        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                             viewBox="0 0 306 262" style="enable-background:new 0 0 306 262;" xml:space="preserve">
+                    <path class="st0" d="M78.1,59.5c0,0-37.3,22-26.7,85s59.7,237,142.7,283s193,56,313-84s21-206-69-240s-249.4-67-309-60
+                        C94.6,47.6,78.1,59.5,78.1,59.5z"/>
+                    </svg>
+                    </div>
+                    {%- endif -%}
+                </div>
+                <div class="minicart-list-prd {% if cart.item_count == 0 %}d-none{% endif %}">
+                    {% if cart.item_count > 0 %}
+                        {% for item in cart.items %}
+                            <div class="minicart-prd row">
+                                <div class="minicart-prd-image col">
+                                    {%- assign aspect_ratio = 1 | divided_by: item.image.aspect_ratio -%}
+                                    <a data-aspect="{{ aspect_ratio }}" href="{{ item.url }}" title="{{ item.title | escape }}" class="image-hover-scale image-container" style="padding-bottom: {{ aspect_ratio | times: 100 }}%"><img data-srcset="{{ item | img_url: '280x' }}" class="lazyload" alt="">
+                                        <div class="foxic-loader"></div>
+                                    </a>
+                                </div>
+                                <div class="minicart-prd-info col">
+                                    <div class="minicart-prd-tag">{{ item.vendor }}</div>
+                                    <h2 class="minicart-prd-name"><a href="{{ item.url }}" title="{{ item.title }}">{{ item.product.title }}</a></h2>
+                                    {% unless item.variant.title contains 'Title' %}
+                                    <div><a href="{{ item.url }}" title="{{ item.title }}">{{ item.variant.title }}</a></div>{% endunless %}
+                                    <div class="options_title">
+                                        {% assign propertySize = item.properties | size %}
+                                        {% if propertySize > 0 %}
+                                            {% for p in item.properties %}
+                                                <h6 class="mb-0">{% assign first_character_in_key = p.first | truncate: 1, '' %}
+                                                    {% unless p.last == blank or first_character_in_key == '_' %}
+                                                    {{ p.first }}:
+                                                    {% if p.last contains '/uploads/' %}
+                                                        <a href="{{ p.last }}">{{ p.last | split: '/' | last }}</a>
+                                                    {% else %}
+                                                        {{ p.last }}<br/>
+                                                    {% endif %}
+
+                                                    {% endunless %}
+                                                </h6>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                    <div class="minicart-prd-qty">
+                                        {%- if settings.ajax_cart -%}
+                                            {% include 'cart_qty' %}
+                                        {%- else -%}
+                                            <span class="minicart-prd-qty-label">{{ 'cart.label.quantity' | t }}:</span>
+                                            <span class="minicart-prd-qty-value">
+                                                {{ item.quantity }}
+                                            </span>
+                                        {%- endif -%}
+                                    </div>
+                                    <div class="minicart-prd-price prd-price">
+                                        <div class="price-new">{{ item.price | money }}</div>
+                                    </div>
+                                </div>
+                                <div class="minicart-prd-action">
+                                    <a href="/cart/change?line={{ forloop.index }}&amp;quantity=0" data-variant-id="{{ item.variant_id }}" data-line-number="{{ forloop.index }}" title="{{ 'cart.general.remove' | t }}" class="icon-cross js-minicart-remove-item"><i class="icon-recycle"></i></a>
+                                    <a href="{{ item.url }}" class="mt-1"><i class="icon-pencil"></i></a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                {% if settings.minicart_countdown_text != blank %}
+                    <div class="minicart-drop-countdown">
+                        <div class="countdown-box-full">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col-auto"><i class="icon-gift icon--giftAnimate"></i></div>
+                                <div class="col">
+                                    <div class="countdown-txt heading-font">{{ settings.minicart_countdown_text }}</div>
+                                    <div class="countdown js-countdown" data-countdown="{{ settings.minicart_countdown_date }}"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                {% if settings.minicart_html != blank %}
+                    <div class="minicart-drop-info">
+                        <div class="shop-feature-single row no-gutters align-items-center">
+                            <div class="shop-feature-icon col-auto"><i class="icon-truck"></i></div>
+                            <div class="shop-feature-text col">{{ settings.minicart_html }}</div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="minicart-drop-fixed js-hide-empty {% if cart.item_count == 0 %}d-none{% endif %}">
+            <div class="loader-horizontal-sm js-loader-horizontal-sm" data-loader-horizontal><span></span></div>
+            {%- if cart.cart_level_discount_applications != blank -%}rrr
+                <div class="minicart-drop-total js-minicart-drop-total no-gutters align-items-center">
+                    <div class="row no-gutters align-items-center mb-1">
+                        <div class="minicart-drop-subtotal-txt col-auto heading-font">{{ 'cart.general.subtotal' | t }}</div>
+                        <div class="minicart-drop-subtotal-price col" data-header-cart-subtotal>{{ cart.items_subtotal_price | money }}</div>
+                    </div>
+                    {%- for discount_application in cart.cart_level_discount_applications -%}
+                        <div class="row no-gutters align-items-center mb-1">
+                            <div class="minicart-drop-discount-txt col-auto heading-font"><span class="custom-color">{{ 'cart.label.discounted_total' | t }}</span><br><span>{{- discount_application.title -}}</span>  </div>
+                            <div class="minicart-drop-discount-price col custom-color" data-header-cart-discount>-{{ discount_application.total_allocated_amount | money }}</div>
+                        </div>
+                    {%- endfor -%}
+                    <div class="row no-gutters align-items-center">
+                        <div class="minicart-drop-total-txt col-auto heading-font">{{ 'cart.label.total' | t }}</div>
+                        <div class="minicart-drop-total-price col" data-header-cart-total>{{ cart.total_price | money }}</div>
+                    </div>
+                </div>
+            {%- else -%}
+                <div class="minicart-drop-total js-minicart-drop-total row no-gutters align-items-center">
+                    <div class="minicart-drop-total-txt col-auto heading-font">{{ 'cart.label.total' | t }}</div>
+                    <div class="minicart-drop-total-price col" data-header-cart-total>{{ cart.total_price | money }}</div>
+                </div>
+            {%- endif -%}
+            <div class="minicart-drop-actions">
+                <a href="/cart" class="btn btn--md"><i class="icon-basket"></i><span>{{ 'theme.general.cart_page' | t }}</span></a>
+                {%- if settings.minicart_cb_enable -%}
+                    {%- capture btn_color -%}
+                    {%- if settings.color_minicart_checkout_button_color != '' and settings.color_minicart_checkout_button_color != 'rgba(0,0,0,0)' -%}{{ settings.color_minicart_checkout_button_color }}{%- else -%}#282828{%- endif -%}
+                    {%- endcapture -%}
+                    {%- capture btn_bg -%}
+                    {%- if settings.color_minicart_checkout_button_bgcolor != '' and settings.color_minicart_checkout_button_bgcolor != 'rgba(0,0,0,0)' -%}{{ settings.color_minicart_checkout_button_bgcolor }}{%- else -%}#efefef{%- endif -%}
+                    {%- endcapture -%}
+                    {%- capture btn_color_hover -%}
+                    {%- if settings.color_minicart_checkout_button_color_hover != '' and settings.color_minicart_checkout_button_color_hover != 'rgba(0,0,0,0)' -%}{{ settings.color_minicart_checkout_button_color_hover }}{%- else -%}#fff{%- endif -%}
+                    {%- endcapture -%}
+                    {%- capture btn_bg_hover -%}
+                    {%- if settings.color_minicart_checkout_button_bgcolor_hover != '' and settings.color_minicart_checkout_button_bgcolor_hover != 'rgba(0,0,0,0)' -%}{{ settings.color_minicart_checkout_button_bgcolor_hover }}{%- else -%}#282828{%- endif -%}
+                    {%- endcapture -%}
+                    <a href="/checkout" class="btn btn--md" style="background-color:{{ btn_bg }}; color:{{ btn_color }};" data-color="{{ btn_color }}" data-hover-color="{{ btn_color_hover }}" data-bgcolor="{{ btn_bg }}" data-hover-bgcolor="{{ btn_bg_hover }}"><i class="icon-checkout"></i><span>{{ 'cart.general.checkout' | t }}</span></a>
+                    {%- if settings.agreement_checkout_yes and settings.agreement_checkout_yes_minicart -%}
+                        <div class="w-100 mt-1 text-center" data-agree>
+                            {% render 'agreement-checkbox', button: '.minicart-checkout', name: 'agreementCheckboxMinicart' %}
+                        </div>
+                    {%- endif -%}
+                {%- endif -%}
+            </div>
+            {%- if settings.minicart_payment_enable -%}
+            <ul class="payment-link mb-2">
+                {% for i in (1..12) %}
+                    {% capture code %}icon-code-{{ i }}{% endcapture %}
+                    {% if settings[code] != blank %}
+                        <li><i class="{{ settings[code] }}"></i></li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+            {%- endif -%}
+        </div>
+    </div>
+    <div class="drop-overlay js-dropdn-close"></div>
+</div>
+    {% endif %}
+{% endunless %}
+{% if section.settings.login_box and shop.customer_accounts_enabled %}
+    <div class="dropdn-content account-drop" id="dropdnAccount">
+        <div class="dropdn-content-block js-dropdn-content-scroll">
+            <div class="dropdn-close sticky-top"><span class="js-dropdn-close">{{ 'general.accessibility.close_modal' | t }}</span></div>
+            <ul>
+                {%- if customer -%}
+                    <li><a href="{{ routes.account_url }}"><span>{{ 'customer.account.title' | t }}</span><i class="icon-login"></i></a></li>
+                {% endif %}
+                {%- unless customer -%}
+                <li><a href="{{ routes.account_login_url }}"><span>{{ 'layout.customer.log_in' | t }}</span><i class="icon-login"></i></a></li>
+                <li><a href="{{ routes.account_register_url }}"><span>{{ 'customer.register.title' | t }}</span><i class="icon-user2"></i></a></li>
+                {%- endunless -%}
+                <li><a href="/checkout"><span>{{ 'cart.general.checkout' | t }}</span><i class="icon-card"></i></a></li>
+                {%- if customer -%}
+                    <li><a href="{{ routes.account_logout_url }}"><span>{{ 'layout.customer.log_out' | t }}</span><i class="icon-login"></i></a></li>
+                {% endif %}
+            </ul>
+            {% unless customer %}
+            {% if section.settings.quick_login %}
+                <div class="dropdn-form-wrapper">
+                    <h5 class="heading-font">{{ section.settings.quick_login_title }}</h5>
+                    {% form 'customer_login', novalidate: 'novalidate' %}
+                    {%- if form.errors -%}
+                        <div class="invalid-feedback">
+                            {{ form.errors | default_errors }}
+                        </div>
+                    {%- endif -%}
+                    <div class="form-group">
+                        <input type="email"
+                               name="customer[email]"
+                               id="CustomerEmail"
+                               autocomplete="email"
+                               autocorrect="off"
+                               autocapitalize="off" class="form-control {% if form.errors contains 'form' %}is-invalid{% endif %}" placeholder="{{ 'theme.general.enter_your_email' | t }}">
+                    </div>
+                    <div class="form-group">
+                        <input type="password"
+                               value=""
+                               name="customer[password]"
+                               id="CustomerPassword" class="form-control {% if form.errors contains 'form' %}is-invalid{% endif %}" placeholder="{{ 'theme.general.enter_your_password' | t }}">
+                    </div>
+                    {%- capture btn_color -%}
+                    {%- if settings.color_header_login_button_color != '' and settings.color_header_login_button_color != 'rgba(0,0,0,0)' -%}{{ settings.color_header_login_button_color }}{%- else -%}#282828{%- endif -%}
+                    {%- endcapture -%}
+                    {%- capture btn_bg -%}
+                    {%- if settings.ccolor_header_login_button_bgcolor != '' and settings.ccolor_header_login_button_bgcolor != 'rgba(0,0,0,0)' -%}{{ settings.ccolor_header_login_button_bgcolor }}{%- else -%}#efefef{%- endif -%}
+                    {%- endcapture -%}
+                    {%- capture btn_color_hover -%}
+                    {%- if settings.color_header_login_button_color_hover != '' and settings.color_header_login_button_color_hover != 'rgba(0,0,0,0)' -%}{{ settings.color_header_login_button_color_hover }}{%- else -%}#fff{%- endif -%}
+                    {%- endcapture -%}
+                    {%- capture btn_bg_hover -%}
+                    {%- if settings.color_header_login_button_bgcolor_hover != '' and settings.color_header_login_button_bgcolor_hover != 'rgba(0,0,0,0)' -%}{{ settings.color_header_login_button_bgcolor_hover }}{%- else -%}#282828{%- endif -%}
+                    {%- endcapture -%}
+                    <button type="submit" class="btn btn--lg" style="background-color:{{ btn_bg }}; color:{{ btn_color }};" data-color="{{ btn_color }}" data-hover-color="{{ btn_color_hover }}" data-bgcolor="{{ btn_bg }}" data-hover-bgcolor="{{ btn_bg_hover }}">{{ 'general.password_page.login_form_submit' | t }}</button>
+                    {% endform %}
+                </div>
+            {% endif %}
+            {% endunless %}
+            {%- if section.settings.quick_login_image_enable -%}
+                <div class="dropdn-bnr-wrapper">
+                    <a {% if section.settings.quick_login_image_url != blank %}href="{{ section.settings.quick_login_image_url }}"{% endif %} class="bnr image-hover-scale bnr--bottom bnr--left" data-fontratio="5.695">
+                        <div class="bnr-img">
+                            {%- if section.settings.quick_login_image != blank -%}
+                                {%- assign img_url = section.settings.quick_login_image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+                                <img class="img-fluid lazyload" data-src="{{ img_url }}" data-aspectratio="1" data-sizes="auto" alt="">
+                            {%- else -%}
+                                {% render 'image-placeholder' size: '500x468' %}
+                            {%- endif -%}
+                        </div>
+                        <div class="bnr-caption">
+                            <div class="bnr-text3" style="color:#a2fe01; font-size:.52em;">{{ section.settings.quick_login_banner_caption_1 }}</div>
+                            <div class="bnr-text3 mt-0" style="color:#a2fe01; font-size:.8em;">{{ section.settings.quick_login_banner_caption_2 }}</div>
+                        </div>
+                    </a>
+                </div>
+            {%- endif -%}
+        </div>
+        <div class="drop-overlay js-dropdn-close"></div>
+    </div>
+{% endif %}

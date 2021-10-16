@@ -1,0 +1,222 @@
+{% assign show_only = '' %}
+<div class="holder">
+    <div class="container">
+        <div class="page-title text-center">
+            <div class="title">
+                <h1>{{ 'collections.catalog.title' | t }}</h1>
+            </div>
+        </div>
+        {% assign blocks = section.blocks | sort: 'collection.all_products_count' %}
+        {% case section.settings.posts_per_row %}
+        {% when 2 %}
+        {% assign column = 'col-md-9' %}
+        {% assign image_size = 'x1000' %}
+        {% when 3 %}
+        {% assign column = 'col-md-6' %}
+        {% assign image_size = 'x800' %}
+        {% when 4 %}
+        {% assign column = 'col-md-up-quarter' %}
+        {% assign image_size = 'x600' %}
+        {% when 5 %}
+        {% assign column = 'col-md-up-onefive' %}
+        {% assign image_size = 'x500' %}
+        {% when 6 %}
+        {% assign column = 'col-md-3' %}
+        {% assign image_size = 'x400' %}
+        {% endcase %}
+        {% case section.settings.posts_per_row_mobile %}
+        {% when 1 %}
+        {% assign column_m = 'col-18' %}
+        {% when 2 %}
+        {% assign column_m = 'col-9' %}
+        {% when 3 %}
+        {% assign column_m = 'col-5' %}
+        {% endcase %}
+        <div class="row collection-grid-2 mobile-sm-pad justify-content-center">
+            {% if section.settings.display_type == 'all' %}
+                {% case section.settings.sort %}
+                {% when 'products_high' or 'products_low' %}
+                {% assign collections = collections | sort: 'all_products_count' %}
+                {% when 'date' or 'date_reversed' %}
+                {% assign collections = collections | sort: 'published_at' %}
+                {% endcase %}
+                {% if section.settings.sort == 'products_low' or section.settings.sort == 'date' or section.settings.sort == 'alphabetical' %}
+                    {% for collection in collections %}
+                        {% unless collection.handle == 'frontpage' %}
+                        {% assign featured = collection.handle %}
+                        {% capture collection_title %}{{ collections[featured].title | escape }}{% endcapture %}
+                        {% assign flag = 0 %}
+                        {% for check in show_only %}{% if check == collection.title %}{% assign flag = 1 %}{% endif %}{% endfor %}
+                        {% if show_only == '' %}{% assign flag = 1 %}{% endif %}
+                        {% if flag == 1 %}
+                            <div class="{{ column }} {{ column_m }}">
+                                {% include 'list-collection-item', collection_image_size: image_size, bg: section.settings.bg %}
+                            </div>
+                        {% endif %}
+                        {% endunless %}
+                    {% endfor %}
+                {% else %}
+                    {% for collection in collections reversed %}
+                        {% unless collection.handle == 'frontpage' %}
+                        {% assign featured = collection.handle %}
+                        {% capture collection_title %}{{ collections[featured].title | escape }}{% endcapture %}
+                        {% assign flag = 0 %}
+                        {% for check in show_only %}{% if check == collection.title %}{% assign flag = 1 %}{% endif %}{% endfor %}
+                        {% if show_only == '' %}{% assign flag = 1 %}{% endif %}
+                        {% if flag == 1 %}
+                            <div class="{{ column }} {{ column_m }}">
+                                {% include 'list-collection-item', collection_image_size: image_size, bg: section.settings.bg, qty: section.settings.qty_show, title: section.settings.title_show  %}
+                            </div>
+                        {% endif %}
+                        {% endunless %}
+                    {% endfor %}
+                {% endif %}
+            {% else %}
+                {% for block in section.blocks %}
+                    <div class="{{ column }} {{ column_m }}">
+                        {% assign collection = collections[block.settings.collection] %}
+                        {% assign collection_custom_image = block.settings.collection_image %}
+                        {% include 'list-collection-item', collection_image_size: image_size, bg: section.settings.bg, qty: section.settings.qty_show, title: section.settings.title_show, custom: true, name: block.settings.title, custom_title: block.settings.custom_title %}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        {%- assign link = 'collections/all/' -%}
+        <div class="text-center mt-5"><a href="{{ link }}" class="btn">{{ 'theme.general.all_products' | t }}</a></div>
+    </div>
+</div>
+
+{% schema %}
+{
+"name": "Collections list page",
+"settings": [
+{
+"type": "paragraph",
+"content": "All collections are displayed by default. To customize your list of collections, check 'Selected' and add content."
+},
+{
+"type": "radio",
+"id": "display_type",
+"label": "Select collections to show",
+"default": "all",
+"options": [
+{
+"value": "all",
+"label": "All"
+},
+{
+"value": "selected",
+"label": "Selected"
+}
+]
+},
+{
+"type": "select",
+"id": "sort",
+"label": "Sort collections by:",
+"info": "It only works when 'All' is selected",
+"default": "alphabetical",
+"options": [
+{
+"value": "products_high",
+"label": "Product count, high to low"
+},
+{
+"value": "products_low",
+"label": "Product count, low to high"
+},
+{
+"value": "alphabetical",
+"label": "Alphabetically, A-Z"
+},
+{
+"value": "alphabetical_reversed",
+"label": "Alphabetically, Z-A"
+},
+{
+"value": "date",
+"label": "Date, old to new"
+},
+{
+"value": "date_reversed",
+"label": "Date, new to old"
+}
+]
+},
+{
+"type": "text",
+"id": "collection_image_aspect",
+"label": "Collection image aspect ratio",
+"info": "height/width, for example 1.2  (1 for squared image OR empty input for default size)"
+},
+{
+"type": "checkbox",
+"id": "title_show",
+"label": "Show Title",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "qty_show",
+"label": "Show Quanity",
+"default": false
+},
+{
+"type":"color",
+"id":"bg",
+"label":"Collection item background color"
+},
+{
+"type": "header",
+"content": "Collections per row:"
+},
+{
+"type": "range",
+"id": "posts_per_row",
+"label": "Desktop",
+"min": 2,
+"max": 6,
+"step": 1,
+"default": 4
+},
+{
+"type": "range",
+"id": "posts_per_row_mobile",
+"label": "Mobile",
+"min": 1,
+"max": 3,
+"step": 1,
+"default": 2
+}
+],
+"blocks": [
+{
+"type": "item",
+"name": "Collection",
+"settings": [
+{
+"type": "collection",
+"id": "collection",
+"label": "Collection"
+},
+{
+"type": "image_picker",
+"id": "collection_image",
+"label": "Collection Image"
+},
+{
+"type": "checkbox",
+"id": "custom_title",
+"label": "Use Custom Name",
+"default": false
+},
+{
+"type": "text",
+"id": "title",
+"label": "Custom Collection Name"
+}
+]
+}
+]
+}
+{% endschema %}

@@ -1,0 +1,5 @@
+{%- if section.settings.phone_1 != blank and section.settings.phone_1_yes -%}
+    <div class="hdr-phone{% if settings.color_header_phone_font %} heading-font{% endif %}">
+    {%- if settings.color_header_phone_icon -%}<i class="icon-phone"></i>{%- endif -%}<span>{{ section.settings.phone_1 }}</span>
+    </div>
+{%- endif -%}

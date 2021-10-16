@@ -1,0 +1,10 @@
+{% capture logo_alt %}{{ section.settings.logo.alt | default: shop.name }}{% endcapture %}
+{%- assign aspect_ratio = 1 | divided_by: section.settings.logo_sticky.aspect_ratio -%}
+<a href="{{ routes.root_url }}" class="logo image-container" style="padding-bottom: {{ aspect_ratio | times: 100 }}%;}">
+        {%- capture image_size -%}{{ section.settings.logo_max_width | escape }}x{%- endcapture -%}
+        {% capture image_size_retina %}{{ section.settings.logo_max_width | times: 2 | escape }}x{% endcapture %}
+        <img class="lazyload"
+             data-src="{{ section.settings.logo_sticky | img_url: image_size_retina }}"
+             data-srcset="{{ section.settings.logo_sticky | img_url: image_size_retina }} 1x, {{ section.settings.logo_sticky | img_url: image_size_retina }} 2x"
+             alt="{{ logo_alt | escape }}">
+</a>

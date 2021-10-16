@@ -1,0 +1,77 @@
+{%- if section.settings.enable -%}
+    <div class="holder {{ section.settings.outer_margin }} {{ section.settings.block_width }} {% if section.settings.block_width == 'fullwidth' %}full-nopad{% endif %}">
+        <div class="container" {% if section.settings.block_width == 'boxed' and  section.settings.maxwidth_yes %}style="max-width:{{ section.settings.maxwidth }}px"{% endif %}>
+            {{ section.settings.text }}
+        </div>
+    </div>
+{%- endif -%}
+{% schema %}
+{
+"name": "Custom HTML code",
+"class": "index-section",
+"settings": [
+{
+"type": "checkbox",
+"id": "enable",
+"label": "Enable",
+"default": true
+},
+{
+"type": "header",
+"content": "Layout"
+},
+{
+"type":"select",
+"id":"block_width",
+"label":"Width",
+"options":[
+{"value":"boxed","label":"Boxed"},
+{"value":"fullwidth","label":"Fullwidth"}
+],
+"default":"boxed"
+},
+{
+"type": "checkbox",
+"id": "maxwidth_yes",
+"label": "Enable Max Width",
+"default": false,
+"info": "* only for boxed"
+},
+{
+"type": "range",
+"id": "maxwidth",
+"label": "Max Width",
+"min": 800,
+"max": 2400,
+"step": 20,
+"unit": "px",
+"default": 1600
+},
+{
+"type": "select",
+"id": "outer_margin",
+"label": "Outer top margin",
+"options":[
+{"value":"mt-0","label":"None"},
+{"value":"holder-mt-xsmall","label":"XSmall"},
+{"value":"holder-mt-small","label":"Small"},
+{"value":"holder-mt-medium","label":"Medium (default)"},
+{"value":"holder-mt-large","label":"Large"}
+],
+"default": "holder-mt-medium"
+},
+{
+"type":"textarea",
+"id":"text",
+"label":"HTML code",
+"default":"<h1>Heading</h1><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius laoreet imperdiet. Nullam iaculis odio ac urna blandit tempor. Etiam libero dui, tempor et turpis ut, venenatis varius odio.</p>"
+}
+],
+"presets": [
+{
+"name": "Custom HTML code",
+"category": "Text"
+}
+]
+}
+{% endschema %}

@@ -1,0 +1,146 @@
+{%- if section.settings.enable -%}
+  <div class="holder {{ section.settings.outer_margin }}">
+    {% include 'section-headings' %}
+    <div class="contact-map-fullwidth" style="height: {{ section.settings.map_height }}px;">
+        <div class="contact-map bg-cover lazyload" {%- if section.settings.map_type == 'image' -%}{% if section.settings.map_image != blank %}data-bgset="{% include 'bgset', image: section.settings.map_image %}" data-sizes="auto" style="background-position: {{ section.settings.map_image_position }}"{% endif %}{%- endif -%}>
+            {%- if section.settings.map_type == 'google' -%}{{ section.settings.google_map }}{%- endif -%}
+        </div>
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+"name": "Map",
+"settings": [
+{
+"type": "checkbox",
+"id": "enable",
+"label": "Enable",
+"default": true
+},
+{
+"type": "header",
+"content": "Layout"
+},
+{
+"type": "select",
+"id": "outer_margin",
+"label": "Outer top margin",
+"options":[
+{"value":"mt-0","label":"None"},
+{"value":"holder-mt-xsmall","label":"XSmall"},
+{"value":"holder-mt-small","label":"Small"},
+{"value":"holder-mt-medium","label":"Medium (default)"},
+{"value":"holder-mt-large","label":"Large"}
+],
+"default": "holder-mt-medium"
+},
+{
+"type": "header",
+"content": "Headings"
+},
+{
+"type": "checkbox",
+"id": "enable_text",
+"label": "Enable",
+"default": true
+},
+{
+"type": "text",
+"id": "title",
+"label": "Title",
+"default":"OUR LOCATION"
+},
+{
+"type": "select",
+"id": "title_size",
+"label": "Title Font Size",
+"default": "h1-style",
+"options": [
+{ "value": "h-lg-style", "label": "Large" },
+{ "value": "h1-style", "label": "Normal" },
+{ "value": "h2-style", "label": "Small" }
+]
+},
+    {
+    "type": "text",
+    "id": "subtitle",
+    "label": "Sub Heading",
+    "default": "Sub Heading"
+    },
+    {
+    "type": "text",
+    "id": "bgtitle",
+    "label": "Background Heading"
+    },
+{
+"type": "select",
+"id": "text_alignment",
+"label": "Text Alignment",
+"default": "center",
+"options": [
+{ "value": "left", "label": "Left" },
+{ "value": "center", "label": "Center" },
+{ "value": "right", "label": "Right" }
+]
+},
+{
+"type": "header",
+"content": "Map"
+},
+{
+"type": "radio",
+"id": "map_type",
+"label": "Map Source",
+"options":[
+{"value":"google","label":"Google Maps"},
+{"value":"image","label":"Custom Image"}
+]
+},
+{
+"type": "textarea",
+"id": "google_map",
+"label": "Google maps Embed code",
+"default": "<iframe src='https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d10887.233029391118!2d-77.94517490061943!3d34.23848636904559!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sua!4v1573217807041!5m2!1sen!2sua'></iframe>",
+"info": "Go to [maps.google.com](https://maps.google.com) > Find location > Menu > Share or Embed > Copy Embed code"
+},
+{
+"type":"image_picker",
+"id":"map_image",
+"label":"Map Image",
+"info":"(Recommended size 1920x800px)"
+},
+{
+"type": "select",
+"id": "map_image_position",
+"label": "Image position",
+"default": "center center",
+"options": [
+{"value": "top left", "label": "Top left"},
+{"value": "top center", "label": "Top center"},
+{"value": "top right", "label": "Top right"},
+{"value": "center left", "label": "Center left"},
+{"value": "center center", "label": "Center center"},
+{"value": "center right", "label": "Center right"},
+{"value": "bottom left", "label": "Bottom left"},
+{"value": "bottom center", "label": "Bottom center"},
+{"value": "bottom right", "label": "Bottom right"}
+]
+},
+{
+"type": "range",
+"id": "map_height",
+"label": "Map Height",
+"min": 100,
+"max": 800,
+"step": 10,
+"default": 300
+}
+],
+"presets": [{
+"name": "Map",
+"category": "Contact Us"
+}]
+}
+{% endschema %}

@@ -1,0 +1,277 @@
+<div class="holder {{ section.settings.outer_margin }} py-15 py-md-6 position-relative bg-cover lazyload" {% if section.settings.bg_image != blank %}data-bgset="{% include 'bgset', image: section.settings.bg_image %}" data-sizes="auto"{% endif %} {%- if section.settings.enable_bg -%}{% unless section.settings.bg_color == blank or section.settings.bg_color contains 'rgba(0,0,0,0)' -%}style="background-color: {{ section.settings.bg_color }}"{% endunless %}{% endif %}>
+    <div class="container">
+        <div class="creative-product-carousel-wrap creative-product-carousel-wrap-single {% if section.settings.reversed %}creative-product-carousel--reversed{% endif %}">
+            <div class="creative-product-carousel js-creative-product-carousel" data-autoplay="{{ section.settings.autoplay }}" data-speed="{{ section.settings.autoplay_speed }}">
+                {% for block in section.blocks %}
+                    {% if block.settings.enable %}
+                        <div class="creative-product-carousel-item">
+                            <div class="row flex-nowrap one-in-row">
+                                {%- assign product = all_products[block.settings.product] -%}
+                                {% assign on_sale = false %}
+                                {% if product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price %}
+                                    {% assign on_sale = true %}
+                                {% endif %}
+
+                                {% assign sold_out = true %}
+                                {% if product.available %}
+                                    {% assign sold_out = false %}
+                                {% endif %}
+                                {% assign show = true %}
+                                {% if sold_out %}
+                                    {% unless settings.show_out_of_stock %}
+                                    {% assign show = false %}
+                                    {% endunless %}
+                                {% endif %}
+                                {%- assign grid_image_width = '900x' -%}
+                                {%- assign grid_image_scale = '2' -%}
+                                <div class="col prd-single-col">
+                                    <div class="prd-inside row align-items-center">
+                                        <div class="prd-img-area-col col-lg js-creative-image">
+                                            {%- if product.featured_image.src != blank -%}
+                                            {%- assign aspect_ratio = 1 | divided_by: product.featured_image.aspect_ratio -%}
+                                            <a href="{{ product.url | within: collection }}" class="prd-img image-container" title="{{ product.title | strip_html }}" style="padding-bottom: {{ aspect_ratio | times: 100 }}%">
+                                                <img class="js-prd-img fade-up lazyload"
+                                                     data-src="{{ product.featured_image.src | img_url: grid_image_width }} 1x, {{ product.featured_image.src | img_url: grid_image_width, scale:grid_image_scale }} 2x"
+                                                alt="{{ product.featured_image.alt }}">
+                                            </a>
+                                            {%- else -%}
+                                                {%- render 'image-placeholder-aspect-ratio', width: 200, height: 130, text: 'image' -%}
+                                            {%- endif -%}
+                                        </div>
+                                        <div class="prd-info-col col-lg-6 js-creative-info">
+                                            <h2 class="prd-title"><a title="{{ product.title  | strip_html  }}" href="{{ product.url | within: collection }}">{{ product.title  | strip_html  | truncate: settings.product_title_truncate }}</a></h2>
+                                            <div class="prd-price">
+                                                {% render 'product-price' with product as product %}
+                                            </div>
+                                            {% assign introtext = product.metafields.c_f.introtext %}
+                                            {% if introtext != blank %}
+                                                {% if introtext != '-' %}
+                                                    <div class="prd-description">{{ introtext }}</div>
+                                                {% endif %}
+                                            {% endif %}
+                                            <a class="btn" href="{{ product.url | within: collection }}">{{ 'theme.product.view_full_info' | t }}</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <div class="creative-product-carousel-text creative-prd-single-text heading-font">
+                            <div style="font-size:{{ block.settings.title_size | times: 0.1 }}vw;{% if block.settings.title_color != blank and block.settings.title_color != 'rgba(0,0,0,0)' %}color:{{ block.settings.title_color }}{% endif %}">{{ block.settings.title }}</div>
+                            <div style="font-size:{{ block.settings.title_size_2 | times: 0.1 }}vw;{% if block.settings.title_color_2 != blank %}color:{{ block.settings.title_color_2 }}{% endif %}">{{ block.settings.title_2 }}</div>
+                        </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div class="collection-grid-1 collection-grid-1-vertical js-creative-product-carousel-tabs">
+                {% for block in section.blocks %}
+                    {% if block.settings.enable %}
+                        <div class="collection-grid-1-item js-collection-grid-nav {% if forloop.first %}active tab-loaded{% endif %}">
+                            <a href="{% if block.settings.collection != blank %}{% if forloop.first %}#{% else %}{{ collections[block.settings.collection].url | append:'?view=load-tab' }}{% endif %}{% else %}#{% endif %}" rel="nofollow" class="collection-grid-1-item-inside" title="{{ block.settings.title | strip_html }} {{ block.settings.title_2 | strip_html }}" style="background-color: {{ section.settings.tabs_bg }};{%- if section.settings.tabs_border != blank -%}border: 1px solid {{ section.settings.tabs_border }}{%- endif -%}">
+                                {%- assign product = all_products[block.settings.product] -%}
+                                <img class="fade-up lazyload"
+                                     src={{ product.featured_image.src | img_url: '200x' }}
+                                     data-src="{{ product.featured_image.src | img_url: '200x' }} 1x, {{ product.featured_image.src | img_url: '400x' }} 2x"
+                                alt="{{ product.featured_image.alt }}">
+                            </a>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                {% if section.settings.show_view_all %}
+                    <div class="collection-grid-1-item">
+                        <a href="{{ section.settings.view_all_url | default:'#' }}" class="collection-grid-1-item-inside" style="background-color: {{ section.settings.tabs_bg }};{%- if section.settings.tabs_border != blank -%}border: 1px solid {{ section.settings.tabs_border }}{%- endif -%}">
+                            {{ section.settings.view_all_text | truncate:40 }}
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="creative-product-carousel-loader">
+            <div class="foxic-loader"></div>
+        </div>
+    </div>
+</div>
+{% schema %}
+{
+"name": "Single Creative carousel",
+"class": "index-section",
+"settings": [
+{
+"type": "header",
+"content": "Layout"
+},
+{
+"type": "select",
+"id": "outer_margin",
+"label": "Outer top margin",
+"options":[
+{"value":"mt-0","label":"None"},
+{"value":"holder-mt-xsmall","label":"XSmall"},
+{"value":"holder-mt-small","label":"Small"},
+{"value":"holder-mt-medium","label":"Medium (default)"},
+{"value":"holder-mt-large","label":"Large"}
+],
+"default": "mt-0"
+},
+{
+"type": "checkbox",
+"id": "reversed",
+"label": "Reversed",
+"default": false
+},
+{
+"type": "checkbox",
+"id": "autoplay",
+"label": "Auto-rotate slides",
+"default": true
+},
+{
+"type": "select",
+"id": "autoplay_speed",
+"label": "Autoplay speed",
+"default": "10000",
+"options": [
+{ "value": "5000", "label": "5 seconds" },
+{ "value": "7000", "label": "7 seconds" },
+{ "value": "10000", "label": "10 seconds" },
+{ "value": "15000", "label": "15 seconds" }
+]
+},
+{
+"type":"color",
+"id":"bg_color",
+"label":"Background",
+"default":"#f8f8f8"
+},
+{
+"type":"image_picker",
+"id":"bg_image",
+"label":"Section Background Image",
+"info":"(Recommended size 1920x700 px)"
+},
+{
+"type":"color",
+"id":"tabs_bg",
+"label":"Tabs Background"
+},
+{
+"type":"color",
+"id":"tabs_border",
+"label":"Tabs Border Color"
+},
+{
+"type": "header",
+"content": "General"
+},
+{
+"type": "text",
+"id": "title",
+"label": "Heading",
+"default": "Creative Carousel"
+},
+{
+"type": "checkbox",
+"id": "show_view_all",
+"label": "Show 'View all' button",
+"default": true
+},
+{
+"type":      "text",
+"id":        "view_all_text",
+"label":     "View all text",
+"default":   "View all"
+},
+{
+"type":      "url",
+"id":        "view_all_url",
+"label":     "View all link"
+},
+{
+"type":   "range",
+"id":     "product_title_truncate",
+"min":       30,
+"max":       200,
+"step":      2,
+"label":     "Truncate product title after:",
+"default":   100,
+"info":"letters"
+}
+],
+"blocks": [
+{
+"type": "product",
+"name": "product",
+"settings": [
+{
+"type":"checkbox",
+"id":"enable",
+"label":"Enable",
+"default":true
+},
+{
+"type": "product",
+"id": "product",
+"label": "Product"
+},
+{
+"type": "text",
+"id": "title",
+"label": "Heading",
+"default": "Heading"
+},
+{
+"type":      "range",
+"id":        "title_size",
+"min":       50,
+"max":        100,
+"step":       1,
+"unit":       "%",
+"label":     "Heading Font Size",
+"default":   100
+},
+{
+"type":"color",
+"id":"title_color",
+"label":"Heading Color"
+},
+{
+"type": "text",
+"id": "title_2",
+"label": "Heading 2"
+},
+{
+"type":      "range",
+"id":        "title_size_2",
+"min":       50,
+"max":        100,
+"step":       1,
+"unit":       "%",
+"label":     "Heading 2 Font Size",
+"default":   100
+},
+{
+"type":"color",
+"id":"title_color_2",
+"label":"Heading 2 Color"
+}
+]
+}
+],
+"presets": [
+{
+"name": "Single Creative carousel",
+"category": "Products",
+"blocks": [
+{
+"type": "product"
+},
+{
+"type": "product"
+},
+{
+"type": "product"
+}
+]
+}
+]
+}
+{% endschema %}

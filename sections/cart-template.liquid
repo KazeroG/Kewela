@@ -1,0 +1,562 @@
+{%- assign cart_style = section.settings.cart_style -%}
+{%- assign settings_cart_ajax_enable = section.settings.cart_ajax_enable -%}
+<div class="holder shopping-cart-holder {% unless cart.item_count > 0 %}shopping-cart--empty{% endunless %} {% if settings_cart_ajax_enable %}shopping-cart--ajax{% endif %}">
+    <div class="container">
+        <div class="shopping-cart-empty-text">
+            <div class="page404-bg">
+                <div class="page404-text" style="top: 0;">
+                    {%- if section.settings.cart_empty_rotate -%}
+                        <div class="txt1"><img src="{{ 'tumbleweed.gif' | asset_img_url: 'master' }}"></div>
+                    {%- else -%}
+                        <div class="txt1"><i class="icon-tumbleweed"></i></div>
+                    {%- endif -%}
+                    <div class="txt2">{{ 'cart.general.empty' | t }}</div>
+                </div>
+                {%- unless section.settings.cart_empty_rotate -%}
+                    <svg class="blob" id="morphing" xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600">
+                        <g transform="translate(50,50)">
+                            <path class="p" d="M93.5441 2.30824C127.414 -1.02781 167.142 -4.63212 188.625 21.7114C210.22 48.1931 199.088 86.5178 188.761 119.068C179.736 147.517 162.617 171.844 136.426 186.243C108.079 201.828 73.804 212.713 44.915 198.152C16.4428 183.802 6.66731 149.747 1.64848 118.312C-2.87856 89.9563 1.56309 60.9032 19.4066 38.3787C37.3451 15.7342 64.7587 5.14348 93.5441 2.30824Z"/>
+                        </g>
+                    </svg>
+                {%- endunless -%}
+            </div>
+        </div>
+        {%- if cart.item_count > 0 -%}
+            <form action="{{ routes.cart_url }}" method="post" novalidate>
+                <div class="row vert-margin shopping-cart-content justify-content-center">
+                    <div class="{% if cart_style == 'right' %}col-lg-11 col-xl-13{% else %}col-18{% endif %}">
+                        <h1 class="text-center">{{ 'cart.general.title' | t }}</h1>
+                        <div class="cart-table" data-max-error="{{ 'cart.general.cart_max_error' | t }}">
+                            <div class="cart-table-prd cart-table-prd--head py-2 d-none d-md-flex">
+                                <div class="cart-table-prd-image text-center">&nbsp;</div>
+                                <div class="cart-table-prd-content-wrap">
+                                    <div class="cart-table-prd-info">{{ 'cart.label.product' | t }}</div>
+                                    <div class="cart-table-prd-qty">{{ 'cart.label.quantity' | t }}</div>
+                                    <div class="cart-table-prd-price m-0 justify-content-center">{{ 'cart.label.total' | t }}</div>
+                                </div>
+                                <div class="cart-table-prd-action">&nbsp;</div>
+                            </div>
+                            {%- for item in cart.items -%}
+                                <div class="cart-table-prd" data-variant-id="{{ item.variant_id }}" data-line-number="{{ forloop.index }}">
+                                    <div class="cart-table-prd-image">
+                                        {%- assign aspect_ratio = 1 | divided_by: item.image.aspect_ratio -%}
+                                        <a href="{{ item.url }}" class="image-hover-scale image-container" style="padding-bottom: {{ aspect_ratio | times: 100 }}%">
+                                            {%- assign image_size = '260x' -%}
+                                            <img class="lazyload fade-up-fast"
+                                                 data-src="{{ item | img_url: image_size }}"
+                                                 data-srcset="{{ item | img_url: image_size }} 1x, {{ item | img_url: image_size, scale: 2 }} 2x"
+                                                 data-sizes="auto"
+                                                 alt="{{ item.image.alt | escape }}">
+                                        </a>
+                                    </div>
+                                    <div class="cart-table-prd-content-wrap">
+                                        <div class="cart-table-prd-info">
+                                            <!--    <div class="cart-table-prd-price">
+<div class="price-new">{{ item.price | money }}</div>
+</div>  -->
+                                            <h2 class="cart-table-prd-name"><a href="{{ item.url }}" title="{{ item.title | strip_html }}">{{ item.product.title | strip_html }}</a></h2>
+                                            {% unless item.variant.title contains 'Title' %}<h6 class="cart-table-prd-subname"><a href="{{ item.url }}" title="{{ item.title | strip_html }}">{{ item.variant.title | strip_html }}</a></h6>{% endunless %}
+                                            {% assign propertySize = item.properties | size %}
+                                            {% if propertySize > 0 %}
+                                                <div class="cart-table-prd-options">
+                                                    {% for p in item.properties %}
+                                                        <h6 class="mb-0">{% assign first_character_in_key = p.first | truncate: 1, '' %}
+                                                            {% unless p.last == blank or first_character_in_key == '_' %}
+                                                                {{ p.first }}:
+                                                                {% if p.last contains '/uploads/' %}
+                                                                    <a href="{{ p.last }}">{{ p.last | split: '/' | last }}</a>
+                                                                {% else %}
+                                                                    {{ p.last }}<br/>
+                                                                {% endif %}
+                                                            {% endunless %}
+                                                        </h6>
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="cart-table-prd-qty">
+                                            {%- if settings_cart_ajax_enable -%}
+                                                {% include 'cart_qty' %}
+                                            {%- else -%}
+                                                <div class="qty qty-changer">
+                                                    <button class="decrease js-qty-button"></button>
+                                                    <input type="number" class="qty-input" name="updates[]" id="updates_{{ item.id }}" value="{{ item.quantity }}" data-min="1" data-max="1000" pattern="[0-9]*">
+                                                    <button class="increase js-qty-button"></button>
+                                                </div>
+                                            {%- endif -%}
+                                        </div>
+                                        <div class="cart-table-prd-price-total js-cart-table-prd-price-total">
+                                            {{ item.original_line_price | money }}
+                                        </div>
+                                    </div>
+                                    <div class="cart-table-prd-action">
+                                        {%- unless settings_cart_ajax_enable -%}
+                                            <a href="/cart/change?line={{ forloop.index }}&amp;quantity=0" class="cart-table-prd-remove" data-variant-id="{{ item.variant_id }}" data-line-number="{{ forloop.index }}" title="{{ 'cart.general.remove' | t }}"><i class="icon-recycle"></i></a>
+                                            {%- else -%}
+                                            <a href="#" class="cart-table-prd-remove {% if settings_cart_ajax_enable %}js-cart-table-prd-remove{% endif %}" data-tooltip="{{ 'cart.general.remove' | t }}"><i class="icon-recycle"></i></a>
+                                        {%- endunless -%}
+                                    </div>
+                                </div>
+                            {%- endfor -%}
+                        </div>
+                        <div class="text-center mt-1">
+                            {%- capture btn_color -%}
+                                {%- if section.settings.cart_clear_color != '' and section.settings.cart_clear_color != 'rgba(0,0,0,0)' -%}{{ section.settings.cart_clear_color }}{%- else -%}#fff{%- endif -%}
+                            {%- endcapture -%}
+                            {%- capture btn_bg -%}
+                                {%- if section.settings.cart_clear_bg != '' and section.settings.cart_clear_bg != 'rgba(0,0,0,0)' -%}{{ section.settings.cart_clear_bg }}{%- else -%}#f8357b{%- endif -%}
+                            {%- endcapture -%}
+                            {%- capture btn_color_hover -%}
+                                {%- if section.settings.cart_clear_color_hover != '' and section.settings.cart_clear_color_hover != 'rgba(0,0,0,0)' -%}{{ section.settings.cart_clear_color_hover }}{%- else -%}#fff{%- endif -%}
+                            {%- endcapture -%}
+                            {%- capture btn_bg_hover -%}
+                                {%- if section.settings.cart_clear_bg_hover != '' and section.settings.cart_clear_bg_hover != 'rgba(0,0,0,0)' -%}{{ section.settings.cart_clear_bg_hover }}{%- else -%}#282828{%- endif -%}
+                            {%- endcapture -%}
+                            {%- if settings_cart_ajax_enable -%}
+                                <a href="#" class="btn btn--grey {% if cart.item_count == 0 %}d-none{% endif %} {% if settings_cart_ajax_enable %}js-cart-clear{% endif %}">{{ 'theme.general.clear_cart' | t }}</a>
+                            {%- else -%}
+                                <a href="{{ routes.cart_clear_url }}" class="btn btn--grey {% if cart.item_count == 0 %}d-none{% endif %}">{{ 'theme.general.clear_cart' | t }}</a>
+                            {%- endif -%}
+                        </div>
+                    </div>
+                    {% if cart_style == 'right' %}
+                        <div class="col-lg-7 col-xl-5 aside--sticky js-sticky-collision">
+                            <div class="aside-content">
+                                {%- if section.settings.cart_banner -%}
+                                    <div class="cart-promo-banner" {% if section.settings.cart_banner_bg != blank and section.settings.cart_banner_bg != 'rgba(0,0,0,0)' %}style="background-color: {{ section.settings.cart_banner_bg }}"{% endif %}>
+                                        <div class="cart-promo-banner-inside" {% if section.settings.cart_banner_color != blank and section.settings.cart_banner_color != 'rgba(0,0,0,0)' %}style="color: {{ section.settings.cart_banner_color }}"{% endif %}>
+                                            <div class="txt1">{{ section.settings.cart_banner_text1 }}</div>
+                                            <div class="txt2">{{ section.settings.cart_banner_text2 }}</div>
+                                        </div>
+                                        {%- if section.settings.cart_banner_image != blank -%}
+                                            <div class="cart-promo-banner-logo">
+                                                <img class="lazyload"
+                                                     data-src="{{ section.settings.cart_banner_image | img_url: '200x' }}"
+                                                     data-aspectratio="1"
+                                                     data-sizes="auto"
+                                                     alt="">
+                                            </div>
+                                        {%- endif -%}
+                                    </div>
+                                {%- endif -%}
+                                <div class="card-total">
+                                    {%- if cart.cart_level_discount_applications != blank -%}
+                                        <div class="row">
+                                            <div class="col card-subtotal-txt heading-font">
+                                                {{ 'cart.general.subtotal' | t }}
+                                            </div>
+                                            <div class="col-auto card-subtotal-price js-card-subtotal-price text-right">{{ cart.items_subtotal_price | money }}</div>
+                                        </div>
+                                        {%- for discount_application in cart.cart_level_discount_applications -%}
+                                            <div class="row custom-color">
+                                                <div class="col card-discount-txt heading-font">
+                                                    {{ 'cart.label.discounted_total' | t }}<br><span>{{- discount_application.title -}}</span>
+                                                </div>
+                                                <div class="col-auto card-discount-price js-card-discount text-right">-{{ discount_application.total_allocated_amount | money }}</div>
+                                            </div>
+                                        {%- endfor -%}
+                                        <div class="mb-2"></div>
+                                    {%- endif -%}
+                                    {%- unless settings_cart_ajax_enable -%}
+                                        <div class="text-right">
+                                            <button type="submit" class="btn btn--grey" name="update"><i class="icon-refresh"></i><span>{{ 'cart.general.update' | t }}</span></button>
+                                        </div>
+                                    {%- endunless -%}
+                                    <div class="row d-flex">
+                                        <div class="col card-total-txt heading-font">
+                                            {{ 'cart.label.total' | t }}
+                                        </div>
+                                        <div class="col-auto card-total-price js-card-total-price text-right">{{ cart.total_price | money }}</div>
+                                    </div>
+                                    {%- capture taxes_shipping_checkout -%}
+                                        {%- if shop.taxes_included and shop.shipping_policy.body != blank -%}
+                                            {{ 'cart.general.taxes_included_and_shipping_policy_html' | t: link: shop.shipping_policy.url }}
+                                            {%- elsif shop.taxes_included -%}
+                                            {{ 'cart.general.taxes_included_but_shipping_at_checkout' | t }}
+                                            {%- elsif shop.shipping_policy.body != blank -%}
+                                            {{ 'cart.general.taxes_and_shipping_policy_at_checkout_html' | t: link: shop.shipping_policy.url }}
+                                        {%- else -%}
+                                            {{ 'cart.general.taxes_and_shipping_at_checkout' | t }}
+                                        {%- endif -%}
+                                    {%- endcapture -%}
+                                    <div class="card-text-info text-right">{{ taxes_shipping_checkout }}</div>
+                                    <button type="submit" name="checkout" class="btn btn--full btn--xl shopify-go-checkout"><span>{{ 'cart.general.checkout' | t }}</span></button>
+                                    {%- if settings.agreement_checkout_yes -%}
+                                        <div class="text-right" data-agree>
+                                            {% render 'agreement-checkbox', button: '.shopify-go-checkout', name: 'agreementCheckboxCartPage' %}
+                                        </div>
+                                    {%- endif -%}
+                                    {%- if section.settings.cart_custom_text != blank -%}
+                                        <div class="card-text-info text-right">
+                                            {{ section.settings.cart_custom_text }}
+                                        </div>
+                                    {%- endif -%}
+                                </div>
+                                <div class="mt-2"></div>
+                                <div class="panel-group panel-group--style1 d-flex flex-column" id="cartAccordion">
+                                    {%- if section.settings.cart_shipping_calculator_enable -%}
+                                        {%- render 'shipping-calculator', panel: true, order: section.settings.cart_shipping_calculator_order, heading: section.settings.cart_shipping_calculator_heading, open: section.settings.cart_shipping_calculator_open -%}
+                                    {%- endif -%}
+                                    {%- if section.settings.cart_custom_tab_enable -%}
+                                        <div class="panel order-{{ section.settings.cart_custom_tab_order }}">
+                                            <div class="panel-heading{% if section.settings.cart_custom_tab_open %} active{% endif %}">
+                                                <h4 class="panel-title">
+                                                    <a data-toggle="collapse" data-parent="#cartAccordion" href="#collapse2">{{ section.settings.cart_custom_tab_heading }}</a>
+                                                    <div class="toggle-arrow"><span></span><span></span></div>
+                                                </h4>
+                                            </div>
+                                            <div id="collapse2" class="panel-collapse collapse{% if section.settings.cart_custom_tab_open %} show{% endif %}">
+                                                <div class="panel-body">
+                                                    {%- if section.settings.cart_custom_tab_text -%}
+                                                        {{ section.settings.cart_custom_tab_text }}
+                                                    {%- endif -%}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {%- endif -%}
+                                    {%- if section.settings.cart_notes_enable -%}
+                                        <div class="panel order-{{ section.settings.cart_notes_order }}">
+                                            <div class="panel-heading{% if section.settings.cart_notes_open %} active{% endif %}">
+                                                <h4 class="panel-title">
+                                                    <a data-toggle="collapse" data-parent="#cartAccordion" href="#collapse3">{{ section.settings.cart_notes_heading }}</a>
+                                                    <div class="toggle-arrow"><span></span><span></span></div>
+                                                </h4>
+                                            </div>
+                                            <div id="collapse3" class="panel-collapse collapse{% if section.settings.cart_notes_open %} show{% endif %}">
+                                                <div class="panel-body">
+                                                    <textarea class="form-control form-control--sm textarea--height-100" placeholder="{{ 'cart.general.note' | t }}" name="note"></textarea>
+                                                    {%- if section.settings.cart_notes_custom_text -%}
+                                                        <div class="card-text-info mt-2">
+                                                            <p>{{ section.settings.cart_notes_custom_text }}</p>
+                                                        </div>
+                                                    {%- endif -%}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {%- endif -%}
+                                </div>
+                            </div>
+                        </div>
+
+                    {% else %}
+                        <div class="col-18 mt-4 mt-md-6">
+                            <div class="row vert-margin-md cart-table-under justify-content-center">
+                                {%- if section.settings.cart_shipping_calculator_enable -%}
+                                    <div class="col-md-9 col-xl order-{{ section.settings.cart_shipping_calculator_order }}">
+                                        {%- render 'shipping-calculator', panel: false, order: section.settings.cart_shipping_calculator_order, heading: section.settings.cart_shipping_calculator_heading, open: section.settings.cart_shipping_calculator_open -%}
+                                    </div>
+                                {%- endif -%}
+                                {%- if section.settings.cart_custom_tab_enable -%}
+                                    <div class="col-md-9 col-xl {% if section.settings.cart_custom_tab_enable %}order-{{ section.settings.cart_custom_tab_order }}{% endif %}">
+                                        {%- if section.settings.cart_custom_tab_enable -%}
+                                            <h2>{{ section.settings.cart_custom_tab_heading }}</h2>
+                                            {%- if section.settings.cart_custom_tab_text -%}
+                                                {{ section.settings.cart_custom_tab_text }}
+                                            {%- endif -%}
+                                        {%- endif -%}
+                                        {%- if section.settings.cart_custom_text != blank -%}
+                                            <div class="card-text-info {% if section.settings.cart_custom_tab_enable %}mt-4 mt-md-5{% endif %}">
+                                                {{ section.settings.cart_custom_text }}
+                                            </div>
+                                        {%- endif -%}
+                                    </div>
+                                {%- endif -%}
+                                {%- if section.settings.cart_notes_enable -%}
+                                    <div class="col-md-9 col-xl order-{{ section.settings.cart_notes_order }}">
+                                        <h2>{{ section.settings.cart_notes_heading }}</h2>
+                                        <textarea class="form-control form-control--sm textarea--height-200" placeholder="{{ 'cart.general.note' | t }}" name="note"></textarea>
+                                        {%- if section.settings.cart_notes_custom_text -%}
+                                            <div class="card-text-info mt-2">
+                                                <p>{{ section.settings.cart_notes_custom_text }}</p>
+                                            </div>
+                                        {%- endif -%}
+                                    </div>
+                                {%- endif -%}
+                                <div class="col-md-9 col-xl order-0 order-lg-last">
+                                    {%- if section.settings.cart_banner -%}
+                                        <div class="cart-promo-banner" {% if section.settings.cart_banner_bg != blank and section.settings.cart_banner_bg != 'rgba(0,0,0,0)' %}style="background-color: {{ section.settings.cart_banner_bg }}"{% endif %}>
+                                            <div class="cart-promo-banner-inside" {% if section.settings.cart_banner_color != blank  and section.settings.cart_banner_color != 'rgba(0,0,0,0)' %}style="color: {{ section.settings.cart_banner_color }}"{% endif %}>
+                                                <div class="txt1">{{ section.settings.cart_banner_text1 }}</div>
+                                                <div class="txt2">{{ section.settings.cart_banner_text2 }}</div>
+                                            </div>
+                                            {%- if section.settings.cart_banner_image != blank -%}
+                                                <div class="cart-promo-banner-logo">
+                                                    <img class="lazyload"
+                                                         data-src="{{ section.settings.cart_banner_image | img_url: '200x' }}"
+                                                         data-aspectratio="1"
+                                                         data-sizes="auto"
+                                                         alt="">
+                                                </div>
+                                            {%- endif -%}
+                                        </div>
+                                    {%- endif -%}
+                                    <div class="card-total">
+                                        {%- if cart.cart_level_discount_applications != blank -%}
+                                            <div class="row">
+                                                <div class="col card-subtotal-txt heading-font">
+                                                    {{ 'cart.general.subtotal' | t }}
+                                                </div>
+                                                <div class="col-auto card-subtotal-price js-card-subtotal-price text-right">{{ cart.items_subtotal_price | money }}</div>
+                                            </div>
+                                            {%- for discount_application in cart.cart_level_discount_applications -%}
+                                                <div class="row custom-color">
+                                                    <div class="col card-discount-txt heading-font">
+                                                        {{ 'cart.label.discounted_total' | t }}<br><span>{{- discount_application.title -}}</span>
+                                                    </div>
+                                                    <div class="col-auto card-discount-price js-card-discount text-right">-{{ discount_application.total_allocated_amount | money }}</div>
+                                                </div>
+                                            {%- endfor -%}
+                                            <div class="mb-2"></div>
+                                        {%- endif -%}
+                                        {%- unless settings_cart_ajax_enable -%}
+                                            <div class="text-right">
+                                                <button type="submit" class="btn btn--grey" name="update"><i class="icon-refresh"></i><span>{{ 'cart.general.update' | t }}</span></button>
+                                            </div>
+                                        {%- endunless -%}
+                                        <div class="row d-flex">
+                                            <div class="col card-total-txt">
+                                                {{ 'cart.label.total' | t }}
+                                            </div>
+                                            <div class="col-auto card-total-price js-card-total-price text-right">{{ cart.total_price | money }}</div>
+                                        </div>
+                                        {%- capture taxes_shipping_checkout -%}
+                                            {%- if shop.taxes_included and shop.shipping_policy.body != blank -%}
+                                                {{ 'cart.general.taxes_included_and_shipping_policy_html' | t: link: shop.shipping_policy.url }}
+                                                {%- elsif shop.taxes_included -%}
+                                                {{ 'cart.general.taxes_included_but_shipping_at_checkout' | t }}
+                                                {%- elsif shop.shipping_policy.body != blank -%}
+                                                {{ 'cart.general.taxes_and_shipping_policy_at_checkout_html' | t: link: shop.shipping_policy.url }}
+                                            {%- else -%}
+                                                {{ 'cart.general.taxes_and_shipping_at_checkout' | t }}
+                                            {%- endif -%}
+                                        {%- endcapture -%}
+                                        <div class="card-text-info text-right">{{ taxes_shipping_checkout }}</div>
+                                        <button type="submit" name="checkout" class="btn btn--full btn--xl mt-3 mt-sm-4 mt-md-6 shopify-go-checkout"><span>{{ 'cart.general.checkout' | t }}</span></button>
+                                        {%- if settings.agreement_checkout_yes -%}
+                                            <div class="text-right" data-agree>
+                                                {% render 'agreement-checkbox', button: '.shopify-go-checkout', name: 'agreementCheckboxCartPage' %}
+                                            </div>
+                                        {%- endif -%}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </form>
+        {%- endif -%}
+    </div>
+</div>
+{% schema %}
+    {
+    "name":"Cart page",
+    "settings": [
+    {
+    "type": "checkbox",
+    "id": "cart_ajax_enable",
+    "label": "Enable automatic cart updates",
+    "info": "Updates the cart as soon as customer changes are made. *Save page after change this setting",
+    "default": true
+    },
+    {
+    "type":"select",
+    "id":"cart_style",
+    "label":"Cart Page Style",
+    "options":[
+    {"value":"classic","label":"Classic"},
+    {"value":"right","label":"Right Column"}
+    ],
+    "default":"right"
+    },
+    {
+    "type": "checkbox",
+    "id": "cart_empty_rotate",
+    "label": "Enable empty cart icon rotation",
+    "default": true
+    },
+    {
+    "type": "textarea",
+    "id": "cart_custom_text",
+    "label": "Custom Text (under 'Checkout' button)",
+    "default":"<h5>Standard shipping</h5><p><b>10 - 11 business days</b><br>1 item ships from the U.S. and will be delivered in 10 - 11 business days</p>"
+    },
+    {
+    "type": "header",
+    "content": "Promo Banner"
+    },
+    {
+    "type": "checkbox",
+    "id": "cart_banner",
+    "label": "Show Promo Banner",
+    "default": false
+    },
+    {
+    "type": "text",
+    "id": "cart_banner_text1",
+    "label": "Text 1",
+    "default":"Save up to 50%"
+    },
+    {
+    "type": "text",
+    "id": "cart_banner_text2",
+    "label": "Text 2",
+    "default":"Hurry up expire soon!"
+    },
+    {
+    "type":"image_picker",
+    "id":"cart_banner_image",
+    "label":"Image",
+    "info":"(Recommended size 200x200px)"
+    },
+    {
+    "type":"color",
+    "id":"cart_banner_bg",
+    "label":"Background Color",
+    "default":"#E91E63"
+    },
+    {
+    "type":"color",
+    "id":"cart_banner_color",
+    "label":"Text Color",
+    "default":"#fff"
+    },
+    {
+    "type": "header",
+    "content": "Cart Notes"
+    },
+    {
+    "type": "checkbox",
+    "id": "cart_notes_enable",
+    "label": "Enable cart notes",
+    "default": true
+    },
+    {
+    "type": "checkbox",
+    "id": "cart_notes_open",
+    "label": "Open Tab on start",
+    "default": false
+    },
+    {
+    "type":"select",
+    "id":"cart_notes_order",
+    "label":"Tab's order",
+    "options":[
+    {"value":"1","label":"1"},
+    {"value":"2","label":"2"},
+    {"value":"3","label":"3"}
+    ],
+    "default":"3"
+    },
+    {
+    "type": "text",
+    "id": "cart_notes_heading",
+    "label": "Heading",
+    "default":"Note for the seller"
+    },
+    {
+    "type": "textarea",
+    "id": "cart_notes_custom_text",
+    "label": "Info Text",
+    "default":"*Savings include promotions, coupons, rueBUCKS, and shipping (if applicable)."
+    },
+    {
+    "type": "header",
+    "content": "Custom Tab"
+    },
+    {
+    "type": "checkbox",
+    "id": "cart_custom_tab_enable",
+    "label": "Enable custom tab",
+    "default": true
+    },
+    {
+    "type": "checkbox",
+    "id": "cart_custom_tab_open",
+    "label": "Open Tab on start",
+    "default": false
+    },
+    {
+    "type":"select",
+    "id":"cart_custom_tab_order",
+    "label":"Tab's order",
+    "options":[
+    {"value":"1","label":"1"},
+    {"value":"2","label":"2"},
+    {"value":"3","label":"3"}
+    ],
+    "default":"2"
+    },
+    {
+    "type": "text",
+    "id": "cart_custom_tab_heading",
+    "label": "Heading",
+    "default":"Custom Tab"
+    },
+    {
+    "type": "richtext",
+    "id": "cart_custom_tab_text",
+    "label": "Text",
+    "default":"<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius laoreet imperdiet. Nullam iaculis odio ac urna blandit tempor. Etiam libero dui, tempor et turpis ut, venenatis varius odio.</p>"
+    },
+    {
+    "type": "header",
+    "content": "Shipping Calculator"
+    },
+    {
+    "type": "checkbox",
+    "id": "cart_shipping_calculator_enable",
+    "label": "Enable shipping calculator",
+    "default": true
+    },
+    {
+    "type": "checkbox",
+    "id": "cart_shipping_calculator_open",
+    "label": "Open Tab on start",
+    "default": true
+    },
+    {
+    "type":"select",
+    "id":"cart_shipping_calculator_order",
+    "label":"Tab's order",
+    "options":[
+    {"value":"1","label":"1"},
+    {"value":"2","label":"2"},
+    {"value":"3","label":"3"}
+    ],
+    "default":"1"
+    },
+    {
+    "type": "text",
+    "id": "cart_shipping_calculator_heading",
+    "label": "Heading",
+    "default":"Shipping calculator"
+    },
+    {
+    "type": "text",
+    "id": "shipping_calculator_default_country",
+    "label": "Default country selection",
+    "default": "United States"
+    },
+    {
+    "type": "paragraph",
+    "content": "If your customer is logged-in, the country in his default shipping address will be selected. If you are not sure about the  spelling to use here, refer to the first checkout page."
+    },
+    {
+    "type": "text",
+    "id": "shipping_calculator_submit_button_label",
+    "label": "Submit button label",
+    "default": "Calculate shipping"
+    },
+    {
+    "type": "text",
+    "id": "shipping_calculator_submit_button_label_disabled",
+    "label": "Submit button label when calculating",
+    "default": "Calculating..."
+    },
+    {
+    "type": "paragraph",
+    "content": "Do not forget to include the snippet shipping-calculator in your cart.liquid template where you want the shipping  calculator to appear. You can get the snippet here: [shipping-calculator.liquid](https:\/\/github.com\/carolineschnapp\/shipping-calculator\/blob\/master\/shipping-calculator.liquid) ."
+    }
+    ]
+    }
+{% endschema %}

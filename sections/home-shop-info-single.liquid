@@ -1,0 +1,248 @@
+{%- if section.settings.enable -%}
+    <div class="holder {{ section.settings.outer_margin }} {%- if section.settings.enable_bg -%}holder-with-bg {{ section.settings.padding-t }} {{ section.settings.padding-b }}  bg-cover lazyload"
+        {%- if section.settings.bg_image != blank -%}data-bgset="{% include 'bgset', image: section.settings.bg_image %}" data-sizes="auto"{%- endif -%}
+        {%- if section.settings.bg_color != blank and section.settings.bg_color != 'rgba(0,0,0,0)' -%}style="background-color: {{ section.settings.bg_color }}"{%- endif -%}
+        {%- else -%}"{%- endif -%}>
+    <div class="container-fluid">
+    <div class="text-icn-blocks-single row" {% unless section.settings.color == '' or section.settings.color contains 'rgba(0,0,0,0)' %}style="color: {{ section.settings.color }}"{% endunless %}>
+        <div class="col-auto">
+            <div class="text-icn-blocks-single-icon" {% unless section.settings.icon_color == '' or section.settings.icon_color contains 'rgba(0,0,0,0)' %}style="color: {{ section.settings.icon_color }}"{% endunless %}>
+                {%- if section.settings.icon_type == 'svg' -%}
+                    {{ section.settings.svg }}
+                {%- else -%}
+                    <i class="icon--giftAnimate {% if section.settings.icon_type == 'theme' %}{{ section.settings.icon }}{% else %}{{ section.settings.icon_name }}{% endif %}"></i>
+                {%- endif -%}
+            </div>
+        </div>
+        <div class="text-icn-blocks-single-text col-auto" {% if section.settings.center %}style="min-width: 0;"{% endif %}>
+            {%- if section.settings.text1 != blank -%}
+            <div class="{% if section.settings.text1_lg %}text-icn-blocks-single-text3{% else %}text-icn-blocks-single-text1{% endif %} {% if section.settings.bnr_text1_font %}heading-font{% endif %}">{{ section.settings.text1 }}</div>
+            {%- endif -%}
+            {%- if section.settings.text2 != blank -%}
+            <div class="text-icn-blocks-single-text2 {% if section.settings.bnr_text2_font %}heading-font{% endif %}">{{ section.settings.text2 }}</div>
+            {%- endif -%}
+        </div>
+        <div class="text-icn-blocks-single-button col-auto"><a href="{{ section.settings.button_link }}" target="{{ section.settings.link_target }}" class="btn" style="background-color:{{section.settings.button_bgcolor }}; color:{{section.settings.button_color }};" data-color="{{section.settings.button_color }}" data-hover-color="{{section.settings.button_color_hover }}" data-bgcolor="{{section.settings.button_bgcolor }}" data-hover-bgcolor="{{section.settings.button_bgcolor_hover }}">Purchase</a></div>
+    </div>
+</div>
+    </div>
+{%- endif -%}
+
+{% schema %}
+    {
+    "name": "Shop Info Single",
+    "settings": [
+    {
+    "type": "checkbox",
+    "id": "enable",
+    "label": "Enable",
+    "default": true
+    },
+    {
+    "type": "header",
+    "content": "Layout"
+    },
+    {
+    "type": "select",
+    "id": "outer_margin",
+    "label": "Outer top margin",
+    "options":[
+    {"value":"mt-0","label":"None"},
+    {"value":"holder-mt-xsmall","label":"XSmall"},
+    {"value":"holder-mt-small","label":"Small"},
+    {"value":"holder-mt-medium","label":"Medium (default)"},
+    {"value":"holder-mt-large","label":"Large"}
+    ],
+    "default": "holder-mt-medium"
+    },
+    {
+    "type": "checkbox",
+    "id": "enable_bg",
+    "label": "Add background",
+    "default": true
+    },
+    {
+    "type": "select",
+    "id": "padding-t",
+    "label": "Top Padding",
+    "options":[
+    {"value":"pt-0","label":"None"},
+    {"value":"holder-pt-xsmall","label":"XSmall"},
+    {"value":"holder-pt-small","label":"Small"},
+    {"value":"holder-pt-medium","label":"Medium (default)"},
+    {"value":"holder-pt-large","label":"Large"}
+    ],
+    "default": "holder-pt-xsmall"
+    },
+    {
+    "type": "select",
+    "id": "padding-b",
+    "label": "Bottom Padding",
+    "options":[
+    {"value":"pb-0","label":"None"},
+    {"value":"holder-pb-xsmall","label":"XSmall"},
+    {"value":"holder-pb-small","label":"Small"},
+    {"value":"holder-pb-medium","label":"Medium (default)"},
+    {"value":"holder-pb-large","label":"Large"}
+    ],
+    "default": "holder-pb-xsmall"
+    },
+    {
+    "type":"color",
+    "id":"bg_color",
+    "label":"Section Background Color",
+    "default":"#f8f8f8"
+    },
+    {
+    "type":"image_picker",
+    "id":"bg_image",
+    "label":"Section Background Image",
+    "info":"(Recommended size 1920x700 px)"
+    },
+    {
+    "type": "header",
+    "content": "Text"
+    },
+    {
+    "type": "checkbox",
+    "id": "center",
+    "label": "Center Text",
+    "default": false
+    },
+    {
+    "type":"text",
+    "id":"text1",
+    "label":"Text 1",
+    "default": "BIG SAVING DEALS FOR YOU"
+    },
+    {
+    "type": "checkbox",
+    "id": "text1_lg",
+    "label": "Large Text",
+    "default": false
+    },
+    {
+    "type": "checkbox",
+    "id": "bnr_text1_font",
+    "label": "Use Headings Font",
+    "default": false
+    },
+    {
+    "type":"text",
+    "id":"text2",
+    "label":"Text 2",
+    "default": "GET IT NOW WITH A 0% FINANCE DEAL FROM BIONIC ELECTRONICS."
+    },
+    {
+    "type": "checkbox",
+    "id": "bnr_text2_font",
+    "label": "Use Headings Font",
+    "default": false
+    },
+    {
+    "type":"color",
+    "id":"color",
+    "label":"Text Color"
+    },
+    {
+    "type":"header",
+    "content":"Icon"
+    },
+    {
+    "type": "radio",
+    "id": "icon_type",
+    "label": "Icon Source",
+    "options":[
+    {"value":"theme","label":"Section Icons Set (recommended)"},
+    {"value":"name","label":"Custom Icon Name (Theme Icons Library)"},
+    {"value":"svg","label":"Custom SVG code"}
+    ]
+    },
+    {
+    "type": "select",
+    "id": "icon",
+    "label": "Section Icons Set",
+    "default": "icon-box-1",
+    "options":[
+    {"value":"icon-box-1","label":"Box"},
+    {"value":"icon-call-center","label":"Call Center"},
+    {"value":"icon-speech-bubble","label":"Chat"},
+    {"value":"icon-watch","label":"Clock"},
+    {"value":"icon-credit-card-1","label":"Credit Card"},
+    {"value":"icon-delivery-truck","label":"Delivery Truck"},
+    {"value":"icon-shopping-1","label":"Hand"},
+    {"value":"icon-gift","label":"Gift"},
+    {"value":"icon-gift-card","label":"Gift Card"},
+    {"value":"icon-guarantee","label":"Guarantee"},
+    {"value":"icon-location","label":"Location"},
+    {"value":"icon-return","label":"Return"},
+    {"value":"icon-ribbon","label":"Ribbon"},
+    {"value":"icon-tag","label":"Tag"},
+    {"value":"icon-wallet","label":"Wallet"},
+    {"value":"icon-award","label":"Award"},
+    {"value":"icon-diplom","label":"Document"}
+    ]
+    },
+    {
+    "type":"text",
+    "id":"icon_name",
+    "label":"Custom Icon Name",
+    "default": "icon-gift",
+    "info": "Select icon name here [Theme Icons Library](http://big-skins.com/frontend/foxic-html-demo/icon-foxic/demo.html)"
+    },
+    {
+    "type":"textarea",
+    "id":"svg",
+    "label":"Custom SVG code"
+    },
+    {
+    "type":"header",
+    "content":"Button"
+    },
+    {
+    "type":"url",
+    "id":"button_link",
+    "label":"Link"
+    },
+    {
+    "type":"select",
+    "id":"link_target",
+    "label":"Link Target",
+    "default":"_self",
+    "options":[
+    {
+    "value":"_blank",
+    "label":"New page"
+    },
+    {
+    "value":"_self",
+    "label":"In current page"
+    }]
+    },
+    {
+    "type":"color",
+    "id": "button_color",
+    "label": "Color"
+    },
+    {
+    "type":"color",
+    "id": "button_bgcolor",
+    "label": "Bg Color"
+    },
+    {
+    "type":"color",
+    "id": "button_color_hover",
+    "label": "Hover Color"
+    },
+    {
+    "type":"color",
+    "id": "button_bgcolor_hover",
+    "label": "Hover Bg Color"
+    }
+    ],
+    "presets": [{
+    "name": "Shop Info Single",
+    "category": "Info Blocks"
+    }]
+    }
+{% endschema %}

@@ -1,0 +1,53 @@
+{% if section.settings.about_us_enable %}
+<!-- Header Services -->
+<div class="dropdn dropdn_services dropdn_fullwidth">
+    <a href="#" class="dropdn-link js-dropdn-link">
+        {% if section.settings.about_us_icon != blank %}
+            {%- if section.settings.about_us_icon_type == 'svg' -%}
+                {{ section.settings.about_us_svg }}
+            {%- else -%}
+                <i class="{% if section.settings.about_us_icon_type == 'theme' %}{{ section.settings.about_us_icon }}{% else %}{{ section.settings.about_us_icon_name }}{% endif %}"></i>
+            {%- endif -%}
+        {% endif %}
+        <span class="dropdn-link-txt">{{ section.settings.about_us_title }}</span></a>
+    <div class="dropdn-content">
+        <div class="container">
+            <div class="row">
+                {%- if section.settings.about_us_col_1_title != blank or section.settings.about_us_col_1_content != blank -%}
+                <div class="col">
+                    <h4>{{ section.settings.about_us_col_1_title }}</h4>
+                    {{ section.settings.about_us_col_1_content }}
+                </div>
+                {%- endif -%}
+                {%- if section.settings.about_us_col_2_title != blank or section.settings.about_us_col_2_content != blank -%}
+                <div class="col">
+                    <h4>{{ section.settings.about_us_col_2_title }}</h4>
+                    {{ section.settings.about_us_col_2_content }}
+                </div>
+                {%- endif -%}
+                {%- if section.settings.about_us_col_3_title != blank or section.settings.about_us_col_3_content != blank -%}
+                <div class="col">
+                    <h4>{{ section.settings.about_us_col_3_title }}</h4>
+                    {{ section.settings.about_us_col_3_content }}
+                </div>
+                {%- endif -%}
+                {%- if section.settings.about_us_col_4_title != blank or section.settings.about_us_col_4_content != blank -%}
+                <div class="col">
+                    <h4>{{ section.settings.about_us_col_4_title }}</h4>
+                    {{ section.settings.about_us_col_4_content }}
+                </div>
+                {%- endif -%}
+                {%- if section.settings.about_us_image != blank -%}
+                <div class="col">
+                    <a {% if section.settings.about_us_link %}href="{{ section.settings.about_us_link }}" target="{{ section.settings.about_us_link_target }}"{% endif %} class="image-hover-scale">
+                        {%- assign img_url = section.settings.about_us_image | img_url: '540x' -%}
+                        <img class="fade-up lazyload" data-src="{{ img_url }}"  data-aspectratio="1" data-sizes="auto" alt="">
+                    </a>
+                </div>
+                {%- endif -%}
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Header Services -->
+{% endif %}

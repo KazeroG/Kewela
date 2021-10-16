@@ -1,0 +1,24 @@
+{% if section.settings.currencies %}
+    <!-- Header Currency -->
+    {% if shop.enabled_currencies.size %}
+        <div class="dropdn_currency">
+        {% unless id %}{% assign form_id = id %}{% else %}{% assign form_id = 'currency_selector' %}{% endunless%}
+        {% form 'currency', class: "currency-selector", id: form_id %}
+        <input type="hidden" name="currency" />
+            <div class="dropdn dropdn_currency--shortcut dropdn_caret">
+                <a href="#" class="dropdn-link js-dropdn-link"><span class="js-dropdn-select-current">
+                        {% assign flag = 0 %} {% for currency in shop.enabled_currencies %}{% if currency == cart.currency %}{{currency.iso_code}}{% assign flag = 1 %}{% endif %}{% endfor %} {% if flag == 0 %}{{ shop.currency }}{% endif %}
+                    </span><i class="icon-angle-down"></i></a>
+                <div class="dropdn-content">
+                    <ul class="js-currencies">
+                        {% for currency in shop.enabled_currencies %}
+                            <li {% if currency == cart.currency %} class="active"{% endif %}><a href="#" data-value="{{currency.iso_code}}"><span class="js-dropdn-select-data {% if currency == cart.currency %}selected{% endif %}" data-currency="{{currency.iso_code}}">{{currency.iso_code}}</span><span></span></a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        {% endform %}
+        </div>
+{% endif %}
+    <!-- /Header Currency -->
+{% endif %}

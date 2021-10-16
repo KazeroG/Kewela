@@ -1,0 +1,288 @@
+{%- if section.settings.enable -%}
+    <div class="holder {{ section.settings.outer_margin }}" id="holder-{{ section.id }}">
+        <div class="container">
+            {% include 'section-headings' %}
+            <div class="shop-info-compact-row row vert-margin-small justify-content-center">
+                {%- for block in section.blocks -%}
+                    {%- if block.settings.enable -%}
+                        <div class="shop-info-compact col-auto">
+                            <div class="shop-info-compact-icon">
+                                {%- if block.settings.icon_type == 'svg' -%}
+                                    {{ block.settings.svg }}
+                                {%- else -%}
+                                    <i class="{% if block.settings.icon_type == 'theme' %}{{ block.settings.icon }}{% else %}{{ block.settings.icon_name }}{% endif %}"></i>
+                                {%- endif -%}
+                            </div>
+                            <div class="shop-info-compact-text">
+                                {{ block.settings.text }}
+                            </div>
+                        </div>
+                    {%- endif -%}
+                {%- endfor -%}
+            </div>
+        </div>
+    </div>
+    <style>
+        #holder-{{ section.id }} .shop-info-compact {
+            min-width: 150px;
+        }
+        #holder-{{ section.id }} .shop-info-compact-icon {
+            background: transparent;
+            color: inherit;
+            width: auto;
+            height: auto;
+        }
+        #holder-{{ section.id }} .shop-info-compact-text {
+            font-size: {{ section.settings.text_size }}px;
+        }
+
+        {%- if section.settings.scale != 100 -%}
+        #holder-{{ section.id }} .shop-info-compact-icon {
+            font-size: {{ section.settings.scale | times: 0.7 }}px;
+        }
+
+        #holder-{{ section.id }} .shop-info-compact-icon svg {
+            width: {{ section.settings.scale | times: 0.7 }}px;
+            height: {{ section.settings.scale | times: 0.7 }}px;
+        }
+
+
+        {%- endif -%}
+
+        {%- unless section.settings.icons_color == '' or section.settings.icons_color contains 'rgba(0,0,0,0)' -%}
+        #holder-{{ section.id }} .shop-info-compact-icon {
+            color: {{ section.settings.icons_color }}
+        }
+        {%- endunless -%}
+
+        {%- unless section.settings.icons_color_hover == '' or section.settings.icons_color_hover contains 'rgba(0,0,0,0)' -%}
+        #holder-{{ section.id }} .shop-info-compact:hover .shop-info-compact-icon {
+            color: {{ section.settings.icons_color_hover }}
+        }
+        {%- endunless -%}
+
+        {%- unless section.settings.text_color == '' or section.settings.text_color contains 'rgba(0,0,0,0)' -%}
+        #holder-{{ section.id }} .shop-info-compact .shop-info-compact-text {
+            color: {{ section.settings.text_color }}
+        }
+        {%- endunless -%}
+
+        {%- unless section.settings.text_color_hover == '' or section.settings.text_color_hover contains 'rgba(0,0,0,0)' -%}
+        #holder-{{ section.id }} .shop-info-compact:hover .shop-info-compact-text {
+            color: {{ section.settings.text_color_hover }}
+        }
+        {%- endunless -%}
+    </style>
+{%- endif -%}
+
+{% schema %}
+{
+"name": "Shop Info Compact",
+"settings": [
+{
+"type": "checkbox",
+"id": "enable",
+"label": "Enable",
+"default": true
+},
+{
+"type": "header",
+"content": "Layout"
+},
+{
+"type": "select",
+"id": "outer_margin",
+"label": "Outer top margin",
+"options":[
+{"value":"mt-0","label":"None"},
+{"value":"holder-mt-xsmall","label":"XSmall"},
+{"value":"holder-mt-small","label":"Small"},
+{"value":"holder-mt-medium","label":"Medium (default)"},
+{"value":"holder-mt-large","label":"Large"}
+],
+"default": "holder-mt-medium"
+},
+{
+"type": "header",
+"content": "Heading"
+},
+{
+"type": "checkbox",
+"id": "enable_text",
+"label": "Enable",
+"default": false
+},
+{
+"type": "text",
+"id": "title",
+"label": "Title",
+"default":"Heading"
+},
+{
+"type": "select",
+"id": "title_size",
+"label": "Title Font Size",
+"default": "h2-style",
+"options": [
+{ "value": "h-lg-style", "label": "Large" },
+{ "value": "h1-style", "label": "Normal" },
+{ "value": "h2-style", "label": "Small" }
+]
+},
+{
+"type": "select",
+"id": "text_alignment",
+"label": "Text Alignment",
+"default": "center",
+"options": [
+{ "value": "left", "label": "Left" },
+{ "value": "center", "label": "Center" },
+{ "value": "right", "label": "Right" }
+]
+},
+{
+"type": "text",
+"id": "subtitle",
+"label": "Sub Heading",
+"default": "Sub Heading"
+},
+{
+"type": "text",
+"id": "bgtitle",
+"label": "Background Heading"
+},
+{
+"type": "header",
+"content": "Blocks Settings"
+},
+{
+"type":"range",
+"id":"text_size",
+"min":10,
+"max":48,
+"step":1,
+"label":"Font Size",
+"unit":"px",
+"default": 21
+},
+{
+"type":"range",
+"id":"scale",
+"min":10,
+"max":300,
+"step":10,
+"label":"Scale Icons",
+"unit":"%",
+"default": 100
+},
+{
+"type":"color",
+"id":"icons_color",
+"label":"Icons Color"
+},
+{
+"type":"color",
+"id":"icons_color_hover",
+"label":"Hover Icons Color"
+},
+{
+"type":"color",
+"id":"text_color",
+"label":"Text Color"
+},
+{
+"type":"color",
+"id":"text_color_hover",
+"label":"Hover Text Color"
+}
+],
+"blocks":[
+{
+"type":"text",
+"name":"Icon + Text",
+"limit": 5,
+"settings":[
+{
+"type":"checkbox",
+"id":"enable",
+"label":"Enable",
+"default":true
+},
+{
+"type":"textarea",
+"id":"text",
+"label":"Text",
+"default": "Add your text here"
+},
+{
+"type": "radio",
+"id": "icon_type",
+"label": "Icon Source",
+"options":[
+{"value":"theme","label":"Section Icons Set (recommended)"},
+{"value":"name","label":"Custom Icon Name (Theme Icons Library)"},
+{"value":"svg","label":"Custom SVG code"}
+]
+},
+{
+"type": "select",
+"id": "icon",
+"label": "Section Icons Set",
+"default": "icon-box-1",
+"options":[
+{"value":"icon-box-1","label":"Box"},
+{"value":"icon-call-center","label":"Call Center"},
+{"value":"icon-speech-bubble","label":"Chat"},
+{"value":"icon-watch","label":"Clock"},
+{"value":"icon-credit-card-1","label":"Credit Card"},
+{"value":"icon-delivery-truck","label":"Delivery Truck"},
+{"value":"icon-shopping-1","label":"Hand"},
+{"value":"icon-gift","label":"Gift"},
+{"value":"icon-gift-card","label":"Gift Card"},
+{"value":"icon-guarantee","label":"Guarantee"},
+{"value":"icon-location","label":"Location"},
+{"value":"icon-return","label":"Return"},
+{"value":"icon-ribbon","label":"Ribbon"},
+{"value":"icon-tag","label":"Tag"},
+{"value":"icon-wallet","label":"Wallet"},
+{"value":"icon-award","label":"Award"},
+{"value":"icon-diplom","label":"Document"}
+]
+},
+{
+"type":"text",
+"id":"icon_name",
+"label":"Custom Icon Name",
+"default": "icon-gift",
+"info": "Select icon name here [Theme Icons Library](http://big-skins.com/frontend/foxic-html-demo/icon-foxic/demo.html)"
+},
+{
+"type":"textarea",
+"id":"svg",
+"label":"Custom SVG code"
+}
+]
+}],
+"presets": [{
+"name": "Shop Info Compact",
+"category": "Info Blocks",
+"blocks": [
+{
+"type": "text"
+},
+{
+"type": "text"
+},
+{
+"type": "text"
+},
+{
+"type": "text"
+},
+{
+"type": "text"
+}
+]
+}]
+}
+{% endschema %}

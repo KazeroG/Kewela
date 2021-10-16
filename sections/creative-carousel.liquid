@@ -1,0 +1,322 @@
+<div class="holder {{ section.settings.outer_margin }} py-15 py-md-6 position-relative" {%- if section.settings.bg != blank -%}style="background-color: {{ section.settings.bg }}"{%- endif -%}>
+    <div class="container">
+        <div class="creative-product-carousel-wrap {% if section.settings.reversed %}creative-product-carousel--reversed{% endif %}" id="creativeCarousel-{{ section.id }}">
+            <div class="creative-product-carousel js-creative-product-carousel">
+                {% for block in section.blocks %}
+                    {% if block.settings.enable %}
+                        <div class="creative-product-carousel-item">
+                            <div class="row flex-nowrap four-in-row">
+                                {% if forloop.first %}
+                                    {%- assign collection = collections[block.settings.collection] -%}
+                                    {% include 'section-creative-tab-content' %}
+                                {%- endif -%}
+                            </div>
+                            <div class="creative-product-carousel-text heading-font" style="font-size:{{ block.settings.title_size | times: 0.1}}vw">{{ block.settings.title }}<br />{{ block.settings.title_2 }}</div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div class="collection-grid-1 collection-grid-1-vertical js-creative-product-carousel-tabs">
+                {% for block in section.blocks %}
+                    {% if block.settings.enable %}
+                        <div class="collection-grid-1-item js-collection-grid-nav {% if forloop.first %}active tab-loaded{% endif %}">
+                            <a href="{% if block.settings.collection != blank %}{% if forloop.first %}#{% else %}{{ collections[block.settings.collection].url | append:'?view=load-tab' }}{% endif %}{% else %}#{% endif %}" rel="nofollow" class="collection-grid-1-item-inside" title="{{ block.settings.title | strip_html }} {{ block.settings.title_2 | strip_html  }}" style="background-color: {{ section.settings.tabs_bg }};{%- if section.settings.tabs_border != blank -%}border: 1px solid {{ section.settings.tabs_border }}{%- endif -%}">
+                                {% if block.settings.icon_type == 'svg' %}
+                                    {{ block.settings.svg }}
+                                {% else %}
+                                    {% if block.settings.icon_type == 'text' %}
+                                        {{ block.settings.text | truncate:40 }}
+                                    {% else %}
+                                        <i class="{% if block.settings.icon_type == 'theme' %}{{ block.settings.icon }}{% else %}{{ block.settings.icon_name }}{% endif %}"></i>
+                                    {% endif %}
+                                {% endif %}
+                            </a>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                {% if section.settings.show_view_all %}
+                    <div class="collection-grid-1-item">
+                        <a href="{{ section.settings.view_all_url | default:'#' }}" class="collection-grid-1-item-inside"style="background-color: {{ section.settings.tabs_bg }};{%- if section.settings.tabs_border != blank -%}border: 1px solid {{ section.settings.tabs_border }}{%- endif -%}">
+                            {{ section.settings.view_all_text | truncate:40 }}
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="creative-product-carousel-loader"><div class="foxic-loader"></div></div>
+    </div>
+</div>
+{% if section.settings.equal_height %}
+    <style>
+        {% capture product_aspect_ratio %} {{ section.settings.product_ratio_h | divided_by: section.settings.product_ratio_w | times: 100 }}%{% endcapture %}
+        #creativeCarousel-{{ section.id }} .prd-img:not(.prd-img--noequal) .image-container {
+            padding-bottom: {{ product_aspect_ratio }} !important;
+        }
+    </style>
+{% endif %}
+{% schema %}
+{
+"name": "Creative carousel",
+"class": "index-section",
+"settings": [
+{
+"type": "header",
+"content": "Layout"
+},
+{
+"type": "select",
+"id": "outer_margin",
+"label": "Outer top margin",
+"options":[
+{"value":"mt-0","label":"None"},
+{"value":"holder-mt-xsmall","label":"XSmall"},
+{"value":"holder-mt-small","label":"Small"},
+{"value":"holder-mt-medium","label":"Medium (default)"},
+{"value":"holder-mt-large","label":"Large"}
+],
+"default": "mt-0"
+},
+{
+"type": "checkbox",
+"id": "reversed",
+"label": "Reversed",
+"default": false
+},
+{
+"type":"color",
+"id":"bg",
+"label":"Background",
+"default":"#f8f8f8"
+},
+{
+"type":"color",
+"id":"tabs_bg",
+"label":"Tabs Background"
+},
+{
+"type":"color",
+"id":"tabs_border",
+"label":"Tabs Border Color"
+},
+{
+"type": "header",
+"content": "General"
+},
+{
+"type": "text",
+"id": "title",
+"label": "Heading",
+"default": "Creative Carousel"
+},
+{
+"type": "checkbox",
+"id": "show_view_all",
+"label": "Show 'View all' button",
+"default": true
+},
+{
+"type":      "text",
+"id":        "view_all_text",
+"label":     "View all text",
+"default":   "View all"
+},
+{
+"type":      "url",
+"id":        "view_all_url",
+"label":     "View all link"
+},
+{
+"type":   "range",
+"id":     "product_title_truncate",
+"min":       30,
+"max":       200,
+"step":      2,
+"label":     "Truncate product title after:",
+"default":   100,
+"info":"letters"
+},
+{
+"type": "checkbox",
+"id": "equal_height",
+"label": "Equal height for product photos",
+"info": "useful if your products have different height\/width of the photos",
+"default": false
+},
+{
+"type": "text",
+"id": "product_ratio_w",
+"label": "Width ratio",
+"default": "1",
+"info": "recommended 1"
+},
+{
+"type": "text",
+"id": "product_ratio_h",
+"label": "Height ratio",
+"default": "1.285",
+"info": "value = height \/ width"
+}
+],
+"blocks":[
+{
+"type":"tab",
+"name":"Tab",
+"limit": 3,
+"settings":[
+{
+"type":"checkbox",
+"id":"enable",
+"label":"Enable",
+"default":true
+},
+{
+"type":      "paragraph",
+"content":   "IMPORTANT!"
+},{
+"type":      "paragraph",
+"content":   "Widget loads products main images by default, but default product main image does not fits design."
+},{
+"type":      "paragraph",
+"content":   "1. Recommended product image size is 407x733px in png format. "
+},{
+"type":      "paragraph",
+"content":   "2. Upload such ONE image in the product media gallery (for each product that you want to see this section). "
+},{
+"type":      "paragraph",
+"content":   "3. Set Alt attribute 'MAIN' and such way new '407x733px image' will be visible as main product image in this widget."
+},{
+"type":      "paragraph",
+"content":   "4. Set Alt attribute 'HOVER' for image that you want to be visible on hover (image with the same size as 'MAIN' 407x733px)"
+},
+{
+"type": "text",
+"id": "title",
+"label": "Heading",
+"default": "Tab"
+},{
+"type": "text",
+"id": "title_2",
+"label": "Heading 2"
+},
+{
+"type":      "range",
+"id":        "title_size",
+"min":       0,
+"max":        100,
+"step":       1,
+"unit":       "%",
+"label":     "Heading Font Size",
+"default":   100
+},
+{
+"id": "collection",
+"type": "collection",
+"label": "Collection"
+},
+{
+"type": "radio",
+"id": "icon_type",
+"label": "Tab Type",
+"options":[
+{"value":"text","label":"Text from 'Tab Text'"},
+{"value":"theme","label":"Icon from 'Section Icons Set (recommended)'"},
+{"value":"name","label":"Icon from 'Custom Icon Name (Theme Icons Library)'"},
+{"value":"svg","label":"Icon from 'Custom SVG code'"}
+],
+"default": "text"
+},
+{
+"type":"text",
+"id":"text",
+"label":"Tab Text",
+"default":"Tab Text",
+"info":"12 letters limited"
+},
+{
+"type": "select",
+"id": "icon",
+"label": "Section Icons Set",
+"default": "icon-raincoat",
+"options":[
+{"value":"icon-shopping","label":"Shopping"},
+{"value":"icon-tag","label":"Sale"},
+{"value":"icon-fashion","label":"Blouse"},
+{"value":"icon-boot","label":"Boot 1"},
+{"value":"icon-boots","label":"Boot 2"},
+{"value":"icon-boots-1","label":"Boot 3"},
+{"value":"icon-cardigan","label":"Cardigan"},
+{"value":"icon-coat","label":"Coat"},
+{"value":"icon-dress","label":"Dress"},
+{"value":"icon-dress1","label":"Dress 1"},
+{"value":"icon-eyeglasses","label":"Eyeglasses"},
+{"value":"icon-gloves","label":"Gloves"},
+{"value":"icon-hand-bag","label":"Bag 1"},
+{"value":"icon-handbag","label":"Bag 2"},
+{"value":"icon-hat","label":"Hat 1"},
+{"value":"icon-beanie","label":"Hat 2"},
+{"value":"icon-winter-hat","label":"Hat 3"},
+{"value":"icon-high-heels","label":"Heels 1"},
+{"value":"icon-high-heels1","label":"Heels 1"},
+{"value":"icon-hoodie","label":"Hoodie 1"},
+{"value":"icon-hoodie-1","label":"Hoodie 1"},
+{"value":"icon-jacket","label":"Jacket 1"},
+{"value":"icon-jacket-1","label":"Jacket 2"},
+{"value":"icon-jacket-2","label":"Jacket 3"},
+{"value":"icon-jacket-3","label":"Jacket 4"},
+{"value":"icon-jean","label":"Jeans"},
+{"value":"icon-poncho","label":"Poncho"},
+{"value":"icon-raincoat","label":"Raincoat"},
+{"value":"icon-scarf","label":"Scarf 1"},
+{"value":"icon-scarf-1","label":"Scarf 2"},
+{"value":"icon-shirt","label":"Shirt 1"},
+{"value":"icon-shirt-1","label":"Shirt 2"},
+{"value":"icon-shoe","label":"Shoe 1"},
+{"value":"icon-shoe-1","label":"Shoe 2"},
+{"value":"icon-skirt","label":"Skirt"},
+{"value":"icon-socks","label":"Socks"},
+{"value":"icon-suitcase","label":"Suitcase"},
+{"value":"icon-sweater","label":"Sweater 1"},
+{"value":"icon-sweater-1","label":"Sweater 2"},
+{"value":"icon-sweater-2","label":"Sweater 3"},
+{"value":"icon-sweater-3","label":"Sweater 4"},
+{"value":"icon-trouser","label":"Trousers 1"},
+{"value":"icon-trousers","label":"Trousers 2"},
+{"value":"icon-umbrella","label":"Umbrella"},
+{"value":"icon-vest","label":"Vest"},
+{"value":"icon-vest-1","label":"Vest 1"}
+]
+},
+{
+"type":"text",
+"id":"icon_name",
+"label":"Custom Icon Name",
+"default": "icon-raincoat",
+"info": "Select icon name here [Theme Icons Library](http://big-skins.com/frontend/foxic-html-demo/icon-foxic/demo.html)"
+},
+{
+"type":"textarea",
+"id":"svg",
+"label":"Custom SVG code"
+}
+]
+}
+],
+"presets": [
+{
+"name": "Creative carousel",
+"category": "Products",
+"blocks": [
+{
+"type": "tab"
+},
+{
+"type": "tab"
+},
+{
+"type": "tab"
+}
+]
+}
+]
+}
+{% endschema %}

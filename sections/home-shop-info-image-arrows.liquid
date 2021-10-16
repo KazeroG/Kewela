@@ -1,0 +1,374 @@
+{%- if section.settings.enable -%}
+    <div class="holder {{ section.settings.outer_margin }} {%- if section.settings.enable_bg -%}holder-with-bg {{ section.settings.padding-t }} {{ section.settings.padding-b }} bg- lazyload" data-expand="-500"
+    {%- if section.settings.bg_image != blank -%}data-bgset="{% include 'bgset', image: section.settings.bg_image %}" data-sizes="auto"{%- endif -%}
+    {%- if section.settings.bg_color != blank and section.settings.bg_color != 'rgba(0,0,0,0)' -%}style="background-color: {{ section.settings.bg_color }}"{%- endif -%}
+    {%- else -%}"{%- endif -%} id="holder-{{ section.id }}">
+    <div class="container">
+            {% include 'section-headings' %}
+            <div class="row text-icn-blocks-with-title justify-content-center">
+                <div class="col-sm">
+                    <div class="d-flex d-sm-block justify-content-around flex-column">
+                    {%- for block in section.blocks -%}
+                        {%- if forloop.index == 1 or forloop.index == 2 -%}
+                            {%- if block.settings.enable -%}
+                                <div class="text-icn-block-full-column text-icn-block-full-column-{{ block.id }} position-relative text-left">
+                                {%- if block.settings.enable_arrow -%}
+                                    <div class="icn" {% if block.settings.icon_color == blank or block.settings.icon_color contains 'rgba(0,0,0,0)' %}{% unless section.settings.icons_color == '' or section.settings.icons_color contains 'rgba(0,0,0,0)' %}style="color: {{ section.settings.icons_color }}"{% endunless %}{% else %}style="color: {{ block.settings.icon_color }}"{% endif %}>
+                                        <svg width="83" height="83" viewBox="0 0 83 83" xmlns="http://www.w3.org/2000/svg">
+                                            <g clip-path="url(#clip0{{ block.id }})">
+                                                <path d="M73.9127 36.1173C74.5764 37.1393 74.8282 38.4009 74.5646 39.6458L71.2098 55.5127C70.8205 57.3539 69.7371 58.9325 68.1588 59.9574C66.5806 60.9824 64.6975 61.3304 62.8571 60.9372L46.9973 57.5489C45.1331 57.151 43.7047 55.682 43.358 53.8068C43.0118 51.934 43.8193 50.0542 45.4148 49.0181L54.449 43.151C44.313 27.5436 23.3689 23.0922 7.76146 33.2282L4.61686 35.2704C3.53117 35.9754 2.07981 35.667 1.37472 34.5813C0.669634 33.4956 0.978104 32.0442 2.0638 31.3391L5.20839 29.2969C13.8191 23.7049 24.0921 21.8004 34.1352 23.935C44.1778 26.0697 52.7885 31.987 58.3806 40.5977C59.7885 42.7656 59.1702 45.6747 57.0027 47.0823L47.9682 52.9497C47.9678 52.9499 47.9674 52.9502 47.967 52.9504C47.9675 52.9545 47.9684 52.9593 47.9695 52.9635C47.9718 52.9637 47.974 52.9645 47.9765 52.965L63.8367 56.3531C64.4508 56.4843 65.079 56.3683 65.6058 56.0262C66.1325 55.6841 66.494 55.1574 66.6239 54.543L69.9787 38.676L69.9801 38.6691C69.9767 38.6664 69.9731 38.6633 69.9696 38.6612C69.9692 38.6615 69.9688 38.6617 69.968 38.6622L67.8135 40.0614C66.7278 40.7665 65.2762 40.4576 64.5711 39.3719C63.8663 38.2866 64.1745 36.8349 65.2602 36.1298L67.4147 34.7306C69.0102 33.6944 71.0559 33.7212 72.626 34.7991C73.1487 35.1577 73.5819 35.6078 73.9127 36.1173Z" fill="#272727"/>
+                                            </g>
+                                            <defs>
+                                                <clipPath id="clip0{{ block.id }}">
+                                                    <rect width="60" height="60" transform="translate(32.6792 82.999) rotate(-123.001)"/>
+                                                </clipPath>
+                                            </defs>
+                                        </svg>
+                                    </div>
+                                {%- endif -%}
+                                    <div class="text" {% if block.settings.block_color == blank or block.settings.block_color contains 'rgba(0,0,0,0)' %}{% unless section.settings.block_color == '' or section.settings.block_color contains 'rgba(0,0,0,0)' %}style="color: {{ section.settings.block_color }}"{% endunless %}{% else %}style="color: {{ block.settings.block_color }}"{% endif %}>
+                                        <h4 class="theme-font text-icn-block-full-column-title" {% if block.settings.block_color != blank and section.settings.block_color != 'rgba(0,0,0,0)' %}style="color: {{ block.settings.block_color }}"
+                                            {% else %}{% if section.settings.block_color != blank and section.settings.block_color != 'rgba(0,0,0,0)' %}style="color: {{ section.settings.block_color }}"{% endif %}{% endif %}>{{ block.settings.text1 }}</h4>
+                                        {{ block.settings.text2 }}
+                                    </div>
+                                </div>
+                            {%- endif -%}
+                        {%- endif -%}
+                    {%- endfor -%}
+                    </div>
+                </div>
+                {%- if section.settings.image -%}
+                    <div class="col-sm-6 col-md-7 col-lg-8 my-lg-4">
+                        {%- assign _img = section.settings.image -%}
+                        {%- if _img -%}
+                            {%- assign aspect_ratio = 1 | divided_by: _img.aspect_ratio -%}
+                            {%- assign img_url = _img | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+                            <div class="image-container"
+                                 style="padding-bottom: {{ aspect_ratio | times: 100 }}%">
+                                <img class="lazyload fade-up"
+                                     data-src="{{ img_url }}"
+                                     data-widths="[540, 720, 900, 1080]"
+                                     data-sizes="auto"
+                                     alt="{{ block.settings.title }}">
+                                <div class="foxic-loader"></div>
+                            </div>
+                        {%- else -%}
+                            <div class="gallery-item-image">
+                                {% include 'image-placeholder-aspect-ratio', width: '550', height: '485' %}
+                            </div>
+                        {%- endif -%}
+                    </div>
+                {%- endif -%}
+                <div class="col-sm">
+                    <div class="d-flex d-sm-block justify-content-around flex-column">
+                    {%- for block in section.blocks -%}
+                        {%- if forloop.index == 3 or forloop.index == 4 -%}
+                            {%- if block.settings.enable -%}
+                                <div class="text-icn-block-full-column text-icn-block-full-column-{{ block.id }} position-relative text-right">
+                                {%- if block.settings.enable_arrow -%}
+                                    <div class="icn" {% if block.settings.icon_color == blank or block.settings.icon_color contains 'rgba(0,0,0,0)' %}{% unless section.settings.icons_color == '' or section.settings.icons_color contains 'rgba(0,0,0,0)' %}style="color: {{ section.settings.icons_color }}"{% endunless %}{% else %}style="color: {{ block.settings.icon_color }}"{% endif %}>
+                                        <svg width="83" height="83" viewBox="0 0 83 83" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <g clip-path="url(#clip0{{ block.id }})">
+                                                <path d="M73.9127 36.1173C74.5764 37.1393 74.8282 38.4009 74.5646 39.6458L71.2098 55.5127C70.8205 57.3539 69.7371 58.9325 68.1588 59.9574C66.5806 60.9824 64.6975 61.3304 62.8571 60.9372L46.9973 57.5489C45.1331 57.151 43.7047 55.682 43.358 53.8068C43.0118 51.934 43.8193 50.0542 45.4148 49.0181L54.449 43.151C44.313 27.5436 23.3689 23.0922 7.76146 33.2282L4.61686 35.2704C3.53117 35.9754 2.07981 35.667 1.37472 34.5813C0.669634 33.4956 0.978104 32.0442 2.0638 31.3391L5.20839 29.2969C13.8191 23.7049 24.0921 21.8004 34.1352 23.935C44.1778 26.0697 52.7885 31.987 58.3806 40.5977C59.7885 42.7656 59.1702 45.6747 57.0027 47.0823L47.9682 52.9497C47.9678 52.9499 47.9674 52.9502 47.967 52.9504C47.9675 52.9545 47.9684 52.9593 47.9695 52.9635C47.9718 52.9637 47.974 52.9645 47.9765 52.965L63.8367 56.3531C64.4508 56.4843 65.079 56.3683 65.6058 56.0262C66.1325 55.6841 66.494 55.1574 66.6239 54.543L69.9787 38.676L69.9801 38.6691C69.9767 38.6664 69.9731 38.6633 69.9696 38.6612C69.9692 38.6615 69.9688 38.6617 69.968 38.6622L67.8135 40.0614C66.7278 40.7665 65.2762 40.4576 64.5711 39.3719C63.8663 38.2866 64.1745 36.8349 65.2602 36.1298L67.4147 34.7306C69.0102 33.6944 71.0559 33.7212 72.626 34.7991C73.1487 35.1577 73.5819 35.6078 73.9127 36.1173Z" fill="#272727"/>
+                                            </g>
+                                            <defs>
+                                                <clipPath id="clip0{{ block.id }}">
+                                                    <rect width="60" height="60" fill="white" transform="translate(32.6792 82.999) rotate(-123.001)"/>
+                                                </clipPath>
+                                            </defs>
+                                        </svg>
+                                    </div>
+                                {%- endif -%}
+                                    <div class="text" {% if block.settings.block_color == blank or block.settings.block_color contains 'rgba(0,0,0,0)' %}{% unless section.settings.block_color == '' or section.settings.block_color contains 'rgba(0,0,0,0)' %}style="color: {{ section.settings.block_color }}"{% endunless %}{% else %}style="color: {{ block.settings.block_color }}"{% endif %}>
+                                        <h4 class="theme-font text-icn-block-full-column-title" {% if block.settings.block_color != blank and block.settings.block_color != 'rgba(0,0,0,0)' %}style="color: {{ block.settings.block_color }}"
+                                            {% else %}{% if section.settings.block_color != blank and section.settings.block_color != 'rgba(0,0,0,0)' %}style="color: {{ section.settings.block_color }}"{% endif %}{% endif %}>{{ block.settings.text1 }}</h4>
+                                        {{ block.settings.text2 }}
+                                    </div>
+                                </div>
+                            {%- endif -%}
+                        {%- endif -%}
+                    {%- endfor -%}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{%- endif -%}
+<style>
+    {%- if section.settings.enable_bg -%}
+    #shopify-section-{{ section.id }} .holder {
+        background-size: auto 100%;
+        background-position: center center;
+        background-repeat: no-repeat;
+    }
+    {%- endif -%}
+    #shopify-section-{{ section.id }} .text-icn-block-full-column-title {
+        font-size: {{ section.settings.block_title_size }}px;
+        font-weight: {{ section.settings.block_title_fontweight }};
+    }
+    #shopify-section-{{ section.id }} .text-icn-block-full-column .icn {
+        position: absolute;
+        top: -30px;
+        right: 0;
+    }
+    #shopify-section-{{ section.id }} .text-icn-block-full-column.text-right .icn {
+        right: auto;
+        left: 0;
+        transform: scaleX(-1);
+    }
+    #shopify-section-{{ section.id }} .text-icn-block-full-column .icn > svg {
+        width: 60px;
+        height: 60px;
+        -webkit-filter: drop-shadow( 2px 2px 0px rgba(255, 255, 255, 1));
+        filter: drop-shadow( 2px 2px 0px rgba(255, 255, 255, 1));
+    }
+    @media (max-width: 575px) {
+        #shopify-section-{{ section.id }} .text-icn-block-full-column.text-right {
+            padding-left: 70px;
+        }
+        #shopify-section-{{ section.id }} .text-icn-block-full-column.text-left {
+            padding-right: 70px;
+        }
+        #shopify-section-{{ section.id }} .text-icn-block-full-column .icn {
+            top: 30px;
+            right: 0;
+        }
+        #shopify-section-{{ section.id }} .text-icn-block-full-column.text-right .icn {
+            transform: rotate(180deg);
+        }
+    }
+    {%- if settings.icons_color != blank and section.settings.icons_color != 'rgba(0,0,0,0)' -%}
+        {%- unless settings.color_heading_filter == '' or settings.color_heading_filter contains 'rgba(0,0,0,0)' -%}
+            .text-icn-block-full-column-{{ block.id }} .icn > svg {
+                color: {{ section.settings.icons_color }};
+            }
+        {%- endunless -%}
+    {%- endif -%}
+</style>
+{% schema %}
+    {
+    "name": "Product Info + Image",
+    "settings": [
+    {
+    "type": "checkbox",
+    "id": "enable",
+    "label": "Enable",
+    "default": true
+    },
+    {
+    "type": "header",
+    "content": "Layout"
+    },
+    {
+    "type": "select",
+    "id": "outer_margin",
+    "label": "Outer top margin",
+    "options":[
+    {"value":"mt-0","label":"None"},
+    {"value":"holder-mt-xsmall","label":"XSmall"},
+    {"value":"holder-mt-small","label":"Small"},
+    {"value":"holder-mt-medium","label":"Medium (default)"},
+    {"value":"holder-mt-large","label":"Large"}
+    ],
+    "default": "holder-mt-medium"
+    },
+    {
+    "type": "checkbox",
+    "id": "enable_bg",
+    "label": "Add background",
+    "default": false
+    },
+    {
+    "type": "select",
+    "id": "padding-t",
+    "label": "Top Padding",
+    "options":[
+    {"value":"pt-0","label":"None"},
+    {"value":"holder-pt-xsmall","label":"XSmall"},
+    {"value":"holder-pt-small","label":"Small"},
+    {"value":"holder-pt-medium","label":"Medium (default)"},
+    {"value":"holder-pt-large","label":"Large"}
+    ],
+    "default": "holder-pt-medium"
+    },
+    {
+    "type": "select",
+    "id": "padding-b",
+    "label": "Bottom Padding",
+    "options":[
+    {"value":"pb-0","label":"None"},
+    {"value":"holder-pb-xsmall","label":"XSmall"},
+    {"value":"holder-pb-small","label":"Small"},
+    {"value":"holder-pb-medium","label":"Medium (default)"},
+    {"value":"holder-pb-large","label":"Large"}
+    ],
+    "default": "holder-pb-medium"
+    },
+    {
+    "type":"color",
+    "id":"bg_color",
+    "label":"Section Background Color",
+    "default":"#f8f8f8"
+    },
+    {
+    "type":"image_picker",
+    "id":"bg_image",
+    "label":"Section Background Image",
+    "info":"(Recommended size 1920x700 px)"
+    },
+    {
+    "type": "header",
+    "content": "Headings"
+    },
+    {
+    "type": "checkbox",
+    "id": "enable_text",
+    "label": "Enable",
+    "default": true
+    },
+    {
+    "type": "text",
+    "id": "title",
+    "label": "Title",
+    "default":"About Product"
+    },
+    {
+    "type": "select",
+    "id": "title_size",
+    "label": "Font Size",
+    "default": "h1-style",
+    "options": [
+    { "value": "h-lg-style", "label": "Large" },
+    { "value": "h1-style", "label": "Normal" },
+    { "value": "h2-style", "label": "Small" }
+    ]
+    },
+    {
+    "type": "text",
+    "id": "subtitle",
+    "label": "Sub Heading"
+    },
+    {
+    "type": "text",
+    "id": "bgtitle",
+    "label": "Background Heading"
+    },
+    {
+    "type": "select",
+    "id": "text_alignment",
+    "label": "Text Alignment",
+    "default": "center",
+    "options": [
+    { "value": "left", "label": "Left" },
+    { "value": "center", "label": "Center" },
+    { "value": "right", "label": "Right" }
+    ]
+    },
+    {
+    "type": "header",
+    "content": "All Blocks Settings"
+    },
+    {
+    "type":"range",
+    "id":"block_title_size",
+    "min":10,
+    "max":40,
+    "step":1,
+    "label":"Title Font Size",
+    "unit":"px",
+    "default":30
+    },
+    {
+    "type":"select",
+    "id": "block_title_fontweight",
+    "label": "Title Font Weight",
+    "options": [
+    { "value": "100", "label": "Thin" },
+    { "value": "300", "label": "Light" },
+    { "value": "400", "label": "Regular" },
+    { "value": "500", "label": "Medium" },
+    { "value": "600", "label": "Semibold" },
+    { "value": "700", "label": "Bold" },
+    { "value": "900", "label": "Black" }
+    ],
+    "default":"700"
+    },
+    {
+    "type":"color",
+    "id":"block_color",
+    "label":"All Blocks Text Color"
+    },
+    {
+    "type":"color",
+    "id":"icons_color",
+    "label":"All Arrows Color"
+    },
+    {
+    "type":"image_picker",
+    "id":"image",
+    "label":"Image",
+    "info":"(Recommended size 725x725 px)"
+    }
+    ],
+    "blocks":[
+    {
+    "type":"text",
+    "name":"Text",
+    "limit": 4,
+    "settings":[
+    {
+    "type":"checkbox",
+    "id":"enable",
+    "label":"Enable",
+    "default":true
+    },
+    {
+    "type":"textarea",
+    "id":"text1",
+    "label":"Heading",
+    "default": "Heading"
+    },
+    {
+    "type":"textarea",
+    "id":"text2",
+    "label":"Text",
+    "default": "Add your text here"
+    },
+{
+"type":"checkbox",
+"id":"enable_arrow",
+"label":"Enable Arrow",
+"default":true
+},
+    {
+    "type":"color",
+    "id":"block_color",
+    "label":"Block Text Color"
+    },
+    {
+    "type":"color",
+    "id":"icon_color",
+    "label":"Arrow Color"
+    }
+    ]
+    }],
+    "presets": [{
+    "name": "Product Info + Image",
+    "category": "Info Blocks",
+    "blocks": [
+    {
+    "type": "text"
+    },
+    {
+    "type": "text"
+    },
+    {
+    "type": "text"
+    },
+    {
+    "type": "text"
+    }
+    ]
+    }]
+    }
+{% endschema %}

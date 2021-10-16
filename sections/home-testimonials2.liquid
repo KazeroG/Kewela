@@ -1,0 +1,227 @@
+{%- if section.settings.enable -%}
+    <div class="holder {{ section.settings.outer_margin }} {{ section.settings.block_width }} {% if section.settings.block_width == 'fullwidth' %}full-nopad{% endif %}  {%- if section.settings.enable_bg -%}holder-with-bg {{ section.settings.padding-t }} {{ section.settings.padding-b }}  bg-cover lazyload"
+        {% if section.settings.bg_image != blank %}data-bgset="{% include 'bgset', image: section.settings.bg_image %}" data-sizes="auto"{% endif %}
+        {% if section.settings.bg_color != blank and section.settings.bg_color != 'rgba(0,0,0,0)' %}style="background-color: {{ section.settings.bg_color }}"{% endif %}
+        {%- else -%}"{%- endif -%}>
+        <div class="container">
+            {% include 'section-headings' %}
+            <div class="testimonials-carousel-simple js-testimonials-carousel"
+                 data-slick='{"slidesToShow": 2, {% if settings.arrows_style == "arrows-style3" %}"arrows": false, "dots": true,{% else %}"arrows": true,{% endif %} "responsive": [{"breakpoint": 1024,"settings": {"slidesToShow": 2}},{"breakpoint": 768,"settings": {"slidesToShow": 1}},{"breakpoint": 480,"settings": {"slidesToShow": 1}}]}'>
+                {%- for block in section.blocks -%}
+                    {%- if block.settings.enable -%}
+                        <div class="testimonials-carousel-simple-item" style="background-color: {{ section.settings.testimonials_bg }};" {{ block.shopify_attributes }}>
+                            <h3 class="testimonials-carousel-simple-name" {%- if section.settings.author_color != blank and section.settings.author_color != 'rgba(0,0,0,0)' -%}style="color:{{ section.settings.author_color }}"{%- endif -%}>{{ block.settings.author }}</h3>
+                            <p {%- if section.settings.testimonials_color != blank and section.settings.testimonials_color != 'rgba(0,0,0,0)' -%}style="color:{{ section.settings.testimonials_color }}"{%- endif -%}>{{ block.settings.text }}</p>
+                            <svg>
+                                <rect stroke-dasharray="12" />
+                            </svg>
+                        </div>
+                    {%- endif -%}
+                {%- endfor -%}
+            </div>
+            {%- if settings.arrows_style == "arrows-style2" -%}<div class="carousel-arrows carousel-arrows--bottom mt-3 mt-lg-5"></div>{%- else -%}<div class="carousel-arrows mt-3 mt-lg-5 d-flex justify-content-center"></div>{%- endif -%}
+        </div>
+    </div>
+{%- endif -%}
+<style>
+    .testimonials-carousel-simple-item svg rect {
+        stroke: {{ section.settings.testimonials_border_color | default: '#f4f4f4' }};
+    }
+</style>
+{% schema %}
+{
+"name": "Testimonials (2x)",
+"class": "index-section",
+"settings": [
+{
+"type": "checkbox",
+"id": "enable",
+"label": "Enable",
+"default": true
+},
+{
+"type": "header",
+"content": "Layout"
+},
+{
+"type":"select",
+"id":"block_width",
+"label":"Width",
+"options":[
+{"value":"boxed","label":"Boxed"},
+{"value":"fullwidth","label":"Fullwidth"}
+],
+"default":"boxed"
+},
+{
+"type": "select",
+"id": "outer_margin",
+"label": "Outer top margin",
+"options":[
+{"value":"mt-0","label":"None"},
+{"value":"holder-mt-xsmall","label":"XSmall"},
+{"value":"holder-mt-small","label":"Small"},
+{"value":"holder-mt-medium","label":"Medium (default)"},
+{"value":"holder-mt-large","label":"Large"}
+],
+"default": "holder-mt-medium"
+},
+{
+"type": "checkbox",
+"id": "enable_bg",
+"label": "Add background",
+"default": false
+},
+{
+"type": "select",
+"id": "padding-t",
+"label": "Top Padding",
+"options":[
+{"value":"pt-0","label":"None"},
+{"value":"holder-pt-xsmall","label":"XSmall"},
+{"value":"holder-pt-small","label":"Small"},
+{"value":"holder-pt-medium","label":"Medium (default)"},
+{"value":"holder-pt-large","label":"Large"}
+],
+"default": "holder-pt-medium"
+},
+{
+"type": "select",
+"id": "padding-b",
+"label": "Bottom Padding",
+"options":[
+{"value":"pb-0","label":"None"},
+{"value":"holder-pb-xsmall","label":"XSmall"},
+{"value":"holder-pb-small","label":"Small"},
+{"value":"holder-pb-medium","label":"Medium (default)"},
+{"value":"holder-pb-large","label":"Large"}
+],
+"default": "holder-pb-medium"
+},
+{
+"type":"color",
+"id":"bg_color",
+"label":"Section Background Color",
+"default":"#f8f8f8"
+},
+{
+"type":"image_picker",
+"id":"bg_image",
+"label":"Section Background Image",
+"info":"(Recommended size 1920x700 px)"
+},
+{
+"type": "header",
+"content": "Heading"
+},
+{
+"type": "checkbox",
+"id": "enable_text",
+"label": "Enable",
+"default": false
+},
+{
+"type": "text",
+"id": "title",
+"label": "Title",
+"default":"OUR CLIENTS SAY ABOUT US"
+},
+{
+"type": "select",
+"id": "title_size",
+"label": "Title Font Size",
+"default": "h1-style",
+"options": [
+{ "value": "h-lg-style", "label": "Large" },
+{ "value": "h1-style", "label": "Normal" },
+{ "value": "h2-style", "label": "Small" }
+]
+},
+{
+"type": "text",
+"id": "subtitle",
+"label": "Sub Heading",
+"default": "Sub Heading"
+},
+{
+"type": "text",
+"id": "bgtitle",
+"label": "Background Heading"
+},
+{
+"type": "select",
+"id": "text_alignment",
+"label": "Text Alignment",
+"default": "center",
+"options": [
+{ "value": "left", "label": "Left" },
+{ "value": "center", "label": "Center" },
+{ "value": "right", "label": "Right" }
+]
+},
+{
+"type": "header",
+"content": "Color"
+},
+{
+"type":"color",
+"id":"testimonials_bg",
+"label":"Item Background"
+},
+{
+"type":"color",
+"id":"author_color",
+"label":"Author Name Color"
+},
+{
+"type":"color",
+"id":"testimonials_color",
+"label":"Text Color"
+},
+{
+"type":"color",
+"id":"testimonials_border_color",
+"label":"Border Color"
+}
+],
+"blocks": [
+{
+"type": "quote",
+"name": "Testimonial",
+"settings": [
+{
+"type":"checkbox",
+"id":"enable",
+"label":"Enable",
+"default":true
+},
+{
+"type": "text",
+"id": "author",
+"label": "Author's name",
+"default": "Author's name"
+},
+{
+"type": "richtext",
+"id": "text",
+"label": "Text",
+"default": "<p>Add customer reviews and testimonials</p>"
+}
+]
+}],
+"presets": [
+{
+"name": "Testimonials (2x)",
+"category": "Info Blocks",
+"blocks": [
+{
+"type": "quote"
+},
+{
+"type": "quote"
+}
+]
+}
+]
+}
+{% endschema %}

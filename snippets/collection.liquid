@@ -1,0 +1,235 @@
+{% assign collection_filter_ajax = settings.ajax %}{% if collection_filter_ajax %}{% assign collection_filter_ajax = 1 %}{% endif %}
+{% assign collection_left_sidebar = settings.collection_left_sidebar %}{% if collection_left_sidebar %}{% assign collection_left_sidebar = 1 %}{% endif %}
+{%- assign settings_filter_style = settings.filter_style -%}
+{%- assign container_class = '' -%}
+<div class="holder">
+    <div class="container {{ container_class }}">
+        <!-- Two columns -->
+        <!-- Page Title -->
+        <div class="page-title title-wrap title-lg text-center" data-collection-title>
+            <h1 class="h-lg-style">{{ collection.title}}</h1>
+            {%- if collection_title != blank -%}
+                <div class="h-sub maxW-825{% if settings.heading_sub_first %} h-sub--first{% endif %}"><p><em>{{ collection_title }}</em></p></div>
+            {%- endif -%}
+        </div>
+        <!-- /Page Title -->
+        {%- if collection.description != blank and settings.collection_description_enable -%}
+        <div class="collection-description mb-4">{{ collection.description }}</div>
+        <style>
+            .collection-description {
+                font-size: {{ settings.collection_description_size }}px;
+                line-height: {{ settings.collection_description_lineheight }}em;
+                font-weight: {{ settings.collection_description_fontweight }};
+            }
+        </style>
+        {%- endif -%}
+        {% if settings_filter_style == 'hidden_vertical_style_1' or settings_filter_style == 'visible_vertical' %}
+            <div class="row">
+                {% if collection_left_sidebar %}
+                <!-- Left column -->
+                <div class="col-lg-4 aside aside--left filter-col filter-mobile-col {% if settings.collection_left_sidebar_fixed %}filter-col--sticky js-filter-col{% endif %} {% if settings_filter_style == 'visible_vertical' %}filter-col--opened-desktop{% endif %}" data-sidebar>
+                    {% section 'collection-sidebar' %}
+                </div>
+                <div class="filter-toggle {% unless current_tags.size > 0 %}no-tags{% endunless %} js-filter-toggle" data-refine-buttons-mobile>
+                    <div class="loader-horizontal js-loader-horizontal">
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated w-100"></div>
+                        </div>
+                    </div>
+                    <span class="filter-toggle-icons js-filter-btn"><i class="icon-filter"></i><i class="icon-filter-close"></i></span>
+                    <span class="filter-toggle-text">
+                        <a href="#" class="filter-btn-open js-filter-btn">{{ 'theme.collection.refine_and_sort' | t }}</a>
+                        <a href="{{ collection.url }}" class="filter-btn-close" data-collection-render>{{ 'theme.collection.reset' | t }}</a><a href="#" class="filter-btn-apply js-filter-btn" data-scroll-to=".hdr">{{ 'theme.collection.apply_and_close' | t }}</a>
+                    </span>
+                </div>
+                <!-- /Left column -->
+                {%- endif -%}
+                <!-- Center column -->
+                <div class="col-lg aside">
+                    <div class="prd-grid-wrap">
+                        {% section 'collection-section' %}
+                    </div>
+                </div>
+                <!-- /Center column -->
+            </div>
+        {%- else -%}
+            <div class="row">
+                <!-- Center column -->
+                <div class="col-lg">
+                    {% if collection_left_sidebar %}
+                    <div class="filter-col-horizontal filter-mobile-col js-filter-col-horizontal {% if settings_filter_style == 'visible_horizontal' %}filter-col--opened-desktop{% endif %}" data-sidebar>
+                        {% section 'collection-sidebar' %}
+                    </div>
+                    <!-- filter toggle -->
+                    <div class="filter-toggle js-filter-toggle">
+                        <div class="loader-horizontal js-loader-horizontal">
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated w-100"></div>
+                            </div>
+                        </div>
+                        <span class="filter-toggle-icons js-filter-btn"><i class="icon-filter"></i><i class="icon-filter-close"></i></span>
+                        <span class="filter-toggle-text"><a href="#" class="filter-btn-open js-filter-btn">{{ 'theme.collection.refine_and_sort' | t }}</a><a href="{{ collection.url }}" class="filter-btn-close js-filter-btn" data-collection-render>{{ 'theme.collection.reset' | t }}</a><a href="#" class="filter-btn-apply js-filter-btn" data-collection-render>{{ 'theme.collection.apply_and_close' | t }}</a></span>
+                    </div>
+                    {%- endif -%}
+                    <div class="prd-grid-wrap">
+                        {% section 'collection-section' %}
+                    </div>
+                </div>
+                <!-- /Center column -->
+            </div>
+        {%- endif -%}
+        <!-- /Two columns -->
+        {% section 'collection-shop-info' %}
+    </div>
+</div>
+{% section 'home-product-carousel-collection-page' %}
+<script>
+    function updateQueryParams(){
+        if (location.search.length) {
+            for (var aKeyValue, i = 0, aCouples = location.search.substr(1).split('&'); i < aCouples.length; i++) {
+                aKeyValue = aCouples[i].split('=');
+                if (aKeyValue.length > 1) {
+                    Shopify.queryParams[decodeURIComponent(aKeyValue[0])] = decodeURIComponent(aKeyValue[1]);
+                }
+            }
+        }
+    }
+    function updateURLParameter(url, param, paramVal){
+        var newAdditionalURL = "";
+        var tempArray = url.split("?");
+        var baseURL = tempArray[0];
+        var additionalURL = tempArray[1];
+        var temp = "";
+        if (additionalURL) {
+            tempArray = additionalURL.split("&");
+            for (i=0; i<tempArray.length; i++){
+                if(tempArray[i].split('=')[0] != param){
+                    newAdditionalURL += temp + tempArray[i];
+                    temp = "&";
+                }
+            }
+        }
+        var rows_txt = temp + "" + param + "=" + paramVal;
+        return baseURL + "?" + newAdditionalURL + rows_txt;
+    }
+    function getUrlLastTag(url)
+    {
+        last_tag=0;
+        url_array=url.split('+');
+        last_tag=url_array[url_array.length-1].split('/')[0].split('?')[0];
+        if(!last_tag){
+            last_tag=url.split('collections/')[1];
+            if(last_tag.split('/').length > 1){
+                last_tag=last_tag.split('/')[1].split('?')[0];
+            } else{
+                last_tag = 0
+            }
+        }
+        return last_tag;
+    }
+    function postAjaxJsInit(url,name="",val=""){
+        if(name != '[data-show-more]'){
+            THEME.loaderCategory ? THEME.loaderCategory.open() : false;
+        }else{
+            THEME.loaderHorizontalSm ? THEME.loaderHorizontalSm.open() : false;
+        }
+        updateQueryParams();
+        $.get(url, function(data) {
+            if(name != '[data-show-more]')
+            {
+                window.history.pushState('', '', url);
+                blocks_to_render = [
+                    '[data-product-listing]',
+                    '[data-sidebar]',
+                    '[data-breadcrumbs]',
+                    '[data-selected-items]',
+                    '[data-collection-title]',
+                    '[data-current-selection]',
+                    '[data-select-filter--sort]',
+                    '[data-select-filter--count]'
+                ]
+                blocks_to_replace = [
+                    '[data-refine-buttons-mobile]'
+                ]
+                for(block in blocks_to_render)
+                {
+                    if ($(blocks_to_render[block]).length){
+                        $(blocks_to_render[block]).html($(blocks_to_render[block], data).html());
+                    }
+                }
+                for(block in blocks_to_replace)
+                {
+                    if ($(blocks_to_replace[block]).length){
+                        $(blocks_to_replace[block]).replaceWith($(blocks_to_replace[block], data));
+                    }
+                }
+                THEME.catalog.postAjaxCatalog();
+            } else {
+                $('[data-show-more-wrapper]').remove();
+                $('[data-loader-horizontal]').remove();
+                $("[data-product-listing]").append(data);
+                THEME.product.postAjaxProduct();
+				wishlistPage ? wishlistPage.isWishlist() : false;
+            }
+			currencyUpdate();
+			if ($('.js-filter-col-horizontal').length) THEME.initialization.hideEmptyFiltersH('.js-filter-col-horizontal', '.sidebar-block_content', '.filter-toggle');
+			if ($('.js-filter-col').length) THEME.initialization.hideEmptyFilters('.js-filter-col', '.sidebar-block_content', '.filter-toggle');
+            if(name != '[data-show-more]'){
+                THEME.loaderCategory ? THEME.loaderCategory.close() : false;
+            }else{
+                THEME.loaderHorizontalSm ? THEME.loaderHorizontalSm.close() : false;
+            }
+        });
+    }
+    $(function(){
+        Shopify.queryParams = {};
+        updateQueryParams();
+        {% if collection_filter_ajax == 1 %}
+            $(document).on('click','[data-collection-render]',function(e){
+                url=$(this).attr('href').replace('#','');
+                postAjaxJsInit(url);
+                e.preventDefault();
+            })
+
+            $(document).on('click','[data-show-more]',function(e){
+                url=$(this).attr('href').replace('#','');
+                postAjaxJsInit(url,'[data-show-more]');
+                e.preventDefault();
+            })
+        {% endif %}
+    })
+    {% if collection_filter_ajax == 1 %}
+    $(function(){
+        if($('body').hasClass('ie'))
+        {
+            $('select[name=view]')
+                    .bind('change', function() {
+                                Shopify.queryParams.view = jQuery(this).val();
+                                location.search = jQuery.param(Shopify.queryParams);
+                            }
+                    );
+        }else
+        {
+            $(document).on('change','[data-select-filter]',function(e){
+                name=$(this).attr('name');
+                val=$(this).val();
+                url=updateURLParameter(window.location.href.replace('#','').replace('{{ shop.url }}',''), name, val);
+                $('.prd-grid-wrap').addClass('is-loading');
+                postAjaxJsInit(url,name,val);
+                e.preventDefault();
+            })
+        }
+    })
+
+
+    {% else %}
+    $(function(){
+        $('select[name=view]')
+                .on('change', function() {
+                            Shopify.queryParams.view = jQuery(this).val();
+                            location.search = jQuery.param(Shopify.queryParams);
+                        }
+                );
+    })
+    {% endif %}
+</script>

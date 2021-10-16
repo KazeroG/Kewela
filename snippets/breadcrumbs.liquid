@@ -1,0 +1,80 @@
+{%- assign breadcrumbs_show = true -%}
+{%- if breadcrumbs_show -%}
+    {%- if settings.breadcrumbs_on and template != 'index' -%}
+        {%- assign show = true -%}
+        {% if settings.breadcrumbs_off_pages and template contains 'page' %}
+            {%- assign show = false -%}
+        {%- endif -%}
+        {% if settings.breadcrumbs_off_blog and template contains 'blog' %}
+            {%- assign show = false -%}
+        {%- endif -%}
+        {% if settings.breadcrumbs_off_post and template contains 'article' %}
+            {%- assign show = false -%}
+        {%- endif -%}
+        {% if settings.breadcrumbs_off_collection and template contains 'collection' %}
+            {%- assign show = false -%}
+        {%- endif -%}
+        {% if settings.breadcrumbs_off_product and template contains 'product' %}
+            {%- assign show = false -%}
+        {%- endif -%}
+        {% if settings.breadcrumbs_off_search and template contains 'search' %}
+            {%- assign show = false -%}
+        {%- endif -%}
+        {% if settings.breadcrumbs_off_cart and template contains 'cart' %}
+            {%- assign show = false -%}
+        {%- endif -%}
+        {% if settings.breadcrumbs_off_404 and template contains '404' %}
+            {%- assign show = false -%}
+        {%- endif -%}
+        {% if settings.breadcrumbs_off_customers and template contains 'customers' %}
+            {%- assign show = false -%}
+        {%- endif -%}
+        {% if settings.breadcrumbs_off_product_mobile and template contains 'product' %}
+            {%- assign hideMobile = true -%}
+        {% endif %}
+        {% if settings.breadcrumbs_off_collection_mobile and template contains 'collection' %}
+            {%- assign hideMobile = true -%}
+        {% endif %}
+        {%- if show -%}
+            {%- capture home_link -%}
+            <li {% if hideMobile %}class="d-none d-lg-inline"{% endif %}><a href="/" title="{{ 'homepage.general.title' | t }}">{{ 'homepage.general.title' | t }}</a></li>{%- endcapture -%}
+            <div class="holder breadcrumbs-wrap mt-0 {% if hideMobile %}d-none d-lg-block{% endif %}" {% if settings.breadcrumbs_bg_color != blank %}style="background-color: {{ settings.breadcrumbs_bg_color }}"{% endif %}>
+                <div class="container {{ settings.breadcrumbs_text_alignment }}">
+                    <ul class="breadcrumbs" data-breadcrumbs>
+                        {{ home_link }}
+                        {% if template contains 'page' %}
+                            <li><span>{{ page.title }}</span></li>
+                            {% elsif template contains 'product' %}
+                            {% if collection.url %}
+                                <li>{{ collection.title | link_to: collection.url }}</li>
+                            {% endif %}
+                            <li><span>{{ product.title | strip_html }}</span></li>
+                            {% elsif template contains 'collection' and collection.handle %}
+                            {% if current_tags %}
+                                {% capture url %}/collections/{{ collection.handle }}{% endcapture %}
+                                {{ collection.title | link_to: url }}
+                                {%- comment -%}
+                                <li><span><b>{{ current_tags | join: " + " }}</b></span></li>
+                                {%- endcomment -%}
+                            {% else %}
+                                <li><span>{{ collection.title }}</span></li>
+                            {% endif %}
+                            {% elsif template == 'blog' %}
+                            {% if current_tags %}
+                                <li>{{ blog.title | link_to: blog.url }}</li>
+                                <li><span>{{ current_tags | join: " + " }}</span></li>
+                            {% else %}
+                                <li><span>{{ blog.title }}</span></li>
+                            {% endif %}
+                            {% elsif template == 'article' %}
+                            <li>{{ blog.title | link_to: blog.url }}</li>
+                            <li><span>{{ article.title }}</span></li>
+                        {% else %}
+                            <li><span>{{ page_title }}</span></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        {%- endif -%}
+    {%- endif -%}
+{%- endif -%}

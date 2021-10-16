@@ -1,0 +1,17 @@
+{% if section.settings.languages %}
+    <!-- Header Language -->
+    <div class="dropdn_language ">
+        <div class="dropdn dropdn_language dropdn_language--noimg dropdn_caret">
+            <a href="#" class="dropdn-link js-dropdn-link"><span class="js-dropdn-select-current">English</span><i class="icon-angle-down"></i></a>
+            <div class="dropdn-content">
+                <ul>
+                    <li class="active"><a href="#"><img data-src="{{ 'en.png' | asset_url }}" class="lazyload" alt /><span class="js-dropdn-select-data">English</span></a></li>
+                    <li><a href="#"><img data-src="{{ 'sp.png' | asset_url }}" class="lazyload" alt /><span class="js-dropdn-select-data">Spanish</span></a></li>
+                    <li><a href="#"><img data-src="{{ 'de.png' | asset_url }}" class="lazyload" alt /><span class="js-dropdn-select-data">German</span></a></li>
+                    <li><a href="#"><img data-src="{{ 'fr.png' | asset_url }}" class="lazyload" alt /><span class="js-dropdn-select-data">French</span></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /Header Language -->
+{% endif %}

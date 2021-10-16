@@ -1,0 +1,12 @@
+{%- if template == 'page.gallery' -%}
+    {%- assign settings_outer_margin = 'mt-0' -%}
+{%- endif -%}
+<footer class="page-footer footer-style-5 {% if template == 'index' %}{{ section.settings.outer_margin_index }}{% else %}{{ section.settings.outer_margin }}{% endif %}">
+    <div class="footer-bottom footer-bottom--bg">
+        <div class="container">
+            <div class="footer-copyright text-center">
+                {{ section.settings.copyright }}
+            </div>
+        </div>
+    </div>
+</footer>

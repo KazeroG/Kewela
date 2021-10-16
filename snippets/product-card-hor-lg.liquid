@@ -1,0 +1,147 @@
+{% assign on_sale = false %}
+{% if product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price %}
+    {% assign on_sale = true %}
+{% endif %}
+
+{% assign sold_out = true %}
+{% if product.available %}
+    {% assign sold_out = false %}
+{% endif %}
+
+{% assign show = true %}
+{% if sold_out %}
+    {% unless settings.show_out_of_stock %}
+    {% assign show = false %}
+    {% endunless %}
+{% endif %}
+{% unless grid_image_width == '504x' %}
+    {%- if class == 'prd-hor' -%}
+        {%- assign grid_image_width = '304x' -%}
+    {%- else -%}
+        {%- assign grid_image_width = '396x' -%}
+    {%- endif -%}
+{% endunless %}
+
+
+{%- if section.name == 'Products Grid + Image' -%}
+    {%- assign grid_image_width = '354x' -%}
+{%- endif -%}
+{%- assign gallery_image_preview = '32x32' -%}
+{%- assign grid_image_scale = '2' -%}
+
+{% assign countdown = product.metafields.c_f.countdown %}
+{% assign introtext = product.metafields.c_f.introtext %}
+<div class="prd prd-hor prd-hor--lg {{ settings.product_previews_style }} {% unless settings.add_to_cart_enable %}prd--action-off{% endunless %} {% if countdown != blank %}prd-has-countdown{% endif %} {% if sold_out %}prd-outstock{% endif %} {% if introtext == blank %}prd-off-description{% endif %} {% if settings.label_small or settings.product_labels_style == 'prd-big-circle-labels-small' %}prd-labels--max{% endif %} {% if settings.label_shadow %}prd-labels-shadow{% endif %}"  data-prd-handle="{{ product.url }}">
+    <div class="prd-inside">
+        <div class="prd-img-area">
+            {%- if product.featured_image -%}
+                {%- assign aspect_ratio = 1 | divided_by: product.featured_image.aspect_ratio -%}
+            {%- endif -%}
+            <a title="{{ product.title }}" href="{{ product.url | within: collection }}" class="prd-img {% if settings.zoom_preview %}{% unless sold_out %}image-hover-scale{% endunless %}{% endif %} image-container" {% if product.featured_image %}style="padding-bottom: {{ aspect_ratio | times: 100 }}%{% endif %}">
+                {%- assign product_card_image = product.featured_image.src -%}
+                {%- assign has_color = false -%}
+                {%- assign index_color = 0 -%}
+                {%- for option in product.options -%}
+                    {%- capture downcased_option -%}{{ option | downcase }}{%- endcapture -%}
+                    {%- if downcased_option contains 'color' -%}
+                        {%- assign has_color = true -%}
+                        {%- assign index_color = forloop.index0 -%}
+                    {%- endif -%}
+                {%- endfor -%}
+                {%- if has_color -%}
+                    {%- assign colors = '' -%}
+                    {%- for variant in product.variants -%}
+                        {%- if variant.available -%}
+                            {%- capture color -%}{{ variant.options[index_color] }}{%- endcapture -%}
+                            {%- capture wrapped_color -%},{{ color }},{%- endcapture -%}
+                            {%- unless colors contains wrapped_color -%}
+                                {%- assign color_check = color | downcase  -%}
+                                {%- if current_tags contains color_check -%}
+                                    {%- if variant.image.src -%}
+                                        {%- assign product_card_image = variant.image.src -%}
+                                        {%- break -%}
+                                    {%- endif -%}
+                                {%- endif -%}
+                            {%- capture colors -%}{{ colors }}{{ wrapped_color }}{%- endcapture -%}
+                            {%- endunless -%}
+                        {%- endif -%}
+                    {%- endfor -%}
+                {%- endif -%}
+                <img data-srcset="{{ product_card_image | img_url: grid_image_width }} 1x, {{ product_card_image | img_url: grid_image_width, scale:grid_image_scale }} 2x" alt="{{ product.featured_image.alt | escape }}" class="js-prd-img fade-up lazyload">
+                {%- if  product.images[1] and settings.product_hover_image -%}
+                {% assign product_card_image_2 = product.images[1] %}
+                 <img data-srcset="{{ product_card_image_2 | img_url: grid_image_width }} 1x, {{ product_card_image_2 | img_url: grid_image_width, scale:grid_image_scale }} 2x" alt="{{ product.featured_image.alt | escape }}" class="js-prd-img fade-up lazyload">
+                {%- endif -%}
+                <div class="foxic-loader"></div>
+                {% include 'product-card-labels' type: 'hor-lg' %}
+            </a>
+            <div class="prd-circle-labels">
+                {% render 'compare_quick_view' with product as product %}
+                {% include 'product-colors' %}
+            </div>
+            {% include 'product-card-gallery' %}
+        </div>
+        <div class="prd-info {% if settings.product_padding %}prd-info--pad{% endif %}">
+            <div class="prd-info-wrap">
+                <div class="prd-info-top">
+                    <div class="prd-rating"><span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span></div>
+                </div>
+                {% if settings.show_rating_under_title and settings.product_show_rating %}<div class="prd-rating {% if settings.product_previews_style == 'prd--style2' %}justify-content-center{% endif %}"><span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span></div>{% endif %}
+                {% if settings.show_vendor_under_title and settings.show_vendor %}<div class="prd-tag">{{ product.vendor | truncate:18 }}</div>{% endif %}
+                {%- assign product_title_truncate = settings.product_title_truncate -%}
+                <h2 class="prd-title"><a title="{{ product.title  }}" href="{{ product.url | within: collection }}">{{ product.title | truncate: product_title_truncate }}</a></h2>
+               </div>
+            <div class="prd-hovers">
+                <div class="prd-circle-labels">
+                    {% render 'compare_quick_view' with product as product %}
+                </div>
+                <div class="prd-price">
+                    {% render 'product-price' with product as product %}
+                    {% unless settings.show_rating_under_title %}{% if settings.product_previews_style == 'prd--style2' %}{% if settings.product_show_rating %}<div class="prd-rating"><span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span></div>{% endif %}{% endif %}{% endunless %}
+                </div>
+                {% if introtext != blank %}
+                    {% if introtext != '-' %}
+                        <div class="prd-description mt-1 mt-md-2">{{ introtext }}</div>
+                    {% endif %}
+                {% endif %}
+                {% if settings.show_product_countdown %}
+                    {% assign countdown = product.metafields.c_f.countdown %}
+                    {%- if countdown != blank -%}
+                        <div class="prd-card_countdown position-static heading-font js-countdown-wrap">
+                            <div class="countdown js-countdown" data-countdown="{{ countdown }}"></div>
+                        </div>
+                    {%- endif -%}
+                {% endif %}
+                {%- if settings.add_to_cart_enable -%}
+                    <div class="prd-action">
+                        <div class="prd-action-left">
+                            {%- if settings.add_to_cart_enable -%}
+                                <form method="post" action="{{ routes.cart_add_url }}">
+                                    {% render 'product-add-to-cart' with product as product, in_the_product:false %}
+                                </form>
+                            {%- endif -%}
+                        </div>
+                        {%- if settings.show_vendor or settings.product_show_rating -%}
+                            {%- assign vendor = true -%}
+                            {%- assign rating = true -%}
+                            {%- if settings.show_vendor_under_title -%}{%- assign vendor = false -%}{%- endif -%}
+                            {%- if settings.show_rating_under_title -%}{%- assign rating = false -%}{%- endif -%}
+                            {%- if settings.product_previews_style == 'prd--style2' -%}{%- assign rating = false -%}{%- endif -%}
+                            {% if vendor or rating %}
+                                <div class="prd-action-right">
+                                    <div class="prd-action-right-inside">
+                                        {% if settings.show_vendor and vendor %}<div class="prd-tag">{{ product.vendor | truncate:18 }}</div>{% endif %}
+                                        {% if settings.product_show_rating and rating %}<div class="prd-rating"><span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span></div>{% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {%- endif -%}
+                    </div>
+                {%- else -%}
+                    {% if settings.show_vendor %}<div class="prd-tag">{{ product.vendor | truncate:18 }}</div>{% endif %}
+                    {% unless settings.product_previews_style == 'prd--style2' %}{% if settings.product_show_rating %}<div class="prd-rating"><span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span></div>{% endif %}{% endunless %}
+                {%- endif -%}
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,178 @@
+{%- if section.settings.enable -%}
+    <div class="holder holder-subscribe-full {{ section.settings.outer_margin }}" {%- if section.settings.bg != blank -%}style="background-color: {{ section.settings.bg }};"{%- endif -%} id="SubscribeSection-{{ section.id }}">
+    {%- if section.settings.decor -%}
+        <div class="circle_decor_wrap">
+            {%- assign classes = "circle_decor circle_decor--tl" -%}
+            {%- assign color = section.settings.decor_color -%}
+            {%- assign target = 'subscribe' -%}
+            {%- render 'decor-circle-1', color: color, target: target, classes: classes -%}
+            {%- assign classes = "circle_decor circle_decor--br" -%}
+            {%- assign color = section.settings.decor_color -%}
+            {%- assign target = 'subscribe' -%}
+            {%- render 'decor-circle-1', color: color, target: target, classes: classes -%}
+        </div>
+    {%- endif -%}
+    <div class="container">
+        <div class="row" {%- if section.settings.color != blank and section.settings.color != 'rgba(0,0,0,0)' -%}style="color: {{ section.settings.color }};"{%- endif -%}>
+            <div class="col-auto">
+                <div class="subscribe-form-title-lg heading-font" {%- if section.settings.color != blank and section.settings.color != 'rgba(0,0,0,0)' -%}style="color: {{ section.settings.color }};"{%- endif -%}>{{ section.settings.title }}</div>
+                <div class="subscribe-form-title-sm" {%- if section.settings.color != blank and section.settings.color != 'rgba(0,0,0,0)' -%}style="color: {{ section.settings.color }};"{%- endif -%}>{{ section.settings.text }}</div>
+            </div>
+            <div class="col">
+                <div class="subscribe-form">
+                    {% form 'customer', id:'newsletterSubsribe' %}
+                        <div class="form-inline">
+                            {% if form.posted_successfully? %}
+                                {%- include 'form-subscribe-notification' -%}
+                            {% endif %}
+                            {% if form.errors %}
+                                {%- include 'form-subscribe-notification', class: 'has-error', id: section.id -%}
+                            {% endif %}
+                            <div class="form-control-wrap">
+                                <input type="hidden" name="contact[tags]" value="newsletter">
+                                <input type="email" name="contact[email]" required class="form-control" value="{% if customer %}{{ customer.email }}{% endif %}" placeholder="{{ 'general.newsletter_form.email_placeholder' | t }}" {%- if section.settings.input_color != blank and section.settings.input_color != 'rgba(0,0,0,0)' -%}style="color: {{ section.settings.input_color }};"{%- endif -%}>
+                                <svg preserveAspectRatio="none"><rect x="2" y="2" rx="6" {%- if section.settings.input_color != blank and section.settings.input_color != 'rgba(0,0,0,0)' -%}style="stroke:{{ section.settings.input_color }};"{%- endif -%}></rect></svg>
+                                <span class="bottom" {%- if section.settings.input_color != blank and section.settings.input_color != 'rgba(0,0,0,0)' -%}style="background-color: {{ section.settings.input_color }};"{%- endif -%}></span>
+                                {{ form.errors | default_errors }}
+                                  <style>
+                                    {%- if section.settings.input_color != blank and section.settings.input_color != 'rgba(0,0,0,0)' -%}
+                                    #SubscribeSection-{{ section.id }} form-control::-moz-placeholder {
+                                        color: {{ section.settings.input_color }};
+                                    }
+                                    #SubscribeSection-{{ section.id }} .form-control:-ms-input-placeholder {
+                                        color: {{ section.settings.input_color }};
+                                    }
+                                    #SubscribeSection-{{ section.id }} .form-control::-webkit-input-placeholder {
+                                        color: {{ section.settings.input_color }};
+                                    }
+                                    #SubscribeSection-{{ section.id }} input:-webkit-autofill {
+                                        -webkit-text-fill-color: {{ section.settings.input_color }} !important;
+                                    }
+                                    {% endif %}
+                                    {%- if section.settings.bg != blank -%}
+                                    #SubscribeSection-{{ section.id }} input:-webkit-autofill,
+                                    #SubscribeSection-{{ section.id }} input:-webkit-autofill:hover,
+                                    #SubscribeSection-{{ section.id }} input:-webkit-autofill:focus,
+                                    #SubscribeSection-{{ section.id }} input:-webkit-autofill:active {
+                                        -webkit-box-shadow: 0 0 0px 1000px {{ section.settings.bg }} inset !important;
+                                    }
+                                    {% endif %}
+                                    {%- if section.settings.decor_color != blank and section.settings.decor_color != 'rgba(0,0,0,0)' -%}
+                                    #SubscribeSection-{{ section.id }}.holder-subscribe-full .circle_decor path, .holder-subscribe-full .circle_decor circle {
+                                        fill: inherit;
+                                    }
+                                    {% endif %}
+                                </style>
+                            </div>
+                            <button type="submit" class="btn btn--lg" style="background-color:{{section.settings.button_bgcolor }}; color:{{section.settings.button_color }};" data-color="{{section.settings.button_color }}" data-hover-color="{{section.settings.button_color_hover }}" data-bgcolor="{{section.settings.button_bgcolor }}" data-hover-bgcolor="{{section.settings.button_bgcolor_hover }}">{{ 'general.newsletter_form.submit' | t }}</button>
+                        </div>
+                    {% endform %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{%- endif -%}
+
+{% schema %}
+{
+"name": "Subscribe Form",
+"presets": [
+{
+"name": "Subscribe Form",
+"category": "Newsletter"
+}
+],
+"settings": [
+{
+"type": "checkbox",
+"id": "enable",
+"label": "Enable",
+"default": true
+},
+{
+"type": "header",
+"content": "Layout"
+},
+{
+"type": "select",
+"id": "outer_margin",
+"label": "Outer top margin",
+"options":[
+{"value":"mt-0","label":"None"},
+{"value":"holder-mt-xsmall","label":"XSmall"},
+{"value":"holder-mt-small","label":"Small"},
+{"value":"holder-mt-medium","label":"Medium (default)"},
+{"value":"holder-mt-large","label":"Large"}
+],
+"default": "holder-mt-medium"
+},
+{
+"type":"color",
+"id":"bg",
+"label":"Background"
+},
+{
+"type":"color",
+"id":"color",
+"label":"Text Color"
+},
+{
+"type":"color",
+"id":"input_color",
+"label":"Input Border & Text Color"
+},
+{
+"type":"checkbox",
+"id":"decor",
+"label":"Show Decor Circles",
+"default":true
+},
+{
+"type":"color",
+"id":"decor_color",
+"label":"Decor Circles Color"
+},
+{
+"type": "header",
+"content": "Text"
+},
+{
+"type": "text",
+"id": "title",
+"label": "Heading",
+"default": "Newsletter"
+},
+{
+"type": "text",
+"id": "text",
+"label": "Text",
+"default": "Subscribe to our weekly newsletter."
+},
+{
+"type":"header",
+"content":"BUTTON"
+},
+{
+"type":"color",
+"id": "button_color",
+"label": "Color"
+},
+{
+"type":"color",
+"id": "button_bgcolor",
+"label": "Bg Color"
+},
+{
+"type":"color",
+"id": "button_color_hover",
+"label": "Hover Color"
+},
+{
+"type":"color",
+"id": "button_bgcolor_hover",
+"label": "Hover Bg Color"
+}
+]
+}
+{% endschema %}

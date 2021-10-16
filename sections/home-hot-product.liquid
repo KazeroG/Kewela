@@ -1,0 +1,308 @@
+{%- assign product = all_products[section.settings.featured_product] -%}
+{% assign on_sale = false %}
+{% if product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price %}
+    {% assign on_sale = true %}
+{% endif %}
+{% if product.price_varies %}
+    {% capture price %}{{ product.price_min | money }}{% endcapture %}
+{% else %}
+    {% capture price %}{{ product.selected_or_first_available_variant.price | money }}{% endcapture %}
+{% endif %}
+  <div class="holder {{ section.settings.outer_margin }} {{ section.settings.block_width }} {% if section.settings.block_width == 'fullwidth' %}full-nopad{% endif %}">
+    <div class="container">
+        <div class="row product-hot {% if section.settings.reversed %}flex-row-reverse{% endif %}">
+            <div class="col-md-9 product-hot-img">
+                {%- if section.settings.image != blank -%}
+                    {%- assign aspect_ratio = 1 | divided_by: section.settings.image.aspect_ratio -%}
+                    <a href="{{ product.url }}" class="d-block image-container" style="padding-bottom: {{ aspect_ratio | times: 100 }}%">
+                        {%- assign img_url = section.settings.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+                        <img class="lazyload fade-up"
+                             data-src="{{ img_url }}"
+                             data-widths="[1090, 1296]"
+                             data-sizes="auto"
+                             alt="{{ block.settings.title | escape }}">
+                    </a>
+                {%- else -%}
+                    {%- render 'image-placeholder-aspect-ratio', width: 951, height: 814 -%}
+                {%- endif -%}
+                {%- if section.settings.label_text != blank -%}
+                    <div class="product-hot-label" {% unless section.settings.label_bgcolor == '' or section.settings.label_bgcolor contains 'rgba(0,0,0,0)' %}style="background-color: {{ section.settings.label_bgcolor }}" {% endunless %}>
+                        <span {% unless section.settings.label_color == '' or section.settings.label_color contains 'rgba(0,0,0,0)' %}style="color: {{ section.settings.label_color }}" {% endunless %}>{{ section.settings.label_text }}</span>
+                    </div>
+                {%- endif -%}
+                {%- if section.settings.price_yes -%}
+                    <div class="product-hot-price">
+                        {%- if section.settings.price_text != blank -%}<div class="price-text" {% unless section.settings.price_text_color == '' or section.settings.price_text_color contains 'rgba(0,0,0,0)' %}style="color: {{ section.settings.price_text_color }}"{% endunless %}>{{ section.settings.price_text }}</div>{%- endif -%}
+                        <div class="price-new" {% unless section.settings.price_color == '' or section.settings.price_color contains 'rgba(0,0,0,0)' %}style="color: {{ section.settings.price_color }}"{% endunless %}>{{ price }}</div>
+                    </div>
+                {%- endif -%}
+            </div>
+            <div class="col-md-9 mt-3 mt-md-0">
+                <div class="product-hot-info">
+                    {%- if section.settings.title_yes -%}
+                    <h2 class="product-hot-title {% if section.settings.title_uppercase %}text-uppercase{% endif %}" {% if section.settings.title_color != blank and section.settings.title_color != 'rgba(0,0,0,0)' %}style="color: {{ section.settings.title_color }}"{% endif %}>
+                        <a href="{{ product.url }}" title="{{ section.settings.title }}">{{ product.title | default:'Select Product' }}</a>
+                    </h2>
+                    {%- endif -%}
+                    {%- if section.settings.custom_description_yes -%}
+                        {%- assign introtext = section.settings.custom_description -%}
+                    {%- else -%}
+                        {%- assign introtext = product.metafields.c_f.introtext -%}
+                    {%- endif -%}
+                    {%- if section.settings.info_yes -%}
+                        <div class="product-hot-description {% if section.settings.info_hide_mobile %}d-none d-md-block{% endif %}" {% if section.settings.info_color != blank and section.settings.info_color != 'rgba(0,0,0,0)' %}style="color: {{ section.settings.info_color }}"{% endif %}>
+                            {{ introtext }}
+                        </div>
+                    {%- endif -%}
+                    {%- if section.settings.button_yes -%}
+                    <div class="btn-wrap">
+                        {%- if section.settings.featured_product != blank %}
+                            {% capture btn_style %}
+                            data-color="{{ section.settings.button_color }}" data-bgcolor="{{ section.settings.button_bg }}" data-hover-color="{{ section.settings.button_hover_color }}" data-hover-bgcolor="{{ section.settings.button_hover_bg }}" style="color:{{ section.settings.button_color }};background-color: {{ section.settings.button_bg }}"
+                            {% endcapture %}
+                            <form method="post" action="{{ routes.cart_add_url }}">
+                                {% render 'product-add-to-cart' with product as product, class: section.settings.button_size, style: btn_style %}
+                            </form>
+                        {%- endif -%}
+                    </div>
+                    {%- endif -%}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% schema %}
+{
+  "name": "Hot Product",
+  "class": "index-section",
+  "presets": [
+    {
+      "name": "Hot Product",
+      "category": "Products"
+    }
+  ],
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+{
+"type":"select",
+"id":"block_width",
+"label":"Width",
+"options":[
+{"value":"boxed","label":"Boxed"},
+{"value":"fullwidth","label":"Fullwidth"}
+],
+"default":"boxed"
+},
+    {
+      "type": "select",
+      "id": "outer_margin",
+      "label": "Outer top margin",
+      "options": [
+        {
+          "value": "mt-0",
+          "label": "None"
+        },
+        {
+          "value": "holder-mt-xsmall",
+          "label": "XSmall"
+        },
+        {
+          "value": "holder-mt-small",
+          "label": "Small"
+        },
+        {
+          "value": "holder-mt-medium",
+          "label": "Medium (default)"
+        },
+        {
+          "value": "holder-mt-large",
+          "label": "Large"
+        }
+      ],
+      "default": "holder-mt-medium"
+    },
+    {
+        "type": "checkbox",
+        "id": "reversed",
+        "label": "Reversed",
+        "default": false
+    },
+    {
+        "type": "header",
+        "content": "Product"
+    },
+    {
+      "type": "product",
+      "id": "featured_product",
+      "label": "Product"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Product image",
+      "info": "Recommended size is 951x814px"
+    },
+    {
+    "type": "header",
+    "content": "Title"
+    },
+    {
+    "type": "checkbox",
+    "id": "title_yes",
+    "label": "Enabled",
+    "default": true
+    },
+    {
+    "type": "checkbox",
+    "id": "title_uppercase",
+    "label": "Uppercase",
+    "default": true
+    },
+    {
+    "type": "color",
+    "id": "title_color",
+    "label": "Title Color"
+    },
+    {
+    "type": "header",
+    "content": "Short Description"
+    },
+    {
+    "type": "checkbox",
+    "id": "info_yes",
+    "label": "Show",
+    "default": true
+    },
+    {
+    "type": "paragraph",
+    "content": "[Documentation](http://big-skins.com/foxic/manuals/#ShortDescription)"
+    },
+    {
+    "type": "checkbox",
+    "id": "custom_description_yes",
+    "label": "Show Custom Description",
+    "default": false
+    },
+    {
+    "type": "textarea",
+    "id": "custom_description",
+    "label": "Description",
+    "default": "Paste Custom Description Text Here"
+    },
+    {
+    "type": "checkbox",
+    "id": "info_hide_mobile",
+    "label": "Hide On Mobile device",
+    "default": true
+    },
+    {
+    "type": "color",
+    "id": "info_color",
+    "label": "Description Color"
+    },
+    {
+    "type": "header",
+    "content": "Label"
+    },
+    {
+    "type": "text",
+    "id": "label_text",
+    "label": "Label Text",
+    "default": "HOT<br>OFFERS"
+    },
+    {
+    "type": "color",
+    "id": "label_color",
+    "label": "Label Color"
+    },
+    {
+    "type": "color",
+    "id": "label_bgcolor",
+    "label": "Label Background Color"
+    },
+    {
+    "type": "header",
+    "content": "Price"
+    },
+    {
+    "type": "checkbox",
+    "id": "price_yes",
+    "label": "Enabled",
+    "default": true
+    },
+    {
+    "type": "text",
+    "id": "price_text",
+    "label": "Label Text",
+    "default": "ONLY TODAY"
+    },
+    {
+    "type": "color",
+    "id": "price_color",
+    "label": "Price Color"
+    },
+    {
+    "type": "color",
+    "id": "price_text_color",
+    "label": "Price Text Color"
+    },
+    {
+    "type": "header",
+    "content": "Button"
+    },
+    {
+    "type": "checkbox",
+    "id": "button_yes",
+    "label": "Enabled",
+    "default": true
+    },
+    {
+      "type": "select",
+      "id": "button_size",
+      "label": "Button Size",
+      "options": [
+        {
+          "value": "btn",
+          "label": "Normal"
+        },
+        {
+          "value": "btn--lg",
+          "label": "Medium"
+        },
+        {
+          "value": "btn--xl",
+          "label": "Large"
+        },
+        {
+          "value": "btn--xxl",
+          "label": "Extra Large"
+        }
+      ],
+      "default": "btn--lg"
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "Button Color"
+    },
+    {
+      "type": "color",
+      "id": "button_bg",
+      "label": "Button Background"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_color",
+      "label": "Button Hover Color"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_bg",
+      "label": "Button Hover Background"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,794 @@
+{% assign newsletter = false %}
+
+{% if settings.newsletter_popup_home_only_yes %}
+    {% if template == 'index' %}
+        {% assign newsletter = true %}
+    {% endif %}
+{% else %}
+    {% assign newsletter = true %}
+{% endif %}
+
+{%- if settings.newsletter_popup_yes and newsletter -%}
+    {%- if settings.newsletter_popup_style == 'classic' -%}
+		<div id="popupNewsletter" style="display: none;" class="modal-info-content js-newslettermodal newslettermodal--classic p-0" data-pause="{{ settings.newsletter_popup_delay | times:1000 }}" data-expires="{{ settings.newsletter_popup_expires }}" data-only-index="{{ settings.newsletter_popup_home_only_yes }}">
+			<div class="row align-items-center">
+                {%- if settings.newsletter_image_yes -%}
+                    {%- if settings.newsletter_image != blank -%}
+                        {%- assign aspect_ratio = 1 | divided_by: settings.newsletter_image.aspect_ratio -%}
+						<div class="col-sm-8 d-none d-sm-block">
+							<div class="popup-newsletter-image image-container" style="padding-bottom: {{ aspect_ratio | times: 100 }}%">
+								<img class="w-100"
+									 src="{{ settings.newsletter_image | img_url: '752x' }}"
+									 data-srcset="{{ settings.newsletter_image | img_url: '752x' }} 1x, {{ settings.newsletter_image | img_url: '752x' }} 2x"
+									 alt="">
+							</div>
+						</div>
+                    {%- else -%}
+						<div class="col-sm-8 d-none d-sm-block">
+                            {% include 'image-placeholder' size: '750x1200' width:'375' height: '600' nosvg: true %}
+						</div>
+                    {%- endif -%}
+                {%- endif -%}
+				<div class="col-sm-10">
+					<div class="popup-newsletter-content">
+                        {%- if settings.newsletter_logo_yes -%}
+							<div class="popup-newsletter-logo" style="max-width: {{ settings.newsletter_logo_max_width }}px;">
+                                {%- if settings.newsletter_logo != blank -%}
+                                    {%- assign aspect_ratio = 1 | divided_by: settings.newsletter_logo.aspect_ratio -%}
+									<a href="{{ routes.root_url }}" class="d-block image-container" style="padding-bottom: {{ aspect_ratio | times: 100 }}%; width: {{ settings.newsletter_logo_max_width }}px;">
+                                        {% capture image_size %}{{ settings.newsletter_logo_max_width | escape }}x{% endcapture %}
+										<img class="lazyload"
+											 data-src="{{ settings.newsletter_logo | img_url: image_size }}"
+											 data-srcset="{{ settings.newsletter_logo | img_url: image_size }} 1x, {{ settings.newsletter_logo | img_url: image_size, scale: 2 }} 2x"
+											 data-sizes="auto"
+											 alt
+											 style="width: {{ settings.newsletter_logo_max_width }}px;">
+									</a>
+                                {%- else -%}
+                                    {% include 'image-placeholder' size: 'Logo' width:'300' height: '96' nosvg: true %}
+                                {%- endif -%}
+							</div>
+                        {%- endif -%}
+                        {% form 'customer', class: 'newslettermodal-content-form', id:'newsletter-popup' %}
+                        {% if form.posted_successfully? %}
+							<script>
+								$('body').addClass('newslettermodal-off');
+							</script>
+                            {%- include 'form-subscribe-notification' -%}
+                        {% endif %}
+                        {% if form.errors %}
+							<script>
+								$('body').addClass('newslettermodal-error');
+							</script>
+                        {% endif %}
+						<h3 class="newslettermodal-content-title">{{ settings.newsletter_popup_title }}</h3>
+						<div class="newslettermodal-content-text">{{ settings.newsletter_popup_desc }}</div>
+						<div class="form-group mt-3">
+							<input type="hidden" name="contact[tags]" value="newsletter">
+							<div class="form-label">{{ 'general.newsletter_form.email_placeholder' | t }}</div>
+							<input type="email" name="contact[email]" class="form-control form-control--sm" value="{% if customer %}{{ customer.email }}{% endif %}" placeholder="{{ 'general.newsletter_form.email_placeholder' | t }}">
+                            {{ form.errors | default_errors }}
+						</div>
+						<button type="submit" class="btn w-100">{{ 'general.newsletter_form.submit' | t }}</button>
+                        {% if settings.newsletter_popup_info != blank %}
+							<div class="popup-newsletter-info-sm  mt-2">{{ settings.newsletter_popup_info }}</div>{% endif %}
+                        {% endform %}
+					</div>
+				</div>
+			</div>
+		</div>
+    {%- else -%}
+		<div class="popup-newsletter js-newslettermodal d-none" id="popupNewsletter" data-pause="{{ settings.newsletter_popup_delay | times:1000 }}" data-expires="{{ settings.newsletter_popup_expires }}" data-only-index="{{ settings.newsletter_popup_home_only_yes }}">
+			<div class="popup-newsletter-close js-popup-newsletter-close"><i class="icon-close"></i></div>
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-5 col-xl-auto">
+						<div class="popup-newsletter-logo">
+                            {%- if settings.newsletter_logo_yes -%}
+								<a href="{{ routes.root_url }}" class="logo">
+                                    {%- if settings.newsletter_logo != blank -%}
+                                        {% capture image_size %}{{ settings.newsletter_logo_max_width | escape }}x{% endcapture %}
+										<img class="lazyload"
+											 data-src="{{ settings.newsletter_logo | img_url: image_size }}"
+											 data-srcset="{{ settings.newsletter_logo | img_url: image_size }} 1x, {{ settings.newsletter_logo | img_url: image_size, scale: 2 }} 2x"
+											 data-sizes="auto"
+											 alt
+											 style="width: {{ settings.newsletter_logo_max_width }}px;">
+                                    {%- else -%}
+                                        {% include 'image-placeholder' size: 'Logo' width:'300' height: '96' nosvg: true %}
+                                    {%- endif -%}
+								</a>
+                            {%- endif -%}
+						</div>
+					</div>
+					<div class="col-lg-13 col-xl">
+						<div class="row">
+							<div class="col-lg-9">
+								<div class="newsletter-form-title-lg heading-font">{{ settings.newsletter_popup_title }}</div>
+								<div class="newsletter-form-title-sm">{{ settings.newsletter_popup_desc }}</div>
+							</div>
+							<div class="col-lg-9 newsletter-form">
+                                {% form 'customer', id:'newsletterPopup' %}
+                                {% if form.posted_successfully? %}
+                                    {%- include 'form-subscribe-notification' -%}
+                                {% endif %}
+                                {% if form.errors %}
+                                    {%- include 'form-subscribe-notification', class: 'has-error', id: 'newsletterPopup' -%}
+                                {% endif %}
+								<input type="hidden" name="contact[tags]" value="newsletter">
+								<div class="form-inline">
+									<div class="form-control-wrap">
+										<input type="email" name="contact[email]" required class="form-control" value="{% if customer %}{{ customer.email }}{% endif %}" placeholder="{{ 'general.newsletter_form.email_placeholder' | t }}">
+										<svg preserveAspectRatio="none">
+											<rect x="2" y="2" rx="6"></rect>
+										</svg>
+										<span class="bottom"></span>
+                                        {{ form.errors | default_errors }}
+									</div>
+									<button type="submit" class="btn btn--lg">{{ 'general.newsletter_form.submit' | t }}</button>
+								</div>
+                                {% endform %}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+        {%- if settings.newsletter_input != blank and settings.newsletter_input != 'rgba(0,0,0,0)' -%}
+			<style>
+				#popupNewsletter .form-control::-moz-placeholder {
+					color: {{ settings.newsletter_input }} !important;
+				}
+
+				#popupNewsletter .form-control:-ms-input-placeholder {
+					color: {{ settings.newsletter_input }} !important;
+				}
+
+				#popupNewsletter .form-control::-webkit-input-placeholder {
+					color: {{ settings.newsletter_input }} !important;
+				}
+
+				#popupNewsletter input:-webkit-autofill {
+					-webkit-text-fill-color: {{ settings.newsletter_input }} !important;
+				}
+			</style>
+        {% endif %}
+    {% endif %}
+{%- endif -%}
+
+
+{% assign promopopup = false %}
+
+{% if settings.promo_popup_home_only_yes %}
+    {% if template == 'index' %}
+        {% assign promopopup = true %}
+    {% endif %}
+{% else %}
+    {% assign promopopup = true %}
+{% endif %}
+
+{%- if settings.promo_popup_yes and promopopup -%}
+	<div class="{{ settings.promo_popup_style }} modal-info-content popupPromo js-popupPromo p-0" data-expires="{{ settings.promo_popup_expires }}" data-only-index="{{ settings.promo_popup_home_only_yes }}" style="display: none; width:{{ settings.promo_max_width }}px;">
+        {%- if settings.promo_popup_style == '1' -%}
+			<div class="d-flex flex-column align-items-center justify-content-{{ settings.promo_popup_text_valignment }} py-8 px-0 text-center bg-cover lazyload fade-up-fast popupPromo--style1"
+                 {% if settings.promo_popup_image != blank %}data-bgset="{% include 'bgset', image: settings.promo_popup_image %}" data-sizes="auto"{% endif %}>
+                {%- if settings.promo_popup_logo != blank -%}
+					<div class="popupPromo-logo" style="max-width: {{ settings.promo_popup_logo_max_width }}px;">
+                        {%- assign aspect_ratio = 1 | divided_by: settings.promo_popup_logo.aspect_ratio -%}
+						<a href="{{ routes.root_url }}" class="d-block image-container" style="padding-bottom: {{ aspect_ratio | times: 100 }}%; width: {{ settings.promo_popup_logo_max_width }}px;">
+							<img class="lazyload fade-up-fast"
+								 src="{{ settings.promo_popup_logo | img_url: '100x' }}"
+								 data-src="{{ settings.promo_popup_logo | img_url: 'master' }}"
+								 alt=""
+								 style="width: {{ settings.promo_popup_logo_max_width }}px;">
+						</a>
+					</div>
+                {%- endif -%}
+                {% if settings.promo_popup_title2 != blank %}<h2 class="promoPopup-title2" {% if settings.promo_popup_title2_color != blank %}style="color: {{ settings.promo_popup_title2_color }}"{% endif %}>{{ settings.promo_popup_title2 }}</h2>{% endif %}
+                {%- if settings.promo_popup_text_image != blank -%}
+					<div class="popupPromo-text" style="max-width: {{ settings.promo_popup_text_image_max_width }}px;">
+						<img class="lazyload fade-up-fast"
+							 src="{{ settings.promo_popup_text_image | img_url: '100x' }}"
+							 data-src="{{ settings.promo_popup_text_image | img_url: 'master' }}"
+							 alt=""
+							 style="width: {{ settings.promo_popup_text_image_max_width }}px;">
+					</div>
+                {%- endif -%}
+                {% if settings.promo_popup_title1 != blank %}<h1 class="promoPopup-title1 custom-color" {% if settings.promo_popup_title1_color != blank %}style="color: {{ settings.promo_popup_title1_color }}"{% endif %}>{{ settings.promo_popup_title1 }}</h1>{% endif %}
+				<div class="promoPopup-promo-time">
+                    {% if settings.promo_popup_text1 != blank %} <div class="promoPopup-promo-time-text1 heading-font" {% if settings.promo_popup_text1_color != blank %}style="color: {{ settings.promo_popup_text1_color }}"{% endif %}>{{ settings.promo_popup_text1 }}</div>{% endif %}
+                    {% if settings.promo_popup_text2 != blank %}<div class="promoPopup-promo-time-text2 heading-font" {% if settings.promo_popup_text2_color != blank %}style="color: {{ settings.promo_popup_text2_color }}"{% endif %}>{{ settings.promo_popup_text2 }}</div>{% endif %}
+				</div>
+                {%- if settings.promo_popup_link_yes -%}
+					<div class="promoPopup-btn-wrap mt-3">
+						<a href="{{ settings.promo_popup_link | default:'#' }}" target="{{ settings.promo_popup_link_target }}"class="btn {{ settings.promo_popup_button_size }}"
+						   data-color="{{ settings.promo_popup_button_color }}" data-bgcolor="{{ settings.promo_popup_button_bgcolor }}" data-hover-color="{{ settings.promo_popup_button_color_hover }}" data-hover-bgcolor="{{ settings.promo_popup_button_bgcolor_hover }}" style="color:{{ settings.promo_popup_button_color }}; background-color:{{ settings.promo_popup_button_bgcolor }}">
+                            {{ settings.promo_popup_link_text }}
+						</a>
+					</div>
+                {%- endif -%}
+			</div>
+            {%- elsif settings.promo_popup_style == '2' -%}
+			<div class="d-flex flex-column align-items-center justify-content-{{ settings.promo_popup_text_valignment }} py-2 py-sm-5 py-md-7 px-0 text-center bg-cover lazyload fade-up-fast popupPromo--style2"
+                 {% if settings.promo_popup_image != blank %}data-bgset="{% include 'bgset', image: settings.promo_popup_image %}" data-sizes="auto"{% endif %}>
+				<div class="row justify-content-{{ settings.promo_popup_text_halignment }}">
+					<div class="col-13 col-sm-11">
+                        {%- if settings.promo_popup_logo != blank -%}
+							<div class="popupPromo-logo" style="max-width: {{ settings.promo_popup_logo_max_width }}px;">
+                                {%- assign aspect_ratio = 1 | divided_by: settings.promo_popup_logo.aspect_ratio -%}
+								<a href="{{ routes.root_url }}" class="d-block image-container" style="padding-bottom: {{ aspect_ratio | times: 100 }}%; width: {{ settings.promo_popup_logo_max_width }}px;">
+									<img class="lazyload fade-up-fast"
+										 src="{{ settings.promo_popup_logo | img_url: '100x' }}"
+										 data-src="{{ settings.promo_popup_logo | img_url: 'master' }}"
+										 alt=""
+										 style="width: {{ settings.promo_popup_logo_max_width }}px;">
+								</a>
+							</div>
+                        {%- endif -%}
+                        {% if settings.promo_popup_title2 != blank %}<h2 class="promoPopup-title2" {% if settings.promo_popup_title2_color != blank %}style="color: {{ settings.promo_popup_title2_color }}"{% endif %}>{{ settings.promo_popup_title2 }}</h2>{% endif %}
+                        {%- if settings.promo_popup_text_image != blank -%}
+							<div class="popupPromo-text" style="max-width: {{ settings.promo_popup_text_image_max_width }}px;">
+								<img class="lazyload fade-up-fast"
+									 src="{{ settings.promo_popup_text_image | img_url: '100x' }}"
+									 data-src="{{ settings.promo_popup_text_image | img_url: 'master' }}"
+									 alt=""
+									 style="width: {{ settings.promo_popup_text_image_max_width }}px;">
+							</div>
+                        {%- endif -%}
+                        {% if settings.promo_popup_title1 != blank %}<h1 class="promoPopup-title1 custom-color" {% if settings.promo_popup_title1_color != blank %}style="color: {{ settings.promo_popup_title1_color }}"{% endif %}>{{ settings.promo_popup_title1 }}</h1>{% endif %}
+						<div class="promoPopup-promo-time mt-1 mt-sm-2">
+                            {% if settings.promo_popup_text1 != blank %}<div class="promoPopup-promo-time-text3 heading-font" {% if settings.promo_popup_text1_color != blank %}style="color: {{ settings.promo_popup_text1_color }}"{% endif %}>{{ settings.promo_popup_text1 }}</div>{% endif %}
+                            {% if settings.promo_popup_text2 != blank %}<div class="promoPopup-promo-time-text4 heading-font" {% if settings.promo_popup_text2_color != blank %}style="color: {{ settings.promo_popup_text2_color }}"{% endif %}>{{ settings.promo_popup_text2 }}</div>{% endif %}
+						</div>
+                        {%- if settings.promo_popup_link_yes -%}
+							<div class="promoPopup-btn-wrap mt-15 mt-sm-3">
+								<a href="{{ settings.promo_popup_link | default:'#' }}" target="{{ settings.promo_popup_link_target }}"class="btn {{ settings.promo_popup_button_size }}"
+								   data-color="{{ settings.promo_popup_button_color }}" data-bgcolor="{{ settings.promo_popup_button_bgcolor }}" data-hover-color="{{ settings.promo_popup_button_color_hover }}" data-hover-bgcolor="{{ settings.promo_popup_button_bgcolor_hover }}" style="color:{{ settings.promo_popup_button_color }}; background-color:{{ settings.promo_popup_button_bgcolor }}">
+                                    {{ settings.promo_popup_link_text }}
+								</a>
+							</div>
+                        {%- endif -%}
+					</div>
+				</div>
+			</div>
+        {%- else -%}
+			<div id="promoCircle" class="d-flex flex-column align-items-center justify-content-{{ settings.promo_popup_text_valignment }} py-4 px-0 text-center lazyload popupPromo--style3">
+                {%- if settings.promo_popup_logo != blank -%}
+					<div class="popupPromo-logo" style="max-width: {{ settings.promo_popup_logo_max_width }}px;">
+                        {%- assign aspect_ratio = 1 | divided_by: settings.promo_popup_logo.aspect_ratio -%}
+						<a href="{{ routes.root_url }}" class="d-block image-container" style="padding-bottom: {{ aspect_ratio | times: 100 }}%; width: {{ settings.promo_popup_logo_max_width }}px;">
+							<img class="lazyload fade-up-fast"
+								 src="{{ settings.promo_popup_logo | img_url: '100x' }}"
+								 data-src="{{ settings.promo_popup_logo | img_url: 'master' }}"
+								 alt=""
+								 style="width: {{ settings.promo_popup_logo_max_width }}px;">
+						</a>
+					</div>
+                {%- endif -%}
+                {% if settings.promo_popup_title2 != blank %}<h2 class="promoPopup-title2" {% if settings.promo_popup_title2_color != blank %}style="color: {{ settings.promo_popup_title2_color }}"{% endif %}>{{ settings.promo_popup_title2 }}</h2>{% endif %}
+                {%- if settings.promo_popup_text_image != blank -%}
+					<div class="popupPromo-text" style="max-width: {{ settings.promo_popup_text_image_max_width }}px;">
+						<img class="lazyload fade-up-fast"
+							 src="{{ settings.promo_popup_text_image | img_url: '100x' }}"
+							 data-src="{{ settings.promo_popup_text_image | img_url: 'master' }}"
+							 alt=""
+							 style="width: {{ settings.promo_popup_text_image_max_width }}px;">
+					</div>
+                {%- endif -%}
+                {% if settings.promo_popup_title1 != blank %}<h1 class="promoPopup-title1 custom-color" {% if settings.promo_popup_title1_color != blank %}style="color: {{ settings.promo_popup_title1_color }}"{% endif %}>{{ settings.promo_popup_title1 }}</h1>{% endif %}
+                {% if settings.promo_popup_text1 != blank %} <div class="promoPopup-text1 heading-font" {% if settings.promo_popup_text1_color != blank %}style="color: {{ settings.promo_popup_text1_color }}"{% endif %}>{{ settings.promo_popup_text1 }}</div>{% endif %}
+                {% if settings.promo_popup_text2 != blank %} <div class="promoPopup-text2 heading-font" {% if settings.promo_popup_text2_color != blank %}style="color: {{ settings.promo_popup_text2_color }}"{% endif %}>{{ settings.promo_popup_text2 }}</div>{% endif %}
+                {%- if settings.promo_popup_link_yes -%}
+					<div class="promoPopup-btn-wrap mt-1 mt-sm-3">
+						<a href="{{ settings.promo_popup_link | default:'#' }}" target="{{ settings.promo_popup_link_target }}"class="btn {{ settings.promo_popup_button_size }}"
+						   data-color="{{ settings.promo_popup_button_color }}" data-bgcolor="{{ settings.promo_popup_button_bgcolor }}" data-hover-color="{{ settings.promo_popup_button_color_hover }}" data-hover-bgcolor="{{ settings.promo_popup_button_bgcolor_hover }}" style="color:{{ settings.promo_popup_button_color }}; background-color:{{ settings.promo_popup_button_bgcolor }}">
+                            {{ settings.promo_popup_link_text }}
+						</a>
+					</div>
+                {%- endif -%}
+				<div class="fancybox-close-small js-popup-promo-close"><i class="icon-close"></i></div>
+			</div>
+			<div id="promoBgUnder" class="promo-bg-under"></div>
+        {%- endif -%}
+	</div>
+	<style>
+		.promo-bg-under {
+			position: fixed;
+			z-index: 2;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			pointer-events: none;
+			background-size: auto;
+			background-position: center;
+			background-repeat: no-repeat;
+			{% if settings.promo_popup_image1 != blank %}background-image: url("{{ settings.promo_popup_image1 | img_url: 'master' }}");{% endif %}
+			transition: transform 750ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+		}
+		.has-popupPromo .fancybox-is-open .fancybox-bg-2 {
+			opacity: 0;
+		}
+		.has-popupPromo .fancybox-is-open .fancybox-bg-2 {
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			top: 0;
+			background-size: auto;
+			background-position: center;
+			background-repeat: no-repeat;
+			{% if settings.promo_popup_image != blank %}background-image: url("{{ settings.promo_popup_image | img_url: 'master' }}");{% endif %}
+			opacity: 1;
+			transition: all 750ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+		}
+
+		.has-popupPromo .fancybox-is-open .fancybox-bg {
+			opacity: .9;
+		{%- unless settings.promo_popup_all_bg == '' or settings.promo_popup_all_bg contains 'rgba(0,0,0,0)' -%}
+		{%- if settings.promo_popup_all_bg2 == '' or settings.promo_popup_all_bg2 contains 'rgba(0,0,0,0)' -%}
+			background: {{ settings.promo_popup_all_bg }};
+		{%- else -%}
+			background: linear-gradient(0deg, {{ settings.promo_popup_all_bg }} 0%, {{ settings.promo_popup_all_bg2 }} 100%);
+		{%- endif -%}
+		{%- endunless -%}
+		}
+		.popupPromo-text {
+			margin: 0 auto;
+		}
+		.popupPromo-logo {
+			margin: 0 auto 10px;
+			max-width: 124px;
+		}
+	</style>
+    {%- if settings.promo_popup_style == '1' or settings.promo_popup_style == '2' -%}
+		<style>
+			.fancybox-bg-2 {
+				display: none !important;
+			}
+			.popupPromo {
+			{%- unless settings.promo_popup_bg == '' or settings.promo_popup_bg contains 'rgba(0,0,0,0)' -%}
+			{%- if settings.promo_popup_bg2 == '' or settings.promo_popup_bg2 contains 'rgba(0,0,0,0)' -%}
+				background: {{ settings.promo_popup_bg }};
+			{%- else -%}
+				background: linear-gradient(0deg, {{ settings.promo_popup_bg }} 0%, {{ settings.promo_popup_bg2 }} 100%);
+			{%- endif -%}
+			{%- endunless -%}
+			}
+
+			.popupPromo {
+				overflow: hidden;
+				transform: translateY(-80px);
+				transition: all .5s;
+			}
+
+			@media (max-width: 575px){
+				.popupPromo .bg-cover {
+					min-height:{{ settings.promo_min_height_m }}px
+				}
+			}
+			@media (min-width: 576px){
+				.popupPromo .bg-cover {
+					min-height:{{ settings.promo_min_height }}px
+				}
+			}
+
+			.promoPopup-title2,
+			.promoPopup-promo-time {
+				color: #191919;
+			}
+
+			.promoPopup-title1, .promoPopup-title2,
+			.promoPopup-promo-time, .promoPopup-btn-wrap {
+				transform: translateY(-80px);
+				opacity: 0;
+				transition-property: transform, opacity;
+				transition-duration: .5s;
+			}
+
+			.fancybox-slide--current .popupPromo,
+			.fancybox-slide--current .popupPromo .promoPopup-title1,
+			.fancybox-slide--current .popupPromo .promoPopup-title2,
+			.fancybox-slide--current .promoPopup-promo-time,
+			.fancybox-slide--current .promoPopup-btn-wrap {
+				transform: translateY(0);
+				opacity: 1;
+				transition-duration: .5s;
+			}
+
+			.fancybox-slide--current .popupPromo .promoPopup-title2 {
+				transition-delay: .5s;
+			}
+
+			.fancybox-slide--current .popupPromo .promoPopup-title1 {
+				transition-delay: 1s;
+			}
+
+			.fancybox-slide--current .popupPromo .promoPopup-promo-time {
+				transition-delay: 1.5s;
+			}
+			.fancybox-slide--current .popupPromo .promoPopup-btn-wrap {
+				transition-delay: 2s;
+			}
+			.popupPromo--style1 .promoPopup-title2 {
+				margin-bottom: 0;
+				font-size: 30px;
+				font-style: normal;
+				font-weight: 700;
+				line-height: 1.1em;
+			}
+			.popupPromo--style1 .promoPopup-title1 {
+				margin-bottom: 15px;
+				font-size: 95px;
+				font-style: normal;
+				font-weight: 800;
+				line-height: 1.2em;
+			}
+			.popupPromo--style2 .promoPopup-title2 {
+				margin-bottom: 0;
+				font-size: 36px;
+				font-style: normal;
+				font-weight: 900;
+				line-height: 1em;
+			}
+			.popupPromo--style2 .promoPopup-title1 {
+				margin-bottom: 15px;
+				font-size: 80px;
+				font-style: normal;
+				font-weight: 900;
+				line-height: 1em;
+			}
+			@media (max-width: 576px){
+				.popupPromo--style2 .promoPopup-title2 {
+					font-size: 22px;
+				}
+				.popupPromo--style2 .promoPopup-title1 {
+					font-size: 50px;
+				}
+			}
+			.popupPromo--style1 .promoPopup-promo-time {
+				border: 2px solid rgba(221, 221, 221, 0.51);
+				padding: 18px 31px;
+			}
+			.promoPopup-promo-time-text1 {
+				font-size: 17px;
+				font-style: normal;
+				font-weight: 500;
+				line-height: 21px;
+			}
+			.promoPopup-promo-time-text2 {
+				margin-top: 5px;
+				font-size: 30px;
+				font-style: normal;
+				font-weight: 700;
+				line-height: 37px;
+			}
+			.promoPopup-promo-time-text3 {
+				font-size: 16px;
+				line-height: 24px;
+				font-style: normal;
+				font-weight: 400;
+			}
+			.promoPopup-promo-time-text4 {
+				font-size: 16px;
+				line-height: 24px;
+				font-style: normal;
+				font-weight: 900;
+				letter-spacing: .35em;
+			}
+			@media (max-width: 576px){
+				.promoPopup-promo-time-text3, .promoPopup-promo-time-text4 {
+					font-size: 14px;
+					line-height: 22px;
+				}
+			}
+		</style>
+        {%- elsif settings.promo_popup_style == '3' -%}
+		<style>
+			@media (max-width: 575px){
+				.popupPromo > .d-flex  {
+					width:{{ settings.promo_min_height_m }}px;
+					height:{{ settings.promo_min_height_m }}px;
+				}
+			}
+			@media (min-width: 576px){
+				.popupPromo > .d-flex  {
+					width:{{ settings.promo_max_width }}px;
+					height:{{ settings.promo_min_height }}px;
+				}
+			}
+			.popupPromo > .d-flex {
+				position: relative;
+				z-index: 2;
+				border-radius: 50%;
+				transform: scale3d(0.3, 0.3, 1);
+				opacity: 0;
+				transition: all 550ms cubic-bezier(0.25, 0.46, 0.45, 0.94) 750ms;
+			}
+			.fancybox-slide--current .popupPromo > .d-flex {
+				transform: scale3d(1, 1, 1);
+				opacity: 1;
+			}
+			.popupPromo {
+				background: transparent;
+				overflow: visible;
+			}
+			.fancybox-slide--html .popupPromo .fancybox-close-small {
+				font-size: 18px;
+				position: absolute;
+				z-index: 100;
+				top: 12%;
+				right: 12%;
+				background: #555555;
+				color: #fff;
+				opacity: .85;
+			}
+			.fancybox-slide--html .popupPromo .fancybox-close-small:hover {
+				background: #282828;
+				color: #fff;
+				opacity: 1;
+			}
+			.popupPromo > .fancybox-close-small {
+				display: none;
+			}
+
+			.popupPromo > .d-flex {
+			{%- unless settings.promo_popup_bg == '' or settings.promo_popup_bg contains 'rgba(0,0,0,0)' -%}
+			{%- if settings.promo_popup_bg2 == '' or settings.promo_popup_bg2 contains 'rgba(0,0,0,0)' -%}
+				background: {{ settings.promo_popup_bg }};
+			{%- else -%}
+				background: linear-gradient(0deg, {{ settings.promo_popup_bg }} 0%, {{ settings.promo_popup_bg2 }} 100%);
+			{%- endif -%}
+			{%- endunless -%}
+			}
+
+			.promoPopup-title2 {
+				margin-bottom: 0;
+				font-size: 16px;
+				line-height: 28px;
+				font-weight: 800;
+			}
+			.promoPopup-title1 {
+				margin-bottom: 20px;
+				margin-top: 5px;
+				font-size: 90px;
+				line-height: 1em;
+				font-weight: 800;
+			}
+			.promoPopup-text1 {
+				font-size: 23px;
+				line-height: 32px;
+				font-weight: 500;
+			}
+			.promoPopup-text2 {
+				margin-top: 5px;
+				font-size: 16px;
+				line-height: 28px;
+				font-weight: 500;
+			}
+			@media (max-width: 576px) {
+				.popupPromo-text {
+					max-width: 60% !important;
+					margin: 0 auto;
+				}
+				.popupPromo-text img {
+					max-width: 100%;
+				}
+				.promoPopup-title2 {
+					font-size: 15px;
+					line-height: 24px;
+				}
+				.promoPopup-title1 {
+					margin-bottom: 10px;
+					font-size: 50px;
+				}
+				.promoPopup-text1 {
+					font-size: 17px;
+					line-height: 28px;
+				}
+				.promoPopup-text2 {
+					font-size: 15px;
+					line-height: 24px;
+				}
+			}
+		</style>
+    {%- endif -%}
+	<script>
+		!function(m){var f={};!function(){var M,u=m.requestAnimationFrame||m.webkitRequestAnimationFrame||m.mozRequestAnimationFrame||m.oRequestAnimationFrame||m.msRequestAnimationFrame||function(t){m.setTimeout(t,1e3/60)},r={particleCount:50,angle:90,spread:45,startVelocity:45,decay:.9,ticks:200,x:.5,y:.5,zIndex:100,colors:["#26ccff","#a25afd","#ff5e7e","#88ff5a","#fcff42","#ffa62d","#ff36ff"]};function d(){}function p(t,e,o){return n=t&&null!=t[e]?t[e]:r[e],(i=o)?i(n):n;var n,i}function l(t){return parseInt(t,16)}function x(t){t.width=document.documentElement.clientWidth,t.height=document.documentElement.clientHeight}function v(t){var e,o,n=t.angle*(Math.PI/180),i=t.spread*(Math.PI/180);return{x:t.x,y:t.y,wobble:10*Math.random(),velocity:.5*t.startVelocity+Math.random()*t.startVelocity,angle2D:-n+(.5*i-Math.random()*i),tiltAngle:Math.random()*Math.PI,color:(e=t.color,o=String(e).replace(/[^0-9a-f]/gi,""),o.length<6&&(o=o[0]+o[0]+o[1]+o[1]+o[2]+o[2]),{r:l(o.substring(0,2)),g:l(o.substring(2,4)),b:l(o.substring(4,6))}),tick:0,totalTicks:t.ticks,decay:t.decay,random:Math.random()+5,tiltSin:0,tiltCos:0,wobbleX:0,wobbleY:0}}function w(o,t,n){var i=t.slice(),r=o.getContext("2d"),l=o.width,a=o.height;function c(){l=a=null}var e,s=(e=function(e){u(function t(){l||a||(x(o),l=o.width,a=o.height),r.clearRect(0,0,l,a),(i=i.filter(function(t){return function(t,e){e.x+=Math.cos(e.angle2D)*e.velocity,e.y+=Math.sin(e.angle2D)*e.velocity+3,e.wobble+=.1,e.velocity*=e.decay,e.tiltAngle+=.1,e.tiltSin=Math.sin(e.tiltAngle),e.tiltCos=Math.cos(e.tiltAngle),e.random=Math.random()+5,e.wobbleX=e.x+10*Math.cos(e.wobble),e.wobbleY=e.y+10*Math.sin(e.wobble);var o=e.tick++/e.totalTicks,n=e.x+e.random*e.tiltCos,i=e.y+e.random*e.tiltSin,r=e.wobbleX+e.random*e.tiltCos,l=e.wobbleY+e.random*e.tiltSin;return t.fillStyle="rgba("+e.color.r+", "+e.color.g+", "+e.color.b+", "+(1-o)+")",t.beginPath(),t.moveTo(Math.floor(e.x),Math.floor(e.y)),t.lineTo(Math.floor(e.wobbleX),Math.floor(i)),t.lineTo(Math.floor(r),Math.floor(l)),t.lineTo(Math.floor(n),Math.floor(e.wobbleY)),t.closePath(),t.fill(),e.tick<e.totalTicks}(r,t)})).length?u(t):(m.removeEventListener("resize",c),n(),e())})},f.exports.Promise?new f.exports.Promise(e):(e(d,d),null));return m.addEventListener("resize",c,!1),{addFettis:function(t){return i=i.concat(t),s},canvas:o,promise:s}}f.exports=function(t){for(var e,o,n,i=p(t,"particleCount",Math.floor),r=p(t,"angle",Number),l=p(t,"spread",Number),a=p(t,"startVelocity",Number),c=p(t,"decay",Number),s=p(t,"colors"),u=p(t,"ticks",Number),d=p(t,"zIndex",Number),m=((e=p(t,"origin",Object)).x=p(e,"x",Number),e.y=p(e,"y",Number),e),f=i,h=[],b=M?M.canvas:(o=d,x(n=document.createElement("canvas")),n.style.position="fixed",n.style.top="0px",n.style.left="0px",n.style.pointerEvents="none",n.style.zIndex=o,n),y=b.width*m.x,g=b.height*m.y;f--;)h.push(v({x:y,y:g,angle:r,spread:l,startVelocity:a,color:s[f%s.length],ticks:u,decay:c}));return M?M.addFettis(h):(document.body.appendChild(b),(M=w(b,h,function(){M=null,document.body.removeChild(b)})).promise)},f.exports.Promise=m.Promise||null}(),m.confetti=f.exports}(window);
+		jQuery(document).ready(function () {
+			var windowX,windowY;
+			windowX = window.innerWidth;
+			windowY = window.innerHeight;
+			function doParallax(cursorX,cursorY){
+				if(document.getElementById('promoBgUnder') == null || document.getElementById('promoBg') == null) {
+					return false
+				}
+				var pointX = (windowX/2) - cursorX;
+				var pointY = (windowY/2) - cursorY;
+				document.getElementById('promoBgUnder').style.transform = 'translate3d('+(pointX/20)+'px, '+(pointY/30)+'px, 0px)';
+				document.getElementById('promoBg').style.transform = 'translate3d('+(pointX/40)+'px, '+(pointY/40)+'px, 0px)';
+			}
+			window.addEventListener('mousemove',function(move){
+				doParallax(move.pageX,move.pageY);
+			});
+			var $promoPopup = $('.js-popupPromo');
+			if ($promoPopup.attr('data-only-index') === 'true' && !$('body[class*="template-index"]').length && !$('body[class*="page-index"]').length) {
+				return false;
+			}
+			function checkCookie() {
+				if ($.cookie('foxicPromoPopup') != 'yes' || $promoPopup.attr('data-expires') == '0' || $('body').hasClass('demo')) {
+					openPromoPopup();
+				}
+			}
+			function openPromoPopup() {
+				var pause = $promoPopup.attr('data-pause') > 0 ? $promoPopup.attr('data-pause') : 2000;
+				setTimeout(function() {
+					$.fancybox.open([{
+						src: '.js-popupPromo',
+						type: 'inline',
+						btnTpl: {
+							smallBtn: '<div class="fancybox-close-small js-popup-promo-close"><i class="icon-close"></i></div>'
+						},
+						baseTpl: '<div class="fancybox-container">' + '<div class="fancybox-bg"></div><div id="promoBg" class="fancybox-bg-2"></div>' + '<div class="fancybox-inner">' + '<div class="fancybox-stage"></div>' + "</div>" + "</div>"
+					}], {
+						buttons: ['close'],
+						touch: false,
+						beforeShow: function beforeShow() {
+							$('body').addClass('has-popupPromo');
+						},
+						afterClose: function afterShow() {
+							$('body').removeClass('has-popupPromo');
+						},
+						afterShow: function afterShow() {
+                            {% if settings.promo_popup_effect == 'confetti' %}
+							var colors = ['{{ settings.promo_popup_effect_color1 }}', '{{ settings.promo_popup_effect_color2 }}', '{{ settings.promo_popup_effect_color3 }}'];
+							for (var i = 0; i < 3; i++) {
+								setTimeout(function() {
+									confetti({
+										particleCount: 100,
+										spread: 50 + i * 15,
+										colors: colors,
+										zIndex: 1000
+									});
+								}, 500 * i)
+							} {% elsif settings.promo_popup_effect == 'snow' %}
+							var duration = 7 * 1000;
+							var animationEnd = Date.now() + duration;
+							var skew = 1;
+							var colors = ['{{ settings.promo_popup_effect_color1 }}'];
+							(function frame() {
+								var timeLeft = animationEnd - Date.now();
+								var ticks = Math.max(200, 500 * (timeLeft / duration));
+								skew = Math.max(0.8, skew - 0.001);
+								confetti({
+									particleCount: 1,
+									startVelocity: 0,
+									ticks: ticks,
+									gravity: 0.5,
+									zIndex: 1000,
+									origin: {
+										x: Math.random(),
+										y: (Math.random() * skew) - 0.2
+									},
+									colors: colors,
+									shapes: ['circle']
+								});
+								if (timeLeft > 0) {
+									requestAnimationFrame(frame);
+								}
+							}()); {% elsif settings.promo_popup_effect == 'pride' %}
+							var end = Date.now() + (5 * 1000);
+							var colors = ['{{ settings.promo_popup_effect_color1 }}', '{{ settings.promo_popup_effect_color2 }}'];
+							(function frame() {
+								confetti({
+									particleCount: 2,
+									angle: 60,
+									spread: 55,
+									origin: {
+										x: 0
+									},
+									colors: colors,
+									zIndex: 1000,
+								});
+								confetti({
+									particleCount: 2,
+									angle: 120,
+									spread: 55,
+									origin: {
+										x: 1
+									},
+									colors: colors,
+									zIndex: 1000,
+								});
+								if (Date.now() < end) {
+									requestAnimationFrame(frame);
+								}
+							}());
+                            {% endif %}
+						}
+					});
+				}, pause);
+			}
+			$(document).on('click', '.js-popup-promo-close', function() {
+				$.cookie('foxicPromoPopup', 'yes', {
+					expires: parseInt($promoPopup.attr('data-expires'), 10)
+				});
+				parent.jQuery.fancybox.getInstance().close();
+			});
+			checkCookie();
+		})
+	</script>
+{% endif %}
+{%- if settings.leavepage_popup_yes -%}
+	<div id="popupLeavePage" style="display: none; width: 650px;" class="modal-info-content js-popupLeavePage popupLeavePage p-0" data-only-index="false">
+		<div class="row align-items-center vert-margin-small">
+			<div class="col-sm popup-col1">
+				<div class="popupLeavePage-content py-3 px-0 text-center">
+                    {%- if settings.leavepage_popup_title != blank -%}
+						<h2 class="h1-style mb-3">{{ settings.leavepage_popup_title }}</h2>
+                    {%- endif -%}
+                    {%- if settings.leavepage_popup_text != blank -%}
+						<div class="popupLeavePage-content-text">
+                            {{ settings.leavepage_popup_text }}
+						</div>
+                    {%- endif -%}
+					<div class="btn-wrap mt-4">
+                        {%- if settings.leavepage_button2 != blank -%}<a data-fancybox-close href="#" class="btn w-100">{{ settings.leavepage_button2 }}</a>{%- endif -%}
+                        {%- if settings.leavepage_button1 != blank -%}<a data-fancybox-close href="#" class="btn btn--grey mt-2 w-100 js-popupLeavePage-disable">{{ settings.leavepage_button1 }}</a>{%- endif -%}
+					</div>
+				</div>
+			</div>
+            {%- if settings.collection_leave != blank -%}
+				<div class="col-sm-8 popup-col2">
+                    {%- assign collection_1 = collections[settings.collection_leave] -%}
+                    {%- assign product_limit_1 = settings.collection_leave_limit -%}
+					<div style="max-width: 100%" class="prd-grid prd-carousel prd-carousel--single-sm js-prd-carousel-dots data-to-show-1 data-to-show-lg-1 data-to-show-md-1 data-to-show-sm-2 data-to-show-xs-1" data-slick='{"dots": false, "arrows": true }'>
+                        {% for product in collection_1.products limit: product_limit_1 %}{% include 'product-card' %}{% else %}{% include 'empty-carousel' %}{% endfor %}
+					</div>
+				</div>
+            {%- endif -%}
+		</div>
+	</div>
+	<style>
+		.has-popupLeavePage .fancybox-container {
+			z-index: 170;
+		}
+	</style>
+	<script>
+		jQuery(document).ready(function () {
+			document.addEventListener("mouseleave", function (e) {
+				if ($('.js-popupLeavePage').attr('data-only-index') == 'true' && !$('body[class*="template-index"]').length && !$('body[class*="page-index"]').length) {
+					return false;
+				} else {
+					if ($('.js-popupLeavePage').data('opened') == true) return false;
+					if ((e.pageY - $(window).scrollTop() <= 1) && !$('body').hasClass('fancybox-active') && !$('body').hasClass('popupLeavePage-off')) {
+						$('.js-popupLeavePage').data('opened', true)
+						$.fancybox.open([{
+							src: '.js-popupLeavePage',
+							type: 'inline',
+							btnTpl: {
+								smallBtn: '<div data-fancybox-close class="fancybox-close-small modal-close"><i class="icon-close"></i></div>'
+							}
+						}], {
+							buttons: ['close'],
+							touch: false,
+							beforeShow: function beforeShow() {
+								$('.js-popupLeavePage .slick-initialized').slick('setPosition');
+								$('body').addClass('has-popupLeavePage');
+							},
+							afterShow: function afterShow() {
+								$('.js-popupLeavePage .slick-initialized').slick('setPosition');
+							},
+							afterClose: function afterShow() {
+								$('body').removeClass('has-popupLeavePage');
+							}
+						});
+					}
+					$('.js-popupLeavePage-disable').on('click', function () {
+						$('body').addClass('popupLeavePage-off')
+					})
+				}
+			})
+		})
+	</script>
+{%- endif -%}

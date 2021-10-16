@@ -1,0 +1,508 @@
+{%- assign product = all_products[section.settings.featured_product] -%}
+{% assign on_sale = false %}
+{% if product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price %}
+    {% assign on_sale = true %}
+{% endif %}
+{% if product.price_varies %}
+    {% capture price %}{{ product.price_min | money }}{% endcapture %}
+{% else %}
+    {% capture price %}{{ product.selected_or_first_available_variant.price | money }}{% endcapture %}
+{% endif %}
+<div class="holder {{ section.settings.outer_margin }} {{ section.settings.block_width }} {% if section.settings.block_width == 'fullwidth' %}full-nopad{% endif %}">
+    <div class="container position-relative">
+        <div class="holder row product-hot product-hot--sale mx-0 {% if section.settings.reversed %}flex-row-reverse{% endif %} {%- if section.settings.enable_bg -%}holder-with-bg {{ section.settings.padding-t }} {{ section.settings.padding-b }}  bg-cover lazyload"
+             {%- if section.settings.bg_image != blank -%}data-bgset="{% include 'bgset', image: section.settings.bg_image %}" data-sizes="auto"{%- endif -%}
+             {%- if section.settings.bg_color != blank and section.settings.bg_color != 'rgba(0,0,0,0)' -%}style="background-color: {{ section.settings.bg_color }}"{%- endif -%}
+        {%- else -%}"{%- endif -%}>
+            <div class="col-md-9 product-hot-img">
+                {%- if section.settings.image != blank -%}
+                    {%- assign aspect_ratio = 1 | divided_by: section.settings.image.aspect_ratio -%}
+                    <a href="{{ product.url }}" class="d-block image-container" style="padding-bottom: {{ aspect_ratio | times: 100 }}%">
+                        {%- assign img_url = section.settings.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+                        <img class="lazyload fade-up"
+                             data-src="{{ img_url }}"
+                             data-widths="[1090, 1296]"
+                             data-sizes="auto"
+                             alt="{{ section.settings.title | escape }}">
+                    </a>
+                {%- else -%}
+                    {%- render 'image-placeholder-aspect-ratio', width: 951, height: 814 -%}
+                {%- endif -%}
+            </div>
+            <div class="col-md-9 mt-3 mt-md-0">
+                <div class="product-hot-info">
+                    {% if section.settings.subtitle != blank %}<h3 class="product-hot-subtitle heading-font" {% if section.settings.subtitle_color != blank and section.settings.subtitle_color != 'rgba(0,0,0,0)' %}style="color: {{ section.settings.subtitle_color }}"{% endif %}>{{ section.settings.subtitle }}</h3>{% endif %}
+                    {%- if section.settings.title_yes -%}
+                        <h2 class="product-hot-title {% if section.settings.title_uppercase %}text-uppercase{% endif %}" {% if section.settings.title_color != blank and section.settings.title_color != 'rgba(0,0,0,0)' %}style="color: {{ section.settings.title_color }}"{% endif %}>
+                            <a href="{{ product.url }}" title="{{ section.settings.title }}">{{ product.title | default:'Select Product' }}</a>
+                        </h2>
+                    {%- endif -%}
+                    {%- if section.settings.custom_description_yes -%}
+                        {%- assign introtext = section.settings.custom_description -%}
+                    {%- else -%}
+                        {%- assign introtext = product.metafields.c_f.introtext -%}
+                    {%- endif -%}
+                    {%- if section.settings.info_yes -%}
+                        <div class="product-hot-description {% if section.settings.info_hide_mobile %}d-none d-md-block{% endif %}" {% if section.settings.info_color != blank and section.settings.info_color != 'rgba(0,0,0,0)' %}style="color: {{ section.settings.info_color }}"{% endif %}>
+                            {{ introtext }}
+                        </div>
+                    {%- endif -%}
+                    {%- if section.settings.countdown_yes -%}
+                    <div class="countdown-box-bg mt-4">
+                        <div class="countdown js-countdown" data-countdown="{{ section.settings.timer }}"></div>
+                    </div>
+                    {%- endif -%}
+                    {%- if section.settings.button_yes -%}
+                        <div class="btn-wrap">
+                            {%- if section.settings.featured_product != blank %}
+                                <form method="post" action="{{ routes.cart_add_url }}">
+                                    {% render 'product-add-to-cart' with product as product, class: section.settings.button_size %}
+                                </form>
+                            {%- endif -%}
+                        </div>
+                    {%- endif -%}
+                </div>
+            </div>
+        </div>
+        {%- if section.settings.label_text != blank -%}
+            <div class="product-hot-label-sm" {% unless section.settings.label_bgcolor == '' or section.settings.label_bgcolor contains 'rgba(0,0,0,0)' %}style="background-color: {{ section.settings.label_bgcolor }}" {% endunless %}>
+                <span {% unless section.settings.label_color == '' or section.settings.label_color contains 'rgba(0,0,0,0)' %}style="color: {{ section.settings.label_color }}" {% endunless %}>{{ section.settings.label_text }}</span>
+            </div>
+        {%- endif -%}
+    </div>
+</div>
+<style>
+
+    {%- if section.settings.countdown_yes -%}
+
+    {%- if section.settings.countdown_shadow -%}
+    #shopify-section-{{ section.id }} .countdown-box-bg .countdown > span:after {
+        box-shadow: 0 0 40px rgba(0,0,0,.3);
+    }
+    {%- endif -%}
+
+    {%- if section.settings.countdown_style == '1' -%}
+    #shopify-section-{{ section.id }} .countdown-box-bg .countdown > span:after {
+        -webkit-mask: url({{ 'brush-shape-square.svg' | asset_url }}) no-repeat 50% 50%;
+        mask: url({{ 'brush-shape-square.svg' | asset_url }}) no-repeat 50% 50%;
+        -webkit-mask-size: cover;
+        mask-size: cover;
+    }
+    {%- elsif section.settings.countdown_style == '3' -%}
+    #shopify-section-{{ section.id }} .countdown-box-bg .countdown > span {
+        padding-top: 5px;
+        padding-bottom: 2px;
+    }
+    #shopify-section-{{ section.id }} .countdown-box-bg .countdown > span:before {
+        position: absolute;
+        content: '';
+        z-index: -1;
+        top: -5px;
+        left: 0;
+        width: 100%;
+    {%- unless section.settings.countdown_color_bg2 == '' or section.settings.countdown_color_bg2 contains 'rgba(0,0,0,0)' -%}
+        background-color: {{ section.settings.countdown_color_bg2 }};
+    {%- endunless -%}
+        height: calc({{ section.settings.countdown_fontsize }}px * 1.5 + 5px);
+    }
+    #shopify-section-{{ section.id }} .countdown-box-bg .countdown > span span {
+        margin-bottom: 12px;
+    {%- unless section.settings.countdown_color2 == '' or section.settings.countdown_color2 contains 'rgba(0,0,0,0)' -%}
+        color: {{ section.settings.countdown_color2 }};
+    {%- endunless -%}
+    }
+    {%- endif -%}
+    #shopify-section-{{ section.id }}  .countdown-box-bg .countdown > span span {
+        font-size: {{ section.settings.countdown_fontsize }}px;
+        font-weight: {{ section.settings.countdown_fontweight }};
+    }
+    .has-round-btns #shopify-section-{{ section.id }} .countdown-box-bg .countdown > span:after {
+        border-radius: 10px;
+    }
+    {%- unless section.settings.countdown_color_bg == '' or section.settings.countdown_color_bg contains 'rgba(0,0,0,0)' -%}
+    #shopify-section-{{ section.id }} .countdown-box-bg .countdown > span:after {
+        background-color: {{ section.settings.countdown_color_bg }};
+        z-index: -2;
+    }
+    {%- endunless -%}
+
+    {%- unless section.settings.countdown_color == '' or section.settings.countdown_color contains 'rgba(0,0,0,0)' -%}
+    #shopify-section-{{ section.id }} .countdown-box-bg .countdown > span {
+        color: {{ section.settings.countdown_color }};
+    }
+    {%- endunless -%}
+    {%- endif -%}
+
+    {%- if section.settings.button_yes -%}
+    #shopify-section-{{ section.id }} .btn-wrap .btn:not(.hovered):not(:hover) {
+    {%- if section.settings.button_bg != blank and section.settings.button_bg != 'rgba(0,0,0,0)' -%} background-color: {{ section.settings.button_bg }};
+    {%- endif -%} {%- if section.settings.button_color != blank and section.settings.button_color != 'rgba(0,0,0,0)' -%} color: {{ section.settings.button_color }};
+    {%- endif -%}
+    }
+    #shopify-section-{{ section.id }} .btn-wrap .btn:hover {
+    {%- if section.settings.button_hover_bg != blank and section.settings.button_hover_bg != 'rgba(0,0,0,0)' -%} background-color: {{ section.settings.button_hover_bg }} !important;
+    {%- endif -%} {%- if section.settings.button_hover_color != blank and section.settings.button_hover_color != 'rgba(0,0,0,0)' -%} color: {{ section.settings.button_hover_color }} !important;
+    {%- endif -%}
+    }
+    {%- endif -%}
+
+</style>
+{% schema %}
+    {
+    "name": "Sale Product",
+    "class": "index-section",
+    "presets": [
+    {
+    "name": "Sale Product",
+    "category": "Products"
+    }
+    ],
+    "settings": [
+    {
+    "type": "header",
+    "content": "Layout"
+    },
+    {
+    "type":"select",
+    "id":"block_width",
+    "label":"Width",
+    "options":[
+    {"value":"boxed","label":"Boxed"},
+    {"value":"fullwidth","label":"Fullwidth"}
+    ],
+    "default":"boxed"
+    },
+    {
+    "type": "select",
+    "id": "outer_margin",
+    "label": "Outer top margin",
+    "options": [
+    {
+    "value": "mt-0",
+    "label": "None"
+    },
+    {
+    "value": "holder-mt-xsmall",
+    "label": "XSmall"
+    },
+    {
+    "value": "holder-mt-small",
+    "label": "Small"
+    },
+    {
+    "value": "holder-mt-medium",
+    "label": "Medium (default)"
+    },
+    {
+    "value": "holder-mt-large",
+    "label": "Large"
+    }
+    ],
+    "default": "holder-mt-medium"
+    },
+    {
+    "type": "checkbox",
+    "id": "reversed",
+    "label": "Reversed",
+    "default": false
+    },
+    {
+    "type": "checkbox",
+    "id": "enable_bg",
+    "label": "Add background",
+    "default": true
+    },
+    {
+    "type": "select",
+    "id": "padding-t",
+    "label": "Top Padding",
+    "options":[
+    {"value":"pt-0","label":"None"},
+    {"value":"holder-pt-xsmall","label":"XSmall"},
+    {"value":"holder-pt-small","label":"Small"},
+    {"value":"holder-pt-medium","label":"Medium (default)"},
+    {"value":"holder-pt-large","label":"Large"}
+    ],
+    "default": "holder-pt-xsmall"
+    },
+    {
+    "type": "select",
+    "id": "padding-b",
+    "label": "Bottom Padding",
+    "options":[
+    {"value":"pb-0","label":"None"},
+    {"value":"holder-pb-xsmall","label":"XSmall"},
+    {"value":"holder-pb-small","label":"Small"},
+    {"value":"holder-pb-medium","label":"Medium (default)"},
+    {"value":"holder-pb-large","label":"Large"}
+    ],
+    "default": "holder-pb-xsmall"
+    },
+    {
+    "type":"color",
+    "id":"bg_color",
+    "label":"Section Background Color",
+    "default":"#ffffff"
+    },
+    {
+    "type":"image_picker",
+    "id":"bg_image",
+    "label":"Section Background Image",
+    "info":"(Recommended size 1920x650 px)"
+    },
+    {
+    "type": "header",
+    "content": "Product"
+    },
+    {
+    "type": "product",
+    "id": "featured_product",
+    "label": "Product"
+    },
+    {
+    "type": "image_picker",
+    "id": "image",
+    "label": "Product image",
+    "info": "Recommended size is 950x815px"
+    },
+    {
+    "type": "header",
+    "content": "Title"
+    },
+    {
+    "type": "checkbox",
+    "id": "title_yes",
+    "label": "Enabled",
+    "default": true
+    },
+    {
+    "type": "checkbox",
+    "id": "title_uppercase",
+    "label": "Uppercase",
+    "default": true
+    },
+    {
+    "type": "color",
+    "id": "title_color",
+    "label": "Title Color"
+    },
+{
+"type": "header",
+"content": "Subtitle"
+},
+{
+"type": "text",
+"id": "subtitle",
+"label": "Subtitle",
+"default": "Subtitle"
+},
+{
+"type": "color",
+"id": "subtitle_color",
+"label": "Subtitle Color"
+},
+    {
+    "type": "header",
+    "content": "Short Description"
+    },
+    {
+    "type": "checkbox",
+    "id": "info_yes",
+    "label": "Show",
+    "default": true
+    },
+    {
+    "type": "paragraph",
+    "content": "[Documentation](http://big-skins.com/foxic/manuals/#ShortDescription)"
+    },
+    {
+    "type": "checkbox",
+    "id": "custom_description_yes",
+    "label": "Show Custom Description",
+    "default": false
+    },
+    {
+    "type": "textarea",
+    "id": "custom_description",
+    "label": "Description",
+    "default": "Paste Custom Description Text Here"
+    },
+    {
+    "type": "checkbox",
+    "id": "info_hide_mobile",
+    "label": "Hide On Mobile device",
+    "default": true
+    },
+    {
+    "type": "color",
+    "id": "info_color",
+    "label": "Description Color"
+    },
+    {
+    "type": "header",
+    "content": "Label"
+    },
+    {
+    "type": "text",
+    "id": "label_text",
+    "label": "Label Text",
+    "default": "Product<br>Of the<br>week"
+    },
+    {
+    "type": "color",
+    "id": "label_color",
+    "label": "Label Color"
+    },
+    {
+    "type": "color",
+    "id": "label_bgcolor",
+    "label": "Label Background Color"
+    },
+    {
+    "type": "header",
+    "content": "Price"
+    },
+    {
+    "type": "checkbox",
+    "id": "price_yes",
+    "label": "Enabled",
+    "default": true
+    },
+    {
+    "type": "header",
+    "content": "Countdown"
+    },
+    {
+    "type": "checkbox",
+    "id": "countdown_yes",
+    "label": "Show Countdown",
+    "default": true
+    },
+    {
+    "type": "select",
+    "id": "countdown_style",
+    "label": "Countdown Style",
+    "default": "1",
+    "options": [
+    { "value": "1", "label": "Style 1" },
+    { "value": "2", "label": "Style 2" },
+    { "value": "3", "label": "Style 3" }
+    ]
+    },
+    {
+    "type": "checkbox",
+    "id": "countdown_shadow",
+    "label": "Add Shadow",
+    "default": false
+    },
+    {
+    "type": "text",
+    "id": "timer",
+    "label": "Countdown Date",
+    "default": "2021/10/10",
+    "info": "YEAR/MONTH/DAY"
+    },
+    {
+    "type": "color",
+    "id": "countdown_color",
+    "label": "Countdown Color"
+    },
+    {
+    "type": "color",
+    "id": "countdown_color2",
+    "label": "Countdown Color 2",
+    "info": "*for Style 3"
+    },
+    {
+    "type": "color",
+    "id": "countdown_color_bg",
+    "label": "Countdown Background"
+    },
+    {
+    "type": "color",
+    "id": "countdown_color_bg2",
+    "label": "Countdown Background 2",
+    "info": "*for Style 3"
+    },
+    {
+    "type":"range",
+    "id":"countdown_fontsize",
+    "min":12,
+    "max":60,
+    "step":1,
+    "label":"Number Font Size",
+    "unit":"px",
+    "default": 30
+    },
+    {
+    "type":"select",
+    "id": "countdown_fontweight",
+    "label": "Number Font Weight",
+    "options": [
+    { "value": "100", "label": "Thin" },
+    { "value": "300", "label": "Light" },
+    { "value": "400", "label": "Regular" },
+    { "value": "500", "label": "Medium" },
+    { "value": "600", "label": "Semibold" },
+    { "value": "700", "label": "Bold" },
+    { "value": "800", "label": "Black" }
+    ],
+    "default":"600"
+    },
+    {
+    "type": "header",
+    "content": "Button"
+    },
+    {
+    "type": "checkbox",
+    "id": "button_yes",
+    "label": "Enabled",
+    "default": true
+    },
+    {
+    "type": "select",
+    "id": "button_size",
+    "label": "Button Size",
+    "options": [
+    {
+    "value": "btn",
+    "label": "Normal"
+    },
+    {
+    "value": "btn--lg",
+    "label": "Medium"
+    },
+    {
+    "value": "btn--xl",
+    "label": "Large"
+    },
+    {
+    "value": "btn--xxl",
+    "label": "Extra Large"
+    }
+    ],
+    "default": "btn--lg"
+    },
+    {
+    "type": "color",
+    "id": "button_color",
+    "label": "Button Color"
+    },
+    {
+    "type": "color",
+    "id": "button_bg",
+    "label": "Button Background"
+    },
+    {
+    "type": "color",
+    "id": "button_hover_color",
+    "label": "Button Hover Color"
+    },
+    {
+    "type": "color",
+    "id": "button_hover_bg",
+    "label": "Button Hover Background"
+    }
+    ]
+    }
+{% endschema %}

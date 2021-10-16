@@ -1,0 +1,6 @@
+{% style %}
+:root {
+{% capture bodybg %}{%- if settings.color_body_bg == '' or settings.color_body_bg contains 'rgba(0,0,0,0)' -%}red{%- else -%}{{ settings.color_body_bg }}{%- endif -%}{% endcapture %}
+--body_bg: {{ bodybg }};
+}
+{% endstyle %}

@@ -1,0 +1,35 @@
+<!-- Products Grid -->
+{% if collection.products.size > 0 %}
+    {% for product in collection.products %}
+        {% include 'product-card' %}
+    {% endfor %}
+{% else %}
+    Collection is empty
+{% endif %}
+<div class="loader-horizontal-sm js-loader-horizontal-sm d-none"><span></span></div>
+{%- if paginate.pages > 1 -%}
+    {%- assign all_product_count = collection.all_products_count -%}
+    {%- assign current_product_count = collection.products_count -%}
+    {%- assign data_start = paginate.page_size | times:paginate.current_page | times:100 | divided_by:current_product_count  -%}
+    {%- assign next_page = paginate.current_page | plus:1 -%}
+    {%- assign data_to = paginate.page_size | times:next_page | times:100 | divided_by:current_product_count -%}
+    {%- if paginate.current_page < paginate.pages -%}
+        <div class="circle-loader-wrap js-hide-on-resize" data-show-more-wrapper>
+            <div class="circle-loader">
+                <a href="{{ paginate.next.url | append:'&view=load-section-grid' | replace:'&view=load-section-grid&view=load-section-grid','&view=load-section-grid' }}" rel="nofollow" class="js-circle-loader js-circle-loader-ajax lazyload" data-start="{{ data_start }}" data-to="{{ data_to }}" data-page="{{ paginate.current_page }}" data-show-more-section-grid>
+                    <svg id="svg_d" viewPort="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="50%" cy="50%" r="63" fill="transparent"></circle>
+                        <circle class="js-circle-bar" cx="50%" cy="50%" r="63" fill="transparent"></circle>
+                    </svg>
+                    <svg id="svg_m" viewPort="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="50%" cy="50%" r="50" fill="transparent"></circle>
+                        <circle class="js-circle-bar" cx="50%" cy="50%" r="50" fill="transparent"></circle>
+                    </svg>
+                    <div class="circle-loader-text">{{ 'theme.collection.load_more' | t }}</div>
+                    <div class="circle-loader-text-alt">{{ paginate.page_size | times:paginate.current_page }} {{ 'theme.collection.out_of' | t }} {{ current_product_count }}</div>
+                </a>
+            </div>
+        </div>
+    {%- endif -%}
+{% endif %}
+<!-- /Products Grid -->

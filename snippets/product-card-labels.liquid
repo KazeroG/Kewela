@@ -1,0 +1,31 @@
+<div class="{{ settings.product_labels_style | replace: '-small', '' }}">
+{% assign new = 0 %}
+{% for tag in product.tags %}{% if tag == 'new' or tag == 'NEW' or tag == 'New' or tag contains '_new' %}{% assign new = 1 %}{% endif %} {% endfor %}
+{% if new == 1 and settings.show_label_new %}<div class="label-new {% if sold_out %}d-none{% endif %}"><span>{{ 'theme.general.new' | t }}</span></div>{% endif %}
+{% if on_sale and settings.show_label_sale %}
+    <div class="label-sale">
+        {% assign percent = product.selected_or_first_available_variant.compare_at_price | minus: product.selected_or_first_available_variant.price | times: 100.0 | divided_by:product.selected_or_first_available_variant.compare_at_price | times: 100 | divided_by: 100 | floor %}
+        {%- if settings.label_sale_style == 'all' -%}
+            <span>-{{ percent }}% <span class="sale-text">{{ 'products.product.on_sale' | t }}</span></span>
+        {%- elsif settings.label_sale_style == 'text' -%}
+            <span><span class="sale-text">{{ 'products.product.on_sale' | t }}</span></span>
+        {%- else -%}
+            <span>-{{ percent }}%</span>
+        {%- endif -%}
+        {% if countdown != blank and  settings.product_labels_style == 'prd-big-circle-labels' %}
+            <div class="countdown-circle">
+                <div class="countdown js-countdown" data-countdown="{{ countdown }}"></div>
+            </div>
+        {%- endif -%}
+    </div>
+{% endif %}
+{% if sold_out %} <div class="label-outstock">{{ 'products.product.sold_out' | t }}</div>{% endif %}
+</div>
+{% if settings.show_product_countdown %}
+    {% assign countdown = product.metafields.c_f.countdown %}
+    {%- if countdown != blank -%}
+        <div class="prd-card_countdown heading-font js-countdown-wrap">
+            <div class="countdown js-countdown" data-countdown="{{ countdown }}"></div>
+        </div>
+    {%- endif -%}
+{% endif %}

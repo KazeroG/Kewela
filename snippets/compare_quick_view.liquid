@@ -1,0 +1,8 @@
+{%- comment -%}
+<a href="#" class="circle-label-compare js-label-compare"> <i class="icon-compare-1"></i> <span>COMPARE</span></a>
+{%- endcomment -%}
+{%- if settings.wishlist_yes -%}
+<a href="#" class="circle-label-compare circle-label-wishlist--add js-add-wishlist" title="{{ 'theme.general.wishlist.add_to_wishlist' | t }}"><i class="icon-heart-stroke"></i></a>
+<a href="#" class="circle-label-compare circle-label-wishlist--off js-remove-wishlist mt-0" title="{{ 'theme.general.wishlist.remove_from_wishlist' | t }}"><i class="icon-heart-hover"></i></a>
+{%- endif -%}
+{% if settings.show_quick_view %}<a href="#" class="circle-label-qview js-prd-quickview" data-src="{{ product.url }}{% if section.id == 'product-recommendations' or template == 'search' %}&{% else %}?{% endif %}view=quick-view&output=embed"> <i class="icon-eye"></i> <span>{{ 'theme.general.quick_view' | t }}</span></a>{%- endif -%}

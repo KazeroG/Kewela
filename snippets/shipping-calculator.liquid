@@ -1,0 +1,108 @@
+<div class="panel order-{{ order }}">
+    {%- if panel -%}
+        <div class="panel-heading{% if open %} active{% endif %}">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#cartAccordion" href="#collapse1">{{ heading }}</a>
+                <div class="toggle-arrow"><span></span><span></span></div>
+            </h4>
+        </div>
+    {%- else -%}
+        <h2>{{ heading }}</h2>
+    {%- endif -%}
+    {%- if panel -%}
+    <div id="collapse1" class="panel-collapse collapse{% if open %} show{% endif %}">
+        <div class="panel-body">
+            {%- endif -%}
+            <div id="shipping-calculator">
+                <div class="form-group">
+                    <label  for="address_country">Country</label>
+                    <div class="select-wrapper select-wrapper-sm">
+                        <select class="form-control form-control--sm" id="address_country" name="address[country]" data-default="{% if shop.customer_accounts_enabled and customer %}{{ customer.default_address.country }}{% elsif settings.shipping_calculator_default_country != '' %}{{ settings.shipping_calculator_default_country }}{% endif %}">{{ country_option_tags }}</select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="field" id="address_province_container" style="display:none;">
+                        <label for="address_province" id="address_province_label">{{ 'customer.addresses.province' | t }}</label>
+                        <div class="form-group select-wrapper select-wrapper-sm">
+                            <select class="form-control form-control--sm" id="address_province" name="address[province]" data-default="{% if shop.customer_accounts_enabled and customer and customer.default_address.province != '' %}{{ customer.default_address.province }}{% endif %}"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="address_zip">{{ 'customer.addresses.zip' | t }}</label>
+                    <input class="form-control form-control--sm" type="text" id="address_zip" name="address[zip]"{% if shop.customer_accounts_enabled and customer %} value="{{ customer.default_address.zip }}"{% endif %} />
+                </div>
+                <div class="form-group mb-0">
+                    <input type="button" class="get-rates btn btn-alt" value="{{ shipping_calculator_submit_button_label | default: 'Calculate shipping' }}"/>
+                </div>
+                <div id="wrapper-response"></div>
+            </div>
+            {%- if panel -%}
+        </div>
+    </div>
+    {%- endif -%}
+    <script id="shipping-calculator-response-template" type="text/template">
+        {% raw %}
+            <p id="shipping-rates-feedback" {{#if success}} class="success" {{else}} class="error" {{/if}}>
+            {{#if success}}
+            {{#if rates}}
+            {{#rates}}
+            {{#if @first}}
+            Rates start at {{price}}.
+            {{/if}}
+            {{/rates}}
+            {{else}}
+            We do not ship to this destination.
+            {{/if}}
+            {{else}}
+            {{ errorFeedback }}
+            {{/if}}
+            </p>
+        {% endraw %}
+    </script>
+
+    <!--[if lte IE 8]>
+    <style> #shipping-calculator { display: none; } </style>
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <style> #shipping-calculator {
+        display: none;
+    } </style>
+    <![endif]-->
+    <script src="{{ 'shipping-cart.js' | asset_url }}"></script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.10/handlebars.min.js"></script>
+
+
+    <script src="/services/javascripts/countries.js"></script>
+
+    <script src="{{ 'shopify_common.js' | shopify_asset_url }}"></script>
+
+    <script>
+        theme = window.theme || {};
+        theme.strings = {
+            shippingCalcSubmitButton: {{ settings.shipping_calculator_submit_button_label | default: 'Calculate shipping' | json }},
+            shippingCalcSubmitButtonDisabled: {{ settings.shipping_calculator_submit_button_label_disabled | default: 'Calculating...' | json }},
+            {% if customer %}shippingCalcCustomerIsLoggedIn: true,{% endif %}
+            shippingCalcMoneyFormat: {{ shop.money_with_currency_format | json }}
+        }
+        Countries.updateProvinceLabel = function (e, t) {
+            if ("string" == typeof e && Countries[e] && Countries[e].provinces) {
+                if ("object" != typeof t && (t = document.getElementById("address_province_label"), null === t))return;
+                t.innerHTML = Countries[e].label;
+                var r = jQuery(t).parent();
+                r.find("select");
+                r.find(".custom-style-select-box-inner").html(Countries[e].provinces[0])
+            }
+        }
+        Shopify.Cart.ShippingCalculator.show( {
+            submitButton: theme.strings.shippingCalcSubmitButton,
+            submitButtonDisabled: theme.strings.shippingCalcSubmitButtonDisabled,
+            customerIsLoggedIn: theme.strings.shippingCalcCustomerIsLoggedIn,
+            moneyFormat: theme.strings.shippingCalcMoneyFormat
+        } );
+    </script>
+
+
+</div>

@@ -1,0 +1,183 @@
+{%- if section.settings.enable -%}
+<div class="holder {{ section.settings.outer_margin }}" id="holder-{{ section.id }}">
+    <div class="container">
+        {% include 'section-headings' %}
+        <div class="instagram-grid">
+            <div id="instafeed{{ section.id }}" class="js-instagram-feed" data-limit='{{ section.settings.insta_limit }}' data-{{ section.settings.insta_source }}='{{ section.settings.insta_source_text }}'></div>
+            {%- if section.settings.insta_button_show -%}
+                <div class="instagram-grid-btn">
+                    <a href="{{ section.settings.insta_button_link }}" target="{{ section.settings.link_target }}" class="btn btn--xxl" {% unless  section.settings.bnr_button_theme %}style="background-color:{{ section.settings.button_bgcolor }}; color:{{ section.settings.button_color }};" data-color="{{ section.settings.button_color }}" data-hover-color="{{ section.settings.button_color_hover }}" data-bgcolor="{{ section.settings.button_bgcolor }}" data-hover-bgcolor="{{ section.settings.button_bgcolor_hover }}"{% endunless %}>{{ section.settings.insta_button_text }}</a>
+                </div>
+            {%- endif -%}
+        </div>
+    </div>
+</div>
+{%- endif -%}
+
+{% schema %}
+{
+    "name": "Instagram Grid",
+    "class": "index-section",
+    "settings": [
+        {
+            "type": "checkbox",
+            "id": "enable",
+            "label": "Enable",
+            "default": true
+        },
+        {
+        "type": "header",
+        "content": "Headings"
+        },
+        {
+        "type": "checkbox",
+        "id": "enable_text",
+        "label": "Enable",
+        "default": false
+        },
+        {
+        "type": "text",
+        "id": "title",
+        "label": "Title",
+        "default":"Instagram"
+        },
+        {
+        "type": "select",
+        "id": "title_size",
+        "label": "Title Font Size",
+        "default": "h1-style",
+        "options": [
+        { "value": "h-lg-style", "label": "Large" },
+        { "value": "h1-style", "label": "Normal" },
+        { "value": "h2-style", "label": "Small" }
+        ]
+        },
+    {
+    "type": "text",
+    "id": "subtitle",
+    "label": "Sub Heading",
+    "default": "Sub Heading"
+    },
+    {
+    "type": "text",
+    "id": "bgtitle",
+    "label": "Background Heading"
+    },
+        {
+        "type": "select",
+        "id": "text_alignment",
+        "label": "Text Alignment",
+        "default": "center",
+        "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+        ]
+        },
+        {
+        "type": "radio",
+        "id": "insta_source",
+        "label": "From where to retrieve the feed",
+        "default":"tag",
+        "options":[
+        {"value":"username","label":"User Name"},
+        {"value":"tag","label":"Tag"}
+        ]
+        },
+        {
+        "type": "text",
+        "id": "insta_source_text",
+        "label": "Username Or Tag",
+        "default":"envato"
+        },
+        {
+        "type": "range",
+        "id": "insta_limit",
+        "label": "Number of pictures",
+        "min": 1,
+        "max": 24,
+        "step": 1,
+        "default": 12,
+        "info":  "* Up to 12 for username, up to 24 for tags"
+        },
+        {
+        "type":"checkbox",
+        "id":"insta_button_show",
+        "label":"Show Button",
+        "default":true
+        },
+        {
+        "type": "text",
+        "id": "insta_button_link",
+        "label": "Button Link",
+        "default":"https://www.instagram.com/bigstepscenter/"
+        },
+        {
+        "type":"select",
+        "id":"link_target",
+        "label":"Link Target",
+        "default":"_self",
+        "options":[
+        {
+        "value":"_blank",
+        "label":"New page"
+        },
+        {
+        "value":"_self",
+        "label":"In current page"
+        }
+        ]
+        },
+        {
+        "type": "text",
+        "id": "insta_button_text",
+        "label": "Button Text",
+        "default":"Follow Us"
+        },
+{
+"type": "select",
+"id": "bnr_button_alignment",
+"label": "Self alignment",
+"default": "inherit",
+"options": [
+{ "value": "inherit", "label": "Default" },
+{ "value": "text-center", "label": "Center" },
+{ "value": "text-left", "label": "Left" },
+{ "value": "text-right", "label": "Right" }
+]
+},
+{
+"type": "checkbox",
+"id": "bnr_button_theme",
+"default": true,
+"label": "Use Theme Button Color"
+},
+        {
+        "type":"color",
+        "id": "button_color",
+        "label": "Color"
+        },
+        {
+        "type":"color",
+        "id": "button_bgcolor",
+        "label": "Bg Color"
+        },
+        {
+        "type":"color",
+        "id": "button_color_hover",
+        "label": "Hover Color"
+        },
+        {
+        "type":"color",
+        "id": "button_bgcolor_hover",
+        "label": "Hover Bg Color"
+        }
+    ],
+    "presets": [
+        {
+            "name": "Instagram Grid",
+            "category": "Instagram"
+        }
+    ]
+}
+{% endschema %}
