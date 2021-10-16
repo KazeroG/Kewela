@@ -24,7 +24,7 @@ body {
     background: #ffffff;
   
   
-  background-position: left top;
+  background-position: center center;
   background-repeat: repeat;
   background-attachment: scroll;
 }
@@ -76,7 +76,7 @@ color: #ffffff;
 }
 
 .header-panel-top .dropdown-cart .actions .btn{background-color: #000000!important;}
-.header-panel-top .dropdown-cart .actions .btn:hover{ background-color: #ff7677!important;}
+.header-panel-top .dropdown-cart .actions .btn:hover{ background-color: #e374b1!important;}
 .top-header-panel .text-continue a,
 .blog-detail .action-btn span:hover,
 .btn:hover,
@@ -119,7 +119,7 @@ color: #ffffff;
 
 .quick-view .product-shop .btn:hover,
 .product-shop #add-to-cart-form .btn:hover,
-.dropdown-cart .actions .btn:hover { border-color:#ff7677; background-color: #ff7677; color: #ffffff; }
+.dropdown-cart .actions .btn:hover { border-color:#e374b1; background-color: #e374b1; color: #ffffff; }
 
 /* Title Color */
 label,
