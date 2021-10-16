@@ -1783,23 +1783,11 @@
       },
       "1634367025316d9493": {
         "type": "instagram",
-        "blocks": {
-          "eb08f05d-3368-4a9b-8a26-aa1f1b588391": {
-            "type": "instagram",
-            "settings": {
-              "enable": true,
-              "link": ""
-            }
-          }
-        },
-        "block_order": [
-          "eb08f05d-3368-4a9b-8a26-aa1f1b588391"
-        ],
         "settings": {
           "show_instagram": true,
-          "instagram_bg_color": "#fff8ee",
+          "instagram_bg_color": "#e494c0",
           "instagram_title": "Partagez vos photos avec nous #kawelabeachtowels",
-          "instagram_des": "Phasellus lorem malesuada ligula pulvinar commodo maecenas suscipit auctom.",
+          "instagram_des": "",
           "display_instagram_button": true,
           "instagram_button_text": "Voir la galerie",
           "instagram_button_link": "",
