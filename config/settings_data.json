@@ -1798,12 +1798,61 @@
           "images_per_row": "3",
           "resolution_images": "thumbnail"
         }
+      },
+      "16343686294627fb2b": {
+        "type": "hb-feature-columns",
+        "blocks": {
+          "16343686294627fb2b-0": {
+            "type": "text_block",
+            "settings": {
+              "hb_enable_image": true,
+              "hb_image": "shopify:\/\/shop_images\/2.png",
+              "hb_title": "Ajouter un titre ou un slogan",
+              "hb_text": "<p>Partagez des articles de blog, des produits ou des promotions avec vos clients. Utilisez ce texte pour décrire vos produits, partager des détails sur leur disponibilité ou leur style, ou encore pour afficher des FAQ et avis récents.<\/p>",
+              "hb_button_label": "",
+              "hb_button_link": ""
+            }
+          },
+          "16343686294627fb2b-1": {
+            "type": "text_block",
+            "settings": {
+              "hb_enable_image": true,
+              "hb_image": "shopify:\/\/shop_images\/5.png",
+              "hb_title": "Ajouter un titre ou un slogan",
+              "hb_text": "<p>Partagez des articles de blog, des produits ou des promotions avec vos clients. Utilisez ce texte pour décrire vos produits, partager des détails sur leur disponibilité ou leur style, ou encore pour afficher des FAQ et avis récents.<\/p>",
+              "hb_button_label": "",
+              "hb_button_link": ""
+            }
+          },
+          "16343686294627fb2b-2": {
+            "type": "text_block",
+            "settings": {
+              "hb_enable_image": true,
+              "hb_title": "Ajouter un titre ou un slogan",
+              "hb_text": "<p>Partagez des articles de blog, des produits ou des promotions avec vos clients. Utilisez ce texte pour décrire vos produits, partager des détails sur leur disponibilité ou leur style, ou encore pour afficher des FAQ et avis récents.<\/p>",
+              "hb_button_label": "",
+              "hb_button_link": ""
+            }
+          }
+        },
+        "block_order": [
+          "16343686294627fb2b-0",
+          "16343686294627fb2b-1",
+          "16343686294627fb2b-2"
+        ],
+        "settings": {
+          "hb_title": "Colonnes de texte avec images",
+          "hb_align_text": "center",
+          "hb_sec_button_label": "",
+          "hb_sec_button_link": ""
+        }
       }
     },
     "content_for_index": [
       "1490716464547",
       "1506523206723",
-      "1634367025316d9493"
+      "1634367025316d9493",
+      "16343686294627fb2b"
     ]
   },
   "presets": {
