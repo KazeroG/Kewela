@@ -1046,8 +1046,11 @@
             "type": "style_2",
             "settings": {
               "megamenu_items_2": "Shop",
+              "banner_second_style_2": "shopify:\/\/shop_images\/IMG_5633.jpg",
               "link_banner_second_style_2": "",
+              "banner_third_style_2": "shopify:\/\/shop_images\/IMG_4115_163009b5-4e7d-45df-815d-ade128e3d409.jpg",
               "link_banner_third_style_2": "",
+              "banner_first_style_2": "shopify:\/\/shop_images\/IMG_4068.jpg",
               "link_banner_first_style_2": ""
             }
           },
