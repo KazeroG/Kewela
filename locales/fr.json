@@ -7,8 +7,8 @@
     "404": {
       "title": "404 - Page non trouvée",
       "subtext_html": "Cette page n'est pas disponible. <a href=\"\/collections\/all\">Retourner au magasinage<\/a>",
-      "click_here": "",
-      "continue_shopping": ""
+      "click_here": "Cliquez ici",
+      "continue_shopping": "pour continuer vos achats."
     },
     "breadcrumbs": {
       "home": "Accueil",
