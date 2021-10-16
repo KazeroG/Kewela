@@ -1063,74 +1063,6 @@
           "display_megamenu": true
         }
       },
-      "1489249304429": {
-        "type": "brands",
-        "blocks": {
-          "1489249384118": {
-            "type": "image",
-            "settings": {
-              "title": "Loremous",
-              "link": ""
-            }
-          },
-          "1489249389892": {
-            "type": "image",
-            "settings": {
-              "title": "Isabella",
-              "link": ""
-            }
-          },
-          "1489249395281": {
-            "type": "image",
-            "settings": {
-              "title": "magcor",
-              "link": ""
-            }
-          },
-          "1489249428812": {
-            "type": "image",
-            "settings": {
-              "title": "fermends",
-              "link": ""
-            }
-          },
-          "1489249433392": {
-            "type": "image",
-            "settings": {
-              "title": "conse-qaur",
-              "link": ""
-            }
-          },
-          "1489249438559": {
-            "type": "image",
-            "settings": {
-              "title": "Loremous",
-              "link": ""
-            }
-          },
-          "1508831157136": {
-            "type": "image",
-            "settings": {
-              "title": "Loremous",
-              "link": ""
-            }
-          }
-        },
-        "block_order": [
-          "1489249384118",
-          "1489249389892",
-          "1489249395281",
-          "1489249428812",
-          "1489249433392",
-          "1489249438559",
-          "1508831157136"
-        ],
-        "settings": {
-          "display_brands_slider": true,
-          "title_brand": "Top brands",
-          "description": "Naminos condimentum dui id enim selementum de tincidunts cosmo de lorem metropolis"
-        }
-      },
       "footer": {
         "type": "footer",
         "settings": {
@@ -1531,7 +1463,7 @@
               "link": "shopify:\/\/collections",
               "color_button": "",
               "background_button": "",
-              "border_button": "#fff"
+              "border_button": "#ffffff"
             }
           },
           "1490716464547-0": {
@@ -1569,7 +1501,7 @@
               "link": "shopify:\/\/collections",
               "color_button": "",
               "background_button": "",
-              "border_button": "#fff"
+              "border_button": "#ffffff"
             }
           },
           "e67497f2-43d1-4498-8c94-a0db9d41b446": {
@@ -1587,7 +1519,7 @@
               "link": "shopify:\/\/collections",
               "color_button": "",
               "background_button": "",
-              "border_button": "#fff"
+              "border_button": "#ffffff"
             }
           }
         },
@@ -1797,131 +1729,6 @@
         "settings": {
         }
       },
-      "1506524986454": {
-        "type": "featured-products",
-        "settings": {
-          "show_product_list_home_page": true,
-          "title": "Featured Products",
-          "product_list_collection": "featured-products",
-          "display_infinite_scrolling_homepage": true,
-          "product_list_limit": "8",
-          "collection_results_per_row1": "4"
-        }
-      },
-      "1506528432153": {
-        "type": "instagram",
-        "blocks": {
-          "1594179326811": {
-            "type": "instagram",
-            "settings": {
-              "enable": true,
-              "link": ""
-            }
-          },
-          "1594179355761": {
-            "type": "instagram",
-            "settings": {
-              "enable": true,
-              "link": ""
-            }
-          },
-          "1594181388870": {
-            "type": "instagram",
-            "settings": {
-              "enable": true,
-              "link": ""
-            }
-          },
-          "1594181405247": {
-            "type": "instagram",
-            "settings": {
-              "enable": true,
-              "link": ""
-            }
-          },
-          "1594181422650": {
-            "type": "instagram",
-            "settings": {
-              "enable": true,
-              "link": ""
-            }
-          },
-          "1594181432044": {
-            "type": "instagram",
-            "settings": {
-              "enable": true,
-              "link": ""
-            }
-          },
-          "1594181448003": {
-            "type": "instagram",
-            "settings": {
-              "enable": true,
-              "link": ""
-            }
-          }
-        },
-        "block_order": [
-          "1594179326811",
-          "1594179355761",
-          "1594181388870",
-          "1594181405247",
-          "1594181422650",
-          "1594181432044",
-          "1594181448003"
-        ],
-        "settings": {
-          "show_instagram": true,
-          "instagram_bg_color": "#f9fafc",
-          "instagram_title": "#The Bagratica on Instagram",
-          "instagram_des": "Discover and share your Bagratica moments with us!",
-          "display_instagram_button": true,
-          "instagram_button_text": "View Our Gallery",
-          "instagram_button_link": "https:\/\/bagratica-demo.myshopify.com\/",
-          "type_instagram": "default",
-          "embed_code": "",
-          "type_instagram_by_gallery": "popup_image",
-          "limit": "10",
-          "images_per_row": "4",
-          "resolution_images": "low_resolution"
-        }
-      },
-      "1510050654981": {
-        "type": "two-banner",
-        "settings": {
-          "banner_2_heading_color_1": "#ffffff",
-          "banner_2_heading_banner_1": "Shop For Her",
-          "banner_2_heading_size_1": "42",
-          "banner_2_des_1": "<p>Dobortis scelerisque blandit lorem cosmopolis<\/p>",
-          "banner_2_des_size_1": "12",
-          "banner_2_button_1": "Shop Now",
-          "banner_2_button_size_1": "12",
-          "banner_2_link_1": "shopify:\/\/collections\/accessorius",
-          "banner_2_heading_color_2": "#ffffff",
-          "banner_2_heading_banner_2": "Shop For Him",
-          "banner_2_heading_size_2": "42",
-          "banner_2_des_2": "<p>Dobortis scelerisque blandit lorem cosmopolis<\/p>",
-          "banner_2_des_size_2": "12",
-          "banner_2_button_2": "Shop Now",
-          "banner_2_button_size_2": "12",
-          "banner_2_link_2": "shopify:\/\/products\/duo-cursus-ultrices-est"
-        }
-      },
-      "1510050864385": {
-        "type": "one-banner",
-        "settings": {
-          "banner_heading_color_1": "#ffffff",
-          "heading_title": "Cosmopolitan",
-          "heading_top_size": "16",
-          "banner_heading_banner_1": "#Trending Now",
-          "banner_heading_size_1": "42",
-          "banner_des_1": "<p>Dobortis scelerisque blandit cosmopolis de loremous.<br\/>Delis elementum tristique consectetur quam urna vehicula lacus nec fermentum.<\/p>",
-          "banner_des_size_1": "12",
-          "banner_button_1": "Shop Now",
-          "banner_button_size_1": "12",
-          "banner_link_1": "shopify:\/\/collections"
-        }
-      },
       "product-notification": {
         "type": "product-notification",
         "blocks": {
@@ -1974,66 +1781,41 @@
           "text_url": ""
         }
       },
-      "1634366323df265354": {
-        "type": "feature-row",
-        "settings": {
-          "layout": "left",
-          "title": "Image avec du texte",
-          "text": "<p>Ajoutez une image à un long texte pour mettre l'accent sur un produit de votre choix, une collection, ou un article de blog. Ajoutez des détails sur la disponibilité, le style, ou mettez un commentaire client en avant.<\/p>",
-          "button_label": "",
-          "button_link": ""
-        }
-      },
-      "1634366339ffa30964": {
-        "type": "three_block",
+      "1634367025316d9493": {
+        "type": "instagram",
         "blocks": {
-          "1634366339ffa30964-0": {
-            "type": "text",
+          "eb08f05d-3368-4a9b-8a26-aa1f1b588391": {
+            "type": "instagram",
             "settings": {
-              "text": "",
-              "text_size": "",
-              "text_bg": "",
-              "text_color": ""
-            }
-          },
-          "1634366339ffa30964-1": {
-            "type": "text",
-            "settings": {
-              "text": "",
-              "text_size": "",
-              "text_bg": "",
-              "text_color": ""
-            }
-          },
-          "1634366339ffa30964-2": {
-            "type": "text",
-            "settings": {
-              "text": "",
-              "text_size": "",
-              "text_bg": "",
-              "text_color": ""
+              "enable": true,
+              "link": ""
             }
           }
         },
         "block_order": [
-          "1634366339ffa30964-0",
-          "1634366339ffa30964-1",
-          "1634366339ffa30964-2"
+          "eb08f05d-3368-4a9b-8a26-aa1f1b588391"
         ],
         "settings": {
+          "show_instagram": true,
+          "instagram_bg_color": "#fff8ee",
+          "instagram_title": "#Ella On Instagram",
+          "instagram_des": "Phasellus lorem malesuada ligula pulvinar commodo maecenas suscipit auctom.",
+          "display_instagram_button": true,
+          "instagram_button_text": "View Gallery",
+          "instagram_button_link": "",
+          "type_instagram": "default",
+          "embed_code": "<h2>Partagez vos photos avec nous #kawelabeachtowels<\/h2>\n<div id=\"insta-feed\"><\/div>",
+          "type_instagram_by_gallery": "popup_image",
+          "limit": "10",
+          "images_per_row": "3",
+          "resolution_images": "thumbnail"
         }
       }
     },
     "content_for_index": [
       "1490716464547",
       "1506523206723",
-      "1510050654981",
-      "1510050864385",
-      "1506524986454",
-      "1489249304429",
-      "1506528432153",
-      "1634366323df265354",
-      "1634366339ffa30964"
+      "1634367025316d9493"
     ]
   },
   "presets": {
