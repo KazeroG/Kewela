@@ -1803,7 +1803,7 @@
           "display_instagram_button": true,
           "instagram_button_text": "View Gallery",
           "instagram_button_link": "",
-          "type_instagram": "default",
+          "type_instagram": "app",
           "embed_code": "<h2>Partagez vos photos avec nous #kawelabeachtowels<\/h2>\n<div id=\"insta-feed\"><\/div>",
           "type_instagram_by_gallery": "popup_image",
           "limit": "10",
