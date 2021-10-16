@@ -1,0 +1,5 @@
+<a class="wishlist" data-icon-wishlist href="#" data-product-handle="{{ product.handle }}" data-id="{{ product.id }}">
+  <span class="wishlist-text text-hover" {% if settings.enable_multilang %}data-translate="wishlist.general.add_to_wishlist"{% endif %}>
+    {{ 'wishlist.general.add_to_wishlist' | t }}
+  </span>
+</a>

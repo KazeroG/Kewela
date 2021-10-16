@@ -1,0 +1,266 @@
+{% assign new = false %}
+{% for tag in product.tags %}
+{% assign tag_handle = tag | handle %}
+{% if tag_handle contains 'new' %}
+{% assign new = true %}
+{% endif %}
+{% endfor %}
+
+<!-- Begin quick-view-template -->
+<div class="clearfix" id="quickview-template" style="display:none">
+  <div class="overlay"></div>
+  <div class="content clearfix">
+    <div class="product-img-box col-xs-5 {% if settings.style_moreview == 'horizontal' %} horizontal{% else %} vertical{% endif %}">
+      <div class="quickview-featured-image product-photo-container {% if settings.style_moreview == 'horizontal' %} horizontal{% else %} vertical{% endif %}"></div>
+      <div class="product-label-qiuck">
+      </div>
+      <div class="more-view-wrapper {% if settings.style_moreview == 'horizontal' %} horizontal{% else %} vertical{% endif %}">
+        <ul class="product-photo-thumbs jcarousel-skin-tango">
+        </ul>
+      </div>
+    </div>
+  
+    <div class="product-shop col-xs-7 {% if settings.style_moreview == 'horizontal' %} horizontal{% else %} vertical{% endif %}">
+      <div class="product-item">
+        {% if settings.display_quickview_vendor %}
+          <p class="product-vendor vendor-top">            
+            <span></span>
+          </p>
+          {% endif %}
+        <h2 class="product-title"><a>&nbsp;</a></h2>
+        
+        {% if settings.display_quickview_availability or settings.display_quickview_product_type or settings.display_quickview_vendor %}
+        <div class="product-infor">
+          {% if settings.display_quickview_availability %}
+          <p class="product-inventory">
+            {% if settings.text_availability != blank %}
+              {% if settings.enable_multilang %}
+              <label class="lang1">{{ settings.text_availability | split: '|' | first }}</label>
+              <label class="lang2">{{ settings.text_availability | split: '|' | last }}</label>
+              {% else %}
+              <label>{{ settings.text_availability | split: '|' | first }}</label>
+              {% endif %}
+            {% endif %}
+            <span></span>
+          </p>
+          {% endif %}
+          {% if settings.display_quickview_product_type %}
+          <p class="product-type">
+            {% if settings.text_product_type != blank %}
+              {% if settings.enable_multilang %}
+              <label class="lang1">{{ settings.text_product_type | split: '|' | first }}</label>
+              <label class="lang2">{{ settings.text_product_type | split: '|' | last }}</label>
+              {% else %}
+              <label>{{ settings.text_product_type | split: '|' | first }}</label>
+              {% endif %}
+            {% endif %}
+            <span></span>
+          </p>
+          {% endif %}
+          {% if settings.display_quickview_vendor %}
+          <p class="product-vendor">
+            {% if settings.text_vendor != blank %}
+              {% if settings.enable_multilang %}
+              <label class="lang1">{{ settings.text_vendor | split: '|' | first }}</label>
+              <label class="lang2">{{ settings.text_vendor | split: '|' | last }}</label>
+              {% else %}
+              <label>{{ settings.text_vendor | split: '|' | first }}</label>
+              {% endif %}
+            {% endif %}
+            <span></span>
+          </p>
+          {% endif %}
+        </div>
+        {% endif %}
+        
+        <div class="countdown" style="display:none">
+          {% if settings.enable_multilang %}
+          <span class="lang1">{{ settings.text_countdown | split: '|' | first }}</span>
+          <span class="lang2">{{ settings.text_countdown | split: '|' | last }}</span>
+          {% else %}
+          <span>{{ settings.text_countdown | split: '|' | first }}</span>
+          {% endif %}
+          <div class="quickview-clock"></div>
+        </div>
+        
+        {% if settings.display_quickview_short_desc %}
+        <p class="item-text product-description"></p>
+        {% endif %}
+
+        <div class="details clearfix">
+          <form action="/cart/add" method="post" class="variants">
+            <select name='id' style="display:none"></select>
+            <div class="prices">
+              <span class="compare-price"></span>
+              <span class="price"></span>
+              <input type="hidden" id="product_regular_price" name="product_regular_price" value="{{ product.price }}">
+            </div>
+            <label for="quantity" {% if settings.enable_multilang %}data-translate="cart.label.quantity"{% endif %}>{{ 'cart.label.quantity' | t }}:</label>
+            <div class="extra">
+              <div class="dec button"><i class="fa fa-angle-down" aria-hidden="true"></i></div>
+              <input type="text" name="quantity" value="1" class="quantity">
+              <div class="inc button"><i class="fa fa-angle-up" aria-hidden="true"></i></div>
+            </div>
+            
+            {% if settings.display_quickview_subtotal %}
+            <div class="total-price">
+              <label {% if settings.enable_multilang %}data-translate="cart.general.subtotal"{% endif %}>{{ 'cart.general.subtotal' | t }}:</label><span></span>
+            </div>
+            {% endif %}
+            
+            <div class="actions">
+              <button type="button" class="btn add-to-cart-btn" {% if settings.enable_multilang %}data-translate="products.product.add_to_cart"{% endif %}>{{ 'products.product.add_to_cart' | t }}</button>
+            </div>
+          </form>
+        </div>
+        {% if settings.display_product_detail_share %} 
+          {% render 'share' with product %}
+        {% endif %}
+      </div>
+    </div>
+    
+    <a href="javascript:void(0)" class="close-window" {% if settings.enable_multilang %}data-translate="cart.ajax_cart.close"{% endif %}>
+      <svg viewBox="0 0 24 24" id="icon-close" width="100%" height="100%">
+        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
+      </svg> 
+    </a> 
+  </div>
+</div>
+<!-- End of quick-view-template -->
+<script type="text/javascript">  
+  Shopify.doNotTriggerClickOnThumb = false; 
+                                       
+  var selectCallbackQuickview = function(variant, selector) {
+      var productItem = jQuery('.quick-view .product-item'),
+          addToCart = productItem.find('.add-to-cart-btn'),
+          productPrice = productItem.find('.price'),
+          comparePrice = productItem.find('.compare-price'),
+          totalPrice = productItem.find('.total-price span');           
+      
+      if (variant) {
+        if (variant.available) {
+          // We have a valid product variant, so enable the submit button
+          addToCart.removeClass('disabled').removeAttr('disabled').text(window.inventory_text.add_to_cart);
+    
+        } else {
+          // Variant is sold out, disable the submit button
+          addToCart.val(window.inventory_text.sold_out).addClass('disabled').attr('disabled', 'disabled');
+        }
+    
+        // Regardless of stock, update the product price
+        $('.quick-view #product_regular_price').val(variant.price);
+        productPrice.html(Shopify.formatMoney(variant.price, "{{ shop.money_format }}"));
+    
+        // Also update and show the product's compare price if necessary
+        if ( variant.compare_at_price > variant.price ) {
+          comparePrice
+            .html(Shopify.formatMoney(variant.compare_at_price, "{{ shop.money_format }}"))
+            .show();
+          productPrice.addClass('on-sale');
+        } else {
+          comparePrice.hide();
+          productPrice.removeClass('on-sale');
+        }
+                            
+        {% if settings.use_color_swatch %}
+        // BEGIN SWATCHES
+          var form = jQuery('#' + selector.domIdPrefix).closest('form');
+          for (var i=0,length=variant.options.length; i<length; i++) {
+            var radioButton = form.find('.swatch[data-option-index="' + i + '"] :radio[value="' + variant.options[i] +'"]');
+            if (radioButton.size()) {
+              radioButton.get(0).checked = true;
+            }
+          }
+         // END SWATCHES
+         {% endif %}
+         
+      //update variant inventory
+        {% if settings.display_quickview_availability %}
+          var inventoryInfo = productItem.find('.product-inventory span');
+          if (variant.available) {
+            if (variant.inventory_management!=null) {
+              inventoryInfo.text(variant.inventory_quantity + " " + window.inventory_text.in_stock);
+            } else {
+              inventoryInfo.text(window.inventory_text.many_in_stock);
+            }
+          } else {
+            inventoryInfo.text(window.inventory_text.out_of_stock);
+          }
+      {% endif %}
+    
+      /*recaculate total price*/
+    	var quantity = parseInt(jQuery('.quick-view input[name=quantity]').val());
+        var p = $('.quick-view #product_regular_price').val();
+        var totalPrice1 = p * quantity;
+        var g = Shopify.formatMoney(totalPrice1, "{{ shop.money_format }}");
+        jQuery('.quick-view .total-price span').html(g);
+
+//         if (ella.checkNeedToConvertCurrency()) {
+//           Currency.convertAll(window.shop_currency, jQuery('.currencies').val(), 'span.money', 'money_format');
+//         }
+        //try pattern one before pattern 2
+//         var regex = /([0-9]+[.|,][0-9]+[.|,][0-9]+)/g;
+//         var unitPriceTextMatch = jQuery('.quick-view .price').text().match(regex);
+
+//         if (!unitPriceTextMatch) {
+//           regex = /([0-9]+[.|,][0-9]+)/g;
+//           unitPriceTextMatch = jQuery('.quick-view .price').text().match(regex);     
+//         }
+
+//         if (unitPriceTextMatch) {
+//           var unitPriceText = unitPriceTextMatch[0];     
+//           var unitPrice = unitPriceText.replace(/[.|,]/g,'');
+//           var quantity = parseInt(jQuery('.quick-view input[name=quantity]').val());
+//           var totalPrice = unitPrice * quantity;
+
+//           var totalPriceText = Shopify.formatMoney(totalPrice, window.money_format);
+//           regex = /([0-9]+[.|,][0-9]+[.|,][0-9]+)/g;     
+//           if (!totalPriceText.match(regex)) {
+//             regex = /([0-9]+[.|,][0-9]+)/g;
+//           } 
+//           totalPriceText = totalPriceText.match(regex)[0];
+
+//           var regInput = new RegExp(unitPriceText, "g"); 
+//           var totalPriceHtml = jQuery('.quick-view .price').html().replace(regInput ,totalPriceText);
+//           jQuery('.quick-view .total-price span').html(totalPriceHtml);     
+//         }
+    /*end of price calculation*/
+
+    
+        {% if settings.enable_multiple_currencies %}
+        Currency.convertAll('{{ shop.currency }}', jQuery('.currencies').val(), 'span.money', 'money_format');
+        {% else if settings.enable_auto_currency %}
+        try{
+            if(jQuery('.currencies').val() != undefined){
+          		Currency.convertAll('{{ shop.currency }}', jQuery('.currencies').val());
+        	}
+        }
+        catch(e){}
+        {% endif %}
+        
+        /*begin variant image*/
+        if (variant && variant.featured_image) {
+            var originalImage = jQuery(".quick-view .quickview-featured-image img");
+            var newImage = variant.featured_image;
+            var element = originalImage[0];
+            Shopify.Image.switchImage(newImage, element, function (newImageSizedSrc, newImage, element) {
+              newImageSizedSrc = newImageSizedSrc.replace(/\?(.*)/,"");
+              jQuery('.quick-view .more-view-wrapper img').each(function() {
+                var grandSize = jQuery(this).attr('src');
+                grandSize = grandSize.replace('compact','large');
+               
+                if (grandSize == newImageSizedSrc) {
+                  jQuery(this).parent().trigger('click');              
+                  return false;
+                }
+              });
+            });        
+        }
+        /*end of variant image*/   
+    
+      } else {
+        // The variant doesn't exist. Just a safegaurd for errors, but disable the submit button anyway
+        addToCart.text(window.inventory_text.unavailable).addClass('disabled').attr('disabled', 'disabled');
+      }
+  };
+</script>

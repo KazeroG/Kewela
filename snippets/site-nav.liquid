@@ -1,0 +1,171 @@
+{% comment %}
+  List out your main-menu linklist (default)
+  More info on linklists:
+    - http://docs.shopify.com/themes/liquid-variables/linklists
+{% endcomment %}
+
+<ul class="site-nav">
+    {% if section.settings.horizontal_linklist != blank %}
+    {% assign menu = linklists[section.settings.horizontal_linklist].links %}
+    {% else %}
+    {% assign menu = linklists.main-menu.links %}
+    {% endif %}
+    {% for link in menu %}
+  	{% assign i = forloop.index | downcase %}
+    {% assign cat = link.title | downcase %}
+  
+  	{% if section.settings.display_megamenu %}
+      
+      	{% assign is_megamenu = false %}
+        {% for block in section.blocks %}
+      	  {% for i in (1..4) %}
+  
+          {% capture cap_megamenu_item %}megamenu_items_{{ i }}{% endcapture %}  
+          {% capture cap_banner_first_style %}banner_first_style_{{ i }}{% endcapture %}
+          {% capture cap_banner_second_style %}banner_second_style_{{ i }}{% endcapture %}
+          {% capture cap_banner_third_style %}banner_third_style_{{ i }}{% endcapture %}
+  
+          {% capture cap_link_banner_first_style %}link_banner_first_style_{{ i }}{% endcapture %}
+  		  {% capture cap_link_banner_second_style %}link_banner_second_style_{{ i }}{% endcapture %}
+  		  {% capture cap_link_banner_third_style %}link_banner_third_style_{{ i }}{% endcapture %}
+  
+           {% capture cap_featured_product %}featured_product_{{ i }}{% endcapture %}
+          {% capture cap_title_featured_product %}title_featured_product_{{ i }}{% endcapture %}
+        {% comment %}  {% capture cap_main_linklist %}main_linklist_{{ i }}{% endcapture %}{% endcomment %}
+  
+  		  {% comment %}
+            For style 4
+          {% endcomment %}
+          {% capture cap_banner_four_style %}banner_four_style_{{ i }}{% endcapture %}
+  
+          {% if block.settings[cap_megamenu_item] != blank %}
+
+            {% assign megamenu_item = block.settings[cap_megamenu_item] | downcase %}
+            {% if megamenu_item == cat %}
+              {% assign is_megamenu = true %}
+              {% assign block_style = block.type %}
+  
+  			  {% assign banner_first_style = block.settings[cap_banner_first_style] %}
+  			  {% assign banner_second_style = block.settings[cap_banner_second_style] %}
+  			  {% assign banner_third_style = block.settings[cap_banner_third_style] %}
+  			  
+  			  {% assign link_banner_first_style = block.settings[cap_link_banner_first_style] %}
+  			  {% assign link_banner_second_style = block.settings[cap_link_banner_second_style] %}
+  			  {% assign link_banner_third_style = block.settings[cap_link_banner_third_style] %}
+  
+  			  {% assign featured_product = block.settings[cap_featured_product] %}
+  			  {% assign title_featured_product = block.settings[cap_title_featured_product] %}  			  
+  			  {%- assign product = all_products[featured_product] -%}
+  				
+  			  {% assign text_under_menu = block.settings.text_under_menu %}
+              {% assign color_under_text = block.settings.color_under_text %}
+              {% assign font_size_under = block.settings.font_size_under %}
+              {% assign background_text = block.settings.background_text %}
+  {% assign featured_collection = block.settings.collection %}
+  			  {% comment %}
+  				For style 4
+  			  {% endcomment %}
+  			  {% assign banner_four_style = block.settings[cap_banner_four_style] %}	
+  			  
+  
+  
+  			  {% assign main_linklist = block.settings[cap_main_linklist] %}
+  
+  
+            {% endif %}
+          {% endif %}
+  		  
+  		  {% case block.settings.width %}
+        	{% when 'small' %}
+  			{%- assign width_product = '120x160' -%}
+        	{% when 'medium' %}
+  			{%- assign width_product = '180x220' -%}
+        	{% when 'large' %}
+  			{%- assign width_product = '220x260' -%}
+  		  {% endcase %}
+  
+  
+          {% endfor %}
+        {% endfor %}
+  
+  	{% endif %}  
+  	{% if section.settings.enable_new %}
+	{% assign items_list_new = section.settings.megamenu_items_new | split:"," | strip | downcase %}
+	{% endif %}
+  	{% assign new = link.title | downcase %}
+    <li class="item{% if is_megamenu %} dropdown mega-menu{% else %}{% if linklists[link.handle] != empty %} dropdown{% endif %}{% endif %}{% if section.settings.enable_new and items_list_new contains new %} icon_new{% endif %}">
+      <a class="{% if link.active %}current{% endif %} {%if linklists[link.handle] != empty %}menu__moblie {% endif %}" href="{{ link.url }}">
+        <span>
+          {% if settings.enable_multilang %}
+          <span class="lang1">{{ link.title | split: '|' | first }}</span>
+          <span class="lang2">{{ link.title | split: '|' | last }}</span>
+          {% else %}
+          {{ link.title | split: '|' | first }}
+          {% endif %}
+        </span>
+        {% if linklists[link.handle] != empty and section.settings.show_dropdown_arrow %}
+        <span class="icon-dropdown">
+        <i class="fa fa-angle-right" aria-hidden="true"></i>
+        </span>
+        {% endif %}
+      </a> 	
+    
+      {% comment %}
+      Check if menu item is Mega menu
+      {% endcomment %}
+      
+      {% assign link_child = link.handle %}
+      {% if section.settings.display_megamenu %}  
+      
+      	{% if is_megamenu %}
+          <div class="site-nav-dropdown {% if is_megamenu %} mega-menu-dropdown{% endif %} shadow {{ block_style }}">
+            <div class="close_mega">
+              <a href="javascript:void(0)">
+                <span></span>
+              </a>
+            </div>
+            <div class="container">
+               <a href="{{ link.url }}"class="menu-title text-center">
+               {% render 'multilang' with  link.title %}
+      			</a> 
+              <div class="row">{% render 'mega-menu',
+              						link_child: link_child,
+                                    megamenu_item: megamenu_item,
+                                    is_megamenu: is_megamenu,
+                                    block_style: block_style,
+                                    banner_first_style: banner_first_style,
+                                    banner_second_style: banner_second_style,
+                                    banner_third_style: banner_third_style,
+                                    link_banner_first_style: link_banner_first_style,
+                                    link_banner_second_style: link_banner_second_style,
+                                    link_banner_third_style: link_banner_third_style,
+                                    featured_product: featured_product,
+                                    title_featured_product: title_featured_product,
+                                    product: product,
+                                    text_under_menu: text_under_menu,
+                                    color_under_text: color_under_text,
+                                    font_size_under: font_size_under,
+                                    background_text: background_text,
+                                    featured_collection: featured_collection,
+                                    banner_four_style: banner_four_style,
+                                    main_linklist: main_linklist
+                				%}</div>
+            </div>
+          </div>
+        {% else %}
+          {% if linklists[link.handle] != empty %}
+            {% render 'dropdown-menu',
+            	link_child: link_child
+      		%}
+          {% endif %}
+        {% endif %}
+      
+      {% else %}
+        {% if linklists[link.handle] != empty %}
+          {% render 'dropdown-menu', link_child: link_child %}
+        {% endif %}
+      {% endif %}
+      
+    </li>
+  {% endfor %}
+</ul>
