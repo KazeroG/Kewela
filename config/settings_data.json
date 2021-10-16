@@ -1783,18 +1783,6 @@
       },
       "1634367025316d9493": {
         "type": "instagram",
-        "blocks": {
-          "eb08f05d-3368-4a9b-8a26-aa1f1b588391": {
-            "type": "instagram",
-            "settings": {
-              "enable": true,
-              "link": ""
-            }
-          }
-        },
-        "block_order": [
-          "eb08f05d-3368-4a9b-8a26-aa1f1b588391"
-        ],
         "settings": {
           "show_instagram": true,
           "instagram_bg_color": "#e494c0",
