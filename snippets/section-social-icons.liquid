@@ -1,0 +1,38 @@
+<section
+  data-section-id="{{ section.id }}"
+  class="section social-icons"
+>
+  <div class="ph4 pv5 pv6-ns tc {% render 'section-style' with outlined: section.settings.outline %}">
+    {% if section.settings.title %}
+      <h1 class="text-columns__title type-heading-1 ma0 mb3">KAWELÄ RÉINVENTE LA SERVIETTE.</h1>
+    {% endif %}
+
+    {% assign accounts = 'pinterest,instagram,facebook,tumblr,twitter,vimeo,youtube' | split: ',' %}
+
+   <style>
+.logobar-div:hover {
+filter: invert(50%) sepia(22%) saturate(1025%) hue-rotate(274deg) brightness(89%) contrast(93%);
+}
+</style>
+<section class="logo-section">
+        <div class="logobar" style="margin-top:75px;margin-bottom:-25px;">
+            <div class="logobar-div">
+                <img src="//cdn.shopify.com/s/files/1/0075/5227/0402/files/2_300x.png?v=1574162994" alt="">
+                <nobr><p>Shipping Rapide</p></nobr>
+            </div>
+            <div class="logobar-div">
+                <img src="//cdn.shopify.com/s/files/1/0075/5227/0402/files/5_300x.png?v=1574163043" alt="">
+                <nobr><p>Retour Facile</p></nobr>
+            </div>
+            <div class="logobar-div">
+                <img src="//cdn.shopify.com/s/files/1/0075/5227/0402/files/4_300x.png?v=1574163027" alt="">
+                <nobr><p>Prpduit Qualité superieur</p></nobr>
+            </div>
+            <div class="logobar-div">
+                <img src="//cdn.shopify.com/s/files/1/0075/5227/0402/files/1_300x.png?v=1574162976" alt="">
+                <nobr><p>Autres</p></nobr>
+            </div>
+        </div>
+    </section>
+  </div>
+</section>

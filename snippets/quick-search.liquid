@@ -1,0 +1,49 @@
+{% capture settings %}
+  {
+    "limit": {{ settings.search_max_result_size | json }},
+    "show_articles": {{ settings.search_show_articles | json }},
+    "show_pages": {{ settings.search_show_pages | json }},
+    "show_products": {{ settings.search_show_products | json }},
+    "show_price": {{ settings.search_show_price | json }},
+    "show_vendor": {{ settings.search_show_vendor | json }}
+  }
+{% endcapture %}
+
+<div class="quick-search">
+  <script type="application/json" data-settings>{{ settings }}</script>
+
+  <a href="#" class="color-inherit no-ajax quick-search__trigger">
+    {% render 'icon' with icon: 'search' %}
+  </a>
+
+  <div class="search hidden">
+    <div class="search__container">
+      <form action="{{ routes.search_url }}" class="search__input-container" autocomplete="off">
+        <input
+          autofocus
+          type="search"
+          name="q"
+          class="search__input"
+          placeholder="{{ 'search.placeholder' | t }}"
+        />
+
+        <div class="search__input-actions">
+          <a href="#" class="search__input-clear accent-link">{{ 'search.clear' | t }}</a>
+          <a href="#" class="search__input-close accent-link">
+            {% render 'icon' with icon: 'close' %}
+          </a>
+          <button
+            type="submit"
+            class="search__submit-button bttn bttn--small"
+          >
+            {{ 'search.submit' | t }}
+          </button>
+        </div>
+
+        <div class="search__results"></div>
+      </form>
+    </div>
+  </div>
+
+  <div class="search__overlay"></div>
+</div>

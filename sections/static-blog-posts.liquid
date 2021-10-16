@@ -1,0 +1,127 @@
+{%- if section.settings.enabled == true -%}
+  <section
+    data-section-id="{{ section.id }}"
+    data-section-type="static-blog-posts"
+    class="section blog-posts"
+  >
+
+    {%- assign blog = blogs[section.settings.blog] -%}
+
+    <div class="js-sbp blog-posts__list" role="list">
+      {% for article in blog.articles limit: section.settings.post_limit %}
+        <div class="w-100" role="listitem">
+          <div class="blog-posts__post section--standard">
+
+            {%- comment -%}
+              Due to accessibility requirements, we are regrouping all logical elements into the <a> element.
+              If a screen reader user is tabbing through the page, or browsing by links on the page with duplicated links,
+              they will appear identical which may lead to a confusing user experience.
+            {%- endcomment -%}
+            <div class="blog-posts__content">
+
+              <div>
+                {% if section.settings.title != blank %}
+                  <p class="type-heading-meta meta mb3">{{ section.settings.title | escape }}</p>
+                {% endif %}
+
+                <h3 class="type-heading-1"><a href="{{ article.url }}">{{ article.title }}</a></h3>
+
+                {% if article.excerpt.size > 0 %}
+                  <div class="type-body-regular">{{ article.excerpt }}</div>
+                {% else %}
+                  <div class="type-body-regular">{{ article.content | strip_html | truncate: 150 }}</div>
+                {% endif %}
+              </div>
+
+              {% if blog.articles.size > 1 %}
+                <div class="mt3">
+                  <a href="#" data-go="prev" class="accent-link mr3">&larr; {{ 'general.pagination.previous' | t }}</a>
+                  <a href="#" data-go="next" class="accent-link">{{ 'general.pagination.next' | t }} &rarr;</a>
+                </div>
+              {% endif %}
+            </div>
+
+            <div class="blog-posts__image">
+              <a href="{{ article.url }}">
+                {% if article.image %}
+                  {% render 'responsive-image' with
+                    image: article.image,
+                    max_width: 1200,
+                    max_height: 1200
+                  %}
+                {% endif %}
+              </a>
+            </div>
+
+          </div>
+        </div>
+
+      {% else %}
+        {% for i in (1..section.settings.post_limit) %}
+          <div class="w-100" role="listitem">
+            <div class="blog-posts__post section--standard">
+
+              <div class="blog-posts__content">
+                <div>
+                  {% if section.settings.title != blank %}
+                    <p class="type-heading-meta meta mb3">{{ section.settings.title | escape }}</p>
+                  {% endif %}
+
+                  <h3 class="type-heading-1">{{ 'homepage.onboarding.blog_title' | t }}</h3>
+                  <div class="type-body-regular">{{ 'homepage.onboarding.blog_excerpt' | t }}</div>
+                </div>
+
+                {% if section.settings.post_limit > 1 %}
+                  <div class="mt3">
+                    <a href="#" data-go="prev" class="accent-link mr3">&larr; {{ 'general.pagination.previous' | t }}</a>
+                    <a href="#" data-go="next" class="accent-link">{{ 'general.pagination.next' | t }} &rarr;</a>
+                  </div>
+                {% endif %}
+              </div>
+
+              <div class="blog-posts__image">
+                {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+              </div>
+
+            </div>
+          </div>
+        {% endfor %}
+      {% endfor %}
+
+    </div>
+  </section>
+{%- endif -%}
+
+{% schema %}
+  {
+    "name": "Featured blog posts",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "enabled",
+        "label": "Enable",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Blog posts"
+      },
+      {
+        "id": "blog",
+        "type": "blog",
+        "label": "Blog"
+      },
+      {
+        "type": "range",
+        "id": "post_limit",
+        "label": "Posts",
+        "min": 3,
+        "max": 12,
+        "step": 3,
+        "default": 3
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,44 @@
+{% render 'section-newsletter' with
+  title: section.settings.title,
+  subheading: section.settings.subheading,
+%}
+
+{% schema %}
+  {
+    "name": "Newsletter",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Newsletters can reinforce your brand"
+      },
+      {
+        "type": "richtext",
+        "id": "subheading",
+        "label": "Subheading",
+        "default": "<p>Include a short sentence describing what someone can expect from your newsletter.</p>"
+      },
+      {
+        "type": "paragraph",
+        "content": "Any customers who subscribe will have an account created for them in Shopify. [View customers](/admin/customers?query=&accepts_marketing=1)"
+      },
+      {
+        "type": "header",
+        "content": "Section style"
+      },
+      {
+        "type": "checkbox",
+        "id": "outline",
+        "label": "Outline section",
+        "default": false
+      }
+    ],
+    "presets": [
+      {
+        "name": "Newsletter",
+        "category": "Promotional"
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,40 @@
+<div class="quick-cart" data-component="quickCart">
+  <div class="quick-cart__overlay js-overlay"></div>
+
+  <div class="quick-cart__popup">
+    <ul class="quick-cart__tabs">
+      <li>
+        <a class="js-tab-link-cart" href="#">{{ 'layout.cart.title' | t }}</a>
+      </li>
+      <li>
+        <a class="js-tab-link-recent" href="#">{{ 'general.products.recently_viewed' | t }}</a>
+      </li>
+      <li>
+        <a class="js-tab-link-quick-shop quick-cart__quick-shop-product" href="#">{{ 'general.products.quick_cart' | t }}</a>
+      </li>
+      <li class="quick-cart__close js-close">
+        {% render 'icon-close' %}
+      </li>
+    </ul>
+
+
+    <div class='quick-cart__items js-items'>
+      <div class='abs fill'>
+        <svg viewBox="0 0 100 86" class='loader abs fill mxa cg'>
+          <use xlink:href="#logo"></use>
+        </svg>
+      </div>
+    </div>
+
+    <footer class='quick-cart__footer js-footer'>
+      <p class='mt0 quick-cart__discounts js-discounts'>-</p>
+      <p class='ma0'>{{ settings.quick_cart_note | replace: "[subtotal]", "<span class='js-subtotal'>$-.--</span>" }}</p>
+      <a
+        class="quick-cart__checkout-button bttn bttn-full bttn--small no-ajax"
+        href="{{ routes.cart_url }}"
+      >
+        {{ 'layout.cart.go' | t }}
+      </a>
+    </footer>
+  </div>
+</div>

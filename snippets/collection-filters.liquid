@@ -1,0 +1,40 @@
+<div class="collection-top-bar__filters">
+  {%- if show_filters or show_sort -%}
+    <div class="collection-top-bar__filters-inner">
+      {%- if collection.all_tags.size > 0 and show_filters -%}
+        {% if filter_type == 'by_group' %}
+          {% for category in categories %}
+            <a href="#" class="collection__button type-body-regular" data-filter="{{ category }}">
+              {{ category }}
+              {% render 'icon' with icon: 'chevron-down' %}
+            </a>
+          {% endfor %}
+        {% endif %}
+
+        {% if filter_type == 'by_tag' %}
+          <a href="#" class="collection__button type-body-regular" data-filter="__tags">
+            {{ 'collections.tags.title' | t }}
+            {% render 'icon' with icon: 'chevron-down' %}
+          </a>
+        {% endif %}
+      {%- endif -%}
+
+      {%- if show_sort -%}
+        <a href="#" class="collection__button type-body-regular" data-filter="__sort">
+          {{ 'collections.sorting.title' | t }}
+          {% render 'icon' with icon: 'chevron-down' %}
+        </a>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  {%- if pagination == 'paginated' -%}
+    <div class="collection-top-bar__per-page type-body-small" data-collection-templates>
+      {% assign views = "12,24,36" | split: ',' %}
+      {{ 'collections.general.show' | t }}
+      {% for num in views %}
+        <a href="#" data-collection-template="view-{{ num }}">{{ num }}</a>
+      {% endfor %}
+    </div>
+  {%- endif -%}
+</div>

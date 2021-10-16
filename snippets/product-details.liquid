@@ -1,0 +1,306 @@
+{% liquid
+  assign file_extension = 'png'
+
+  assign on_sale = false
+  if product.compare_at_price > product.price
+    assign on_sale = true
+  endif
+
+  assign variant_popup_page = pages[settings.variant_popup_page]
+
+  assign variant_popup_content_exists = false
+  assign variant_popup_option = ''
+
+  if settings.variant_popup_option != blank and settings.variant_popup_text != blank and variant_popup_page.content != blank
+    assign variant_popup_content_exists = true
+    assign variant_popup_option = settings.variant_popup_option | downcase
+  endif
+%}
+
+<div class="product__details">
+  <div class="product__heading">
+    <!--Weeemarket Start-->
+    {% comment %}
+    <div data-price-wrapper>
+
+      <span data-product-price class="type-body-regular meta{% if on_sale %} sale{% endif %}">
+        {% if is_placeholder %}
+          {{ 'homepage.onboarding.product_price' | t }}
+        {% else %}
+          {{ current_variant.price | money }}
+        {% endif %}
+      </span>
+
+        <span class="visually-hidden" data-compare-text>{{ 'products.product.regular_price' | t }}</span>
+        <s class="meta" data-compare-price>
+          {% if on_sale %}
+            {{ current_variant.compare_at_price | money }}
+          {% endif %}
+        </s>
+
+      {% render 'unit-price', item: current_variant %}
+    </div>
+
+    <h1 class="product__title type-heading-1" style="margin-bottom:10px;">
+      {% if is_placeholder %}
+        {{ 'homepage.onboarding.product_title' | t }}
+      {% else %}
+        {{ product.title }}
+    </h1>
+      <p style="margin-top:-10px">{{ product.metafields.subtitle.subtitle.value }}</p>
+      {% endif %}
+    {% endcomment %}
+    
+    <h1 class="product__title type-heading-1" style="margin-bottom:10px;">
+      {% if is_placeholder %}
+        {{ 'homepage.onboarding.product_title' | t }}
+      {% else %}
+        {{ product.title }}
+    </h1>
+     <p style="margin-top:-10px"> {{ product.metafields.subtitle.subtitle.value }}
+    </p>
+      {% endif %}
+    
+    
+    <div data-price-wrapper>
+
+      <span data-product-price class="type-body-regular meta{% if on_sale %} sale{% endif %}">
+        {% if is_placeholder %}
+          {{ 'homepage.onboarding.product_price' | t }}
+        {% else %}
+          {{ current_variant.price | money }}
+        {% endif %}
+      </span>
+
+        <span class="visually-hidden" data-compare-text>{{ 'products.product.regular_price' | t }}</span>
+        <s class="meta" data-compare-price>
+          {% if on_sale %}
+            {{ current_variant.compare_at_price | money }}
+          {% endif %}
+        </s>
+
+      {% render 'unit-price', item: current_variant %}
+    </div>
+
+    <!--Weeemarket end-->
+    {% if show_vendor %}
+      <p class="product__vendor">{{ product.vendor }}</p>
+    {% endif %}
+  </div>
+
+
+  <div>
+    {% if product != blank %}
+
+      {% form 'product', product, data-product-form: '', data-product-handle: product.handle %}
+
+        {% unless product.has_only_default_variant %}
+          {% for option in product.options_with_values %}
+            {%- assign option_name = option.name | downcase -%}
+
+            <div class="js-enabled mb3">
+
+                <label for="Option{{ option.position }}" class="dib mb2">
+                  {{ option.name }}
+                </label>
+
+                {% if show_swatches %}
+                  {%- assign option_setting = settings.swatch_option | downcase -%}
+
+                  {% if option_name == option_setting %}
+                    <div class="product__color-swatches" data-product-swatches data-product-option="Option{{ option.position }}">
+                      {% for value in option.values %}
+                        <a
+                          href="#"
+                          data-product-swatch
+                          data-product-swatch-option="{{ value }}"
+                          class="product__color-swatch {% if option.selected_value == value %}selected{% endif %}"
+                          style="background-image: url({{ value | handle | append: '.' | append: file_extension | file_url }})"
+                          tabindex="0"
+                        >
+                        </a>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                {% endif %}
+
+                {% comment %}
+                  All inputs that have `name=options[Name]` will be picked up by
+                  ProductForm, registered as an option input, and made available
+                  at ProductForm.optionsInputs
+                {% endcomment %}
+                <div class="select-wrapper">
+                  <select
+                    id="Option{{ option.position }}"
+                    name="options[{{ option.name | escape }}]"
+                    class="input-reset input w-100"
+                  >
+                    {% for value in option.values %}
+                      <option
+                        value="{{ value | escape }}"
+                        {% if option.selected_value == value %}selected="selected"{% endif %}>
+                          {{ value }}
+                      </option>
+                    {% endfor %}
+                  </select>
+
+                  {% if variant_popup_content_exists and option_name == variant_popup_option %}
+                    <a
+                      href="#"
+                      class="variant-popup__trigger accent-link type-body-small"
+                      data-variant-popup-trigger
+                      data-modal-content-id="modal-{{ settings.variant_popup_page }}"
+                    >
+                      {{ settings.variant_popup_text }}
+                    </a>
+                    <div id="modal-{{ settings.variant_popup_page }}" class="variant-popup__content modal-content">
+                      <h2 class="type-heading-1 mt0 mb3">{{ variant_popup_page.title }}</h2>
+                      {{ variant_popup_page.content }}
+                    </div>
+                  {% endif %}
+                </div>
+            </div>
+          {% endfor %}
+        {% endunless %}
+
+        {% comment %}
+          In order for this form to submit, it needs to contain an input with name="id".
+          ProductForm() will automatically create this input (or make sure it has the
+          right value set if it already exists) on form submit based on the
+          currently selected variant. However, if JS is disabled we need a fallback.
+
+          Include a single <select> element which allows users to select all variants
+          as a fallback and present it only when JS is disabled. In addition,
+          make sure you hide the option inputs declared above, like we do with the
+          `.js-enabled` class which only shows its contents when JS is enabled.
+        {% endcomment %}
+        <select
+          name="id"
+          id="variant-selector"
+          class="input-reset input w-100"
+          data-variant-select
+        >
+          {% for variant in product.variants %}
+            <option
+              {% if variant == current_variant %}selected="selected"{% endif %}
+              {% unless variant.available %}disabled="disabled"{% endunless %}
+              value="{{ variant.id }}">
+                {{ variant.title }}
+            </option>
+          {% endfor %}
+        </select>
+
+
+        {% comment %}
+          Any input with `name="quantity"` will be picked up by ProductForm and
+          registered as a quantity input. If a quantity input is not included, a
+          default quantity of 1 is assumed.
+        {% endcomment %}
+        {%- if show_quantity_input -%}
+          <div class="mb3">
+            <label for="Quantity" class="dib mb2">{{ 'products.product.quantity' | t }}</label>
+            <input type="number" id="Quantity" name="quantity" value="1" min="1" class="input-reset input w-100">
+          </div>
+        {%- endif -%}
+
+        <button
+          type="submit"
+          class="bttn bttn--full {% if enable_payment_button %}bttn--secondary{% endif %} "
+          data-add-button
+          data-lang-available="{{ 'products.product.add_to_cart' | t }}"
+          data-lang-sold-out="{{ 'products.product.sold_out' | t }}"
+          {% unless current_variant.available %}disabled="disabled"{% endunless %}
+        >
+
+          <span class="bttn__spinner">
+            {% render 'icon-spinner' %}
+          </span>
+
+          <span data-add-button-text>
+            {% if current_variant.available %}
+              {{ 'products.product.add_to_cart' | t }}
+            {% else %}
+              {{ 'products.product.sold_out' | t }}
+            {% endif %}
+          </span>
+
+        </button>
+
+        {% comment %}
+          https://help.shopify.com/en/themes/customization/store/dynamic-checkout-buttons
+        {% endcomment %}
+        {% if enable_payment_button %}
+          {{ form | payment_button }}
+        {% endif %}
+
+        {% comment %} Surface pick-up {% endcomment %}
+        <div data-store-availability-container data-base-url="{{ shop.url }}{{ routes.root_url }}"></div>
+      {% endform %}
+
+    {% endif %}
+  </div>
+    
+  <!--Weeemarket Start-->
+  {% render 'product-custom-infos' %}
+  <!--Weeemarket End-->
+
+  <div class="product__description type-body-regular rte">
+    {% if is_placeholder %}
+      {{ 'homepage.onboarding.product_description' | t }}
+    {% else %}
+  	  <!--Weeemarket Start-->
+      {% comment %}
+      {{ product.description }}
+      {% endcomment %}
+      <div class="weeemarket_dropdown">
+        <p>Description</p>
+        <span onclick="toggle(0)">+</span>
+      </div>
+      <div class="weeemarket_dropdown-section">
+    	{{ product.description }}
+      </div>
+      <!--Weeemarket End-->
+      
+    {% endif %}
+  </div>
+
+  {% if show_share_buttons %}
+    {% render 'social-sharing', share_title: product.title, share_permalink: product.url, share_image: product %}
+  {% endif %}
+
+  <!--Weeemarket Start-->
+  {% render 'product-fabric-care' %}
+  <!--Weeemarket End-->
+    
+  {% render 'product-reviews' %}
+</div>
+  
+  <!--Weeemarket Start-->
+<script>
+  let weeemarketDropdowns = document.querySelectorAll(".weeemarket_dropdown");
+  let toggleButtons = document.querySelectorAll(".weeemarket_dropdown span");
+  let toggleTitles = document.querySelectorAll(".weeemarket_dropdown p");
+  let sectionsToToggle = document.querySelectorAll(".weeemarket_dropdown-section");
+  //let titles = ["Show Description", "Hide Description", "Show Reviews", "Hide Reviews"];
+  
+  //hide all sections
+  for(let i = 0; i < sectionsToToggle.length; i++)
+  	sectionsToToggle[i].style.display = "none";
+  
+  //add border-bottom to last element
+  weeemarketDropdowns[weeemarketDropdowns.length - 1].style.borderBottom = "solid 1px gray";
+  
+  function toggle(apparitionOrder){
+    if(toggleButtons[apparitionOrder].innerHTML == "+"){
+      sectionsToToggle[apparitionOrder].style.display = "block";
+      toggleButtons[apparitionOrder].innerHTML = "-";
+      //toggleTitles[apparitionOrder].innerHTML = titles[apparitionOrder * 2 + 1];
+    }
+    else{
+      sectionsToToggle[apparitionOrder].style.display = "none";
+      toggleButtons[apparitionOrder].innerHTML = "+";
+      //toggleTitles[apparitionOrder].innerHTML = titles[apparitionOrder * 2];
+    }
+  }
+</script>
+<!--Weeemarket End-->

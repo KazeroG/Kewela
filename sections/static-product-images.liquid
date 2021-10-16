@@ -1,0 +1,44 @@
+{% assign offset = 0 %}
+{% if product.media[0].media_type == 'image' %}
+  {% assign offset = 1 %}
+{% endif %}
+
+{% if section.settings.enabled %}
+  {% if product.images.size > 1 %}
+    <section
+      data-section-id="{{ section.id }}"
+      data-section-type="static-product-images"
+      class="section"
+    >
+      <div class="product__expanded-photos">
+      {% for image in product.images offset:offset %}
+        {%- capture item_classes -%}
+          {%- if forloop.index == 1 or forloop.index == 4 -%}
+            w-100
+          {%- else -%}
+            w-50
+          {%- endif -%}
+        {%- endcapture -%}
+
+        <div class="{{ item_classes }} pa2">
+          {% render 'responsive-image-fill' with image: image, max_width: 1200, max_height: 1200 %}
+        </div>
+      {% endfor %}
+      </div>
+    </section>
+  {% endif %}
+{% endif %}
+
+{% schema %}
+  {
+    "name": "Product photos",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "enabled",
+        "label": "Enable grid of product images",
+        "default": false
+      }
+    ]
+  }
+{% endschema %}

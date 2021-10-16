@@ -1,0 +1,42 @@
+<section data-section-id="{{ section.id }}" class="section newsletter">
+  <div class="newsletter__container-custom">
+    
+    <!--Weeemarket Start-->
+    {% comment %}
+      <div class="newsletter__container {% render 'section-style' with outlined: section.settings.outline %}">
+    {% endcomment %}
+    <!--Weeemarket End-->
+        
+
+  {% if title != blank %}
+    <label for="Email" class="newsletter__heading type-heading-1">{{ title | escape }}</label>
+  {% endif %}
+  {% if subheading != blank %}
+    <div class="newsletter__subheading type-body-regular rte">{{ subheading }}</div>
+  {% endif %}
+
+  {% form 'customer' %}
+    {{ form.errors | default_errors }}
+    {% if form.posted_successfully? %}
+      <p>{{ 'general.newsletter_form.confirmation' | t }}</p>
+    {% else %}
+      <input type="hidden" name="contact[tags]" value="newsletter">
+      <div class="newsletter__input-container-custom">
+        <input type="email"
+          class="input newsletter__input-custom input-reset"
+          name="contact[email]"
+          id="Email"
+          value="{% if customer.email != blank %}{{ customer.email }}{% endif %}"
+          placeholder="{{ 'general.newsletter_form.email_placeholder' | t }}"
+          autocorrect="off"
+          autocapitalize="off">
+        <button type="submit" name="commit" id="Subscribe" class="newsletter__submit-button-custom">
+          M'INSCRIRE
+          <!--Weeemarket Start <span>{{ 'general.newsletter_form.submit' | t }} &rarr;</span>--><!--Weeemarket end-->
+        </button>
+      </div>
+    {% endif %}
+  {% endform %}
+
+</div>
+</section>

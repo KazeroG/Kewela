@@ -1,0 +1,64 @@
+<section data-component="page">
+  {% if article.image %}
+    {% assign s = section.settings %}
+    <div
+      class="article__heading-wrapper lazyload cover bg-container bg-center relative"
+      data-bgset="{% render 'responsive-bg-image', image: article.image %}"
+      role="img"
+      aria-label="{{ article.image.alt }}"
+    >
+
+      <div class="article__heading-content" {% if s.text_color != blank %}style="color: {{ s.text_color }};"{% endif %}>
+        <header role="banner" class="article__heading__text ph3 tc self-center centered-content">
+          <h1 class="type-heading-display measure-narrow center">{{ article.title }}</h1>
+          {%- if article.excerpt != blank -%}
+            <div class="type-body-large measure center">{{ article.excerpt }}</div>
+          {%- endif -%}
+        </header>
+      </div>
+
+      {% if s.overlay_color != blank %}
+        <div class="z-1 absolute absolute--fill o-{{ s.overlay_opacity }}" style="background: {{ s.overlay_color }};"></div>
+      {% endif %}
+    </div>
+
+    <noscript>
+      {%- assign image_size = article.image.width | append: 'x' -%}
+      <div class="cover bg-center" style="background-image: {{ article.image | img_url: image_size }}"></div>
+    </noscript>
+  {% else %}
+    {% render 'page-header' with title: article.title, hide_breadcrumbs: true %}
+  {% endif %}
+</section>
+
+{% schema %}
+  {
+    "name": "Blog post",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Style"
+      },
+      {
+        "type": "range",
+        "id": "overlay_opacity",
+        "label": "Overlay opacity",
+        "min": 0,
+        "max": 100,
+        "step": 10,
+        "default": 30,
+        "unit": "%"
+      },
+      {
+        "type": "color",
+        "id": "overlay_color",
+        "label": "Overlay color"
+      },
+      {
+        "type": "color",
+        "id": "text_color",
+        "label": "Text color"
+      }
+    ]
+  }
+{% endschema %}

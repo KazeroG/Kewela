@@ -1,0 +1,394 @@
+{%- assign font_logo_size = settings.font_logo_size | append: 'px' -%}
+
+{% assign s = section.settings %}
+{% assign links = linklists[s.menu].links %}
+
+{% assign header_is_transparent = false %}
+
+{% if s.transparent_index_header_enabled and template.name == "index" %}
+  {% assign header_is_transparent = true %}
+{% endif %}
+
+{% if s.transparent_about_header_enabled and template.suffix == "about" %}
+  {% assign header_is_transparent = true %}
+{% endif %}
+
+{% assign header_modifier = "header--default" %}
+{% if s.header_style == "icon" %}
+  {% assign header_modifier = "header--always-mobile" %}
+{% endif %}
+
+{% if header_is_transparent %}
+  {% assign header_modifier = header_modifier | append: " header--transparent" %}
+{% endif %}
+
+<script>
+  window.theme.quickCartNote = {{ settings.quick_cart_note | json }};
+</script>
+
+{% assign center_header = false %}
+{% if s.header_alignment == "center" %}
+  {% assign center_header = true %}
+{% endif %}
+
+<section
+  data-component="header"
+  data-section-id="{{ section.id }}"
+  data-section-type="header"
+  class="{% unless header_is_transparent %}bg-base {% endunless %} w-100 z-5"
+  data-navigation='
+    [
+      {%- for link in links -%}
+        {
+          "active": "{{ link.active }}",
+          "child_active": "{{ link.child_active }}",
+          "current": "{{ link.current }}",
+          "child_current": "{{ link.child_current }}",
+          "levels": "{{ link.levels }}",
+          "links": [
+            {%- for child in link.links -%}
+              {
+                "active": "{{ child.active }}",
+                "child_active": "{{ child.child_active }}",
+                "current": "{{ child.current }}",
+                "child_current": "{{ child.child_current }}",
+                "levels": "{{ child.levels }}",
+
+                  "links": [
+                    {%- for grandchild in child.links -%}
+                      {
+                        "active": "{{ grandchild.active }}",
+                        "child_active": "{{ grandchild.child_active }}",
+                        "current": "{{ grandchild.current }}",
+                        "child_current": "{{ grandchild.child_current }}",
+                        "levels": "{{ grandchild.levels }}",
+                        "title": "{{ grandchild.title | escape }}",
+                        "type": "{{ grandchild.type }}",
+                        "url": "{{ grandchild.url }}"
+                      }
+                      {% if forloop.last == false %},{% endif %}
+                    {%- endfor -%}
+                  ],
+                "title": "{{ child.title | escape }}",
+                "type": "{{ child.type }}",
+                "url": "{{ child.url }}"
+              }
+              {% if forloop.last == false %},{% endif %}
+            {%- endfor -%}
+          ],
+          "title": "{{ link.title | escape }}",
+          "type": "{{ link.type }}",
+          "url": "{{ link.url }}"
+        }
+
+        {% if forloop.last == false %},{% endif %}
+      {%- endfor -%}
+    ]
+  '
+>
+  <div
+    id="header"
+    class="header {{ header_modifier }}"
+    data-transparent-header="{{ header_is_transparent }}"
+  >
+  <div class="
+    header__content
+    {% if center_header %}header__content--centered{% endif %}
+    {% if shop.customer_accounts_enabled %}header__content--has-customer-accounts{% endif %}
+  ">
+    <div id="mobile-nav">
+      <div class="header__menu-icon">
+      {% render 'icon' with icon: 'menu' %}
+      </div>
+    </div>
+    <h1 class="header__logo-wrapper">
+      <a href="{{ routes.root_url }}" class="header__logo-image color-inherit">
+
+        {% if header_is_transparent and s.transparent_header_logo != blank %}
+          {% capture image_size %}{{ s.logo_max_width }}x{% endcapture %}
+          <img src="{{ s.transparent_header_logo | img_url: image_size }}"
+              srcset="{{ s.transparent_header_logo | img_url: image_size }} 1x, {{ s.transparent_header_logo | img_url: image_size, scale: 2 }} 2x"
+              alt="{{ s.transparent_header_logo.alt | default: shop.name }}">
+
+        {% else %}
+
+          {% if s.logo != blank %}
+            {% capture image_size %}{{ s.logo_max_width }}x{% endcapture %}
+            <img src="{{ s.logo | img_url: image_size }}"
+                srcset="{{ s.logo | img_url: image_size }} 1x, {{ s.logo | img_url: image_size, scale: 2 }} 2x"
+                alt="{{ s.logo.alt | default: shop.name }}">
+
+          {% else %}
+
+            <span class="header__logo-text">{{ shop.name }}</span>
+
+          {% endif %}
+
+        {% endif %}
+      </a>
+    </h1>
+
+    <div class="header__sticky-logo-wrapper">
+      {%- unless s.sticky_header_logo == blank -%}
+        <a href="{{ routes.root_url }}" class="header__sticky-logo-image color-inherit">
+          <img
+            src="{{ s.sticky_header_logo | img_url: x50 }}"
+            srcset="{{ s.sticky_header_logo | img_url: x50 }} 1x, {{ s.sticky_header_logo | img_url: x50, scale: 2 }} 2x"
+            alt="{{ s.sticky_header_logo.alt | default: shop.name }}"
+          >
+        </a>
+      {%- endunless -%}
+    </div>
+
+    <div class="flex justify-between" data-primary-navigation="yes">
+      <nav class="header__nav">
+        {%
+          render 'navmenu' with
+          menu: s.menu,
+          depth: 1,
+          max_depth: 3,
+          blocks: section.blocks,
+          top_level: true,
+          has_triggers: true
+        %}
+      </nav>
+      <div class="no-js-menu no-js-menu--desktop">
+        {% render 'no-js-navmenu' with menu: s.menu %}
+      </div>
+
+      <div class="header__icon-wrapper">
+        <ul class="header__icon-list">
+          <li class="header__icon header__icon--search">
+            <noscript>
+            <a href="{{ routes.search_url }}" class="color-inherit">
+              <div class="relative" style="width: 24px;">
+                {% render 'icon-search' %}
+              </div>
+            </a>
+            </noscript>
+            {% render 'quick-search' %}
+          </li>
+          {%- if shop.customer_accounts_enabled -%}
+            <li class="header__icon header__icon--account">
+              <a href="{{ routes.account_url }}" class="color-inherit">
+                <div class="relative" style="width: 24px;">
+                  {% render 'icon-account' %}
+                </div>
+              </a>
+            </li>
+          {%- endif -%}
+          <li class="header__icon header__icon--cart">
+              <a href="{{ routes.cart_url }}" class="color-inherit js-cart-drawer-toggle">
+                <div class="quick-cart__icon" style="width: 24px;">
+                  {% render 'icon-cart' %}
+                  {% if cart.item_count > 0 %}
+                    <div class="quick-cart__indicator js-cart-count">
+                      <!--Weeemarket Start-->
+                      {% comment %}
+                      {{ cart.item_count }}
+                      {% endcomment %}
+                      <!--Weeemarket End-->
+                    </div>
+                  {% endif %}
+                  {% render 'component-quick-cart' %}
+                </div>
+              </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="no-js-menu no-js-menu--mobile">
+    {% render 'no-js-navmenu' with menu: s.menu %}
+  </div>
+  </div>
+
+</section>
+
+{% assign proper_alpha = s.transparent_header_border_opacity | divided_by: 100.00 %}
+
+<style>
+  .header__logo-text {
+    font-size: {{ font_logo_size }};
+  }
+
+  .header.header--transparent {
+    border-color: {{ s.transparent_header_border_color | color_modify: 'alpha', proper_alpha }};
+    color: {{ s.transparent_header_foreground_color }};
+  }
+
+  .header.header--transparent .header__icon-wrapper,
+  .header.header--transparent #mobile-nav {
+    color: {{ s.transparent_header_foreground_color }};
+  }
+
+  {% if header_is_transparent %}
+    .header-section {
+      position: absolute;
+    }
+  {% endif %}
+
+  {% if s.logo != blank %}
+    .header__logo-image {
+      display: block;
+      max-width: {{ s.logo_max_width }}px;
+    }
+  {% endif %}
+</style>
+
+{% schema %}
+  {
+    "name": "Header",
+    "class": "header-section",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Header"
+      },
+      {
+        "type": "select",
+        "id": "header_style",
+        "label": "Header style",
+        "options": [
+          { "value": "inline", "label": "Inline links" },
+          { "value": "icon", "label": "Menu icon" }
+        ],
+        "default": "inline"
+      },
+      {
+        "type": "select",
+        "id": "header_alignment",
+        "label": "Alignment",
+        "options": [
+            { "value": "left", "label": "Left"},
+            { "value": "center", "label": "Center"}
+        ],
+        "default": "left",
+        "info": "Alignment will only apply if Header Style is Inline links"
+      },
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "Logo image"
+      },
+      {
+        "type": "range",
+        "id": "logo_max_width",
+        "min": 50,
+        "max": 350,
+        "step": 10,
+        "unit": "px",
+        "label": "Custom logo width",
+        "default": 250
+      },
+      {
+        "type": "image_picker",
+        "id": "sticky_header_logo",
+        "label": "Sticky header logo image",
+        "info": "Sticky header logo will appear when the header becomes sticky. Maximum logo height: 50px"
+      },
+      {
+        "type": "link_list",
+        "id": "menu",
+        "label": "Main menu",
+        "default": "main-menu"
+      },
+      {
+        "type": "header",
+        "content": "Transparent header"
+      },
+      {
+        "type": "checkbox",
+        "id": "transparent_index_header_enabled",
+        "label": "Enable on home page",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "transparent_about_header_enabled",
+        "label": "Enable on about page",
+        "default": false
+      },
+      {
+        "type": "color",
+        "id": "transparent_header_foreground_color",
+        "label": "Text color",
+        "info": "Only applicable if transparent header is enabled.",
+        "default": "#ffffff"
+      },
+      {
+        "type": "color",
+        "id": "transparent_header_border_color",
+        "label": "Border color",
+        "info": "Only applicable if transparent header is enabled.",
+        "default": "#ffffff"
+      },
+      {
+        "type": "range",
+        "id": "transparent_header_border_opacity",
+        "min": 0,
+        "max": 100,
+        "step": 10,
+        "unit": "%",
+        "label": "Border opacity",
+        "default": 50
+      },
+      {
+        "type": "image_picker",
+        "id": "transparent_header_logo",
+        "label": "Transparent logo image"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "mega_nav",
+        "name": "Mega nav",
+        "settings": [
+          {
+            "type": "text",
+            "id": "dropdown_parent_link",
+            "label": "Dropdown parent link",
+            "info": "Name the link in the main menu that you'd like the Mega nav to appear from."
+          },
+          {
+            "type": "image_picker",
+            "id": "mega_nav_featured_image",
+            "label": "Mega nav featured image"
+          },
+          {
+            "type": "text",
+            "id": "featured_image_heading",
+            "label": "Featured image heading"
+          },
+          {
+            "type": "text",
+            "id": "featured_image_link_text",
+            "label": "Featured image link text"
+          },
+          {
+            "type": "url",
+            "id": "featured_image_link",
+            "label": "Featured image link"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}
+
+
+{% if template.name == 'index' %}
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "WebSite",
+      "name": "{{ shop.name }}",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "{{ routes.search_url }}?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      },
+      "url": "{{ shop.url }}{{ page.url }}"
+    }
+  </script>
+{% endif %}

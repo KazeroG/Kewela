@@ -1,0 +1,150 @@
+<section
+  data-section-id="{{ section.id }}"
+  data-section-type="dynamic-text-columns-with-images"
+  class="section"
+>
+  <div class="text-columns text-columns--{%- if section.settings.outline -%}outline{%- else -%}standard{%- endif -%}">
+
+    {% if section.settings.title != blank or section.settings.subheading != blank %}
+      <div class="text-columns__heading">
+        {%- if section.settings.title != blank -%}
+          <h2 class="text-columns__title type-heading-1 ma0 mb3">{{ section.settings.title }}</h2>
+        {%- endif -%}
+        {%- if section.settings.subheading != blank -%}
+          <p class="text-columns__subheading type-body-regular measure">{{ section.settings.subheading }}</p>
+        {%- endif -%}
+      </div>
+    {% endif %}
+
+    <div class="text-columns__content">
+      {% for block in section.blocks %}
+        <div class="text-columns__feature text-columns__feature--{{ section.blocks.size }}">
+          {%- if block.settings.image != blank -%}
+            <div class="mb3" style="max-width: {{ block.settings.image_max_width }}%;">
+              <div style="max-width: {{ block.settings.image.width | divided_by: 2 }}px">
+                {% render 'responsive-image' with image: block.settings.image, max_width: 600 %}
+              </div>
+            </div>
+          {%- endif -%}
+          {%- if block.settings.title != blank -%}
+            <h3 class="type-heading-2 mt0">{{ block.settings.title }}</h3>
+          {%- endif -%}
+          {%- if block.settings.subheading != blank -%}
+            <p class="type-body-regular mb0">{{ block.settings.subheading }}</p>
+          {%- endif -%}
+          {%- if block.settings.link != blank and block.settings.link_text != blank -%}
+            <a href="{{ block.settings.link }}" class="type-body-regular accent-link db mt3">{{ block.settings.link_text }} &rarr;</a>
+          {%- endif -%}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+  {
+    "name": "Text columns with images",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading"
+      },
+      {
+        "type": "textarea",
+        "id": "subheading",
+        "label": "Subheading"
+      },
+      {
+        "type": "header",
+        "content": "Section style"
+      },
+      {
+        "type": "checkbox",
+        "id": "outline",
+        "label": "Outline section",
+        "default": false
+      }
+    ],
+    "max_blocks": 6,
+    "blocks": [
+      {
+        "type": "column",
+        "name": "Column",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type": "range",
+            "id": "image_max_width",
+            "label": "Max image width",
+            "min": 10,
+            "max": 100,
+            "step": 10,
+            "unit": "%",
+            "default": 100
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Heading"
+          },
+          {
+            "type": "textarea",
+            "id": "subheading",
+            "label": "Subheading"
+          },
+          {
+            "type": "url",
+            "id": "link",
+            "label": "Link"
+          },
+          {
+            "type": "text",
+            "id": "link_text",
+            "label": "Link text"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Text columns with images",
+        "category": "Text",
+        "settings": {
+          "title": "Text columns with images",
+          "subheading": "This section is designed for steps or policies. Tell your brand's story, describe how a product is made, or outline shipping stages.",
+          "outline": false
+        },
+        "blocks": [
+          {
+            "type": "column",
+            "settings": {
+              "title": "Column One",
+              "subheading": "Start here. Introduce your vision, or explain why what you do or sell is superior to your competitors."
+            }
+          },
+          {
+            "type": "column",
+            "settings": {
+              "title": "Column Two",
+              "subheading": "Get into your process a bit. The quality of handiwork, proprietary knowledge, or materials that you use that make your products better. "
+            }
+          },
+          {
+            "type": "column",
+            "settings": {
+              "title": "Column Three",
+              "subheading": "End it with an action item that the user can take advantage of. Link to a more in-depth page, or go straight to a collection. Your call.",
+              "link": "#",
+              "link_text": "Don't forget to add a link"
+            }
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

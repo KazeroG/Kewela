@@ -1,0 +1,19 @@
+<div class="lightbox" data-lightbox>
+  <div class="lightbox__images" data-images tabindex="0">
+    <button class="lightbox__close" data-close>
+      {% render 'icon-close' %}
+    </button>
+
+    {%- for image in images -%}
+      {% assign custom_id = image.id | plus: forloop.index %}
+
+      <div class="lightbox__image" data-id="{{ image.id }}">
+        {% render 'responsive-image' with
+          image: image,
+          id: custom_id,
+          max_width: 3000,
+        %}
+      </div>
+    {%- endfor -%}
+  </div>
+</div>

@@ -1,0 +1,75 @@
+{% render 'section-testimonials'with
+  type: 'dynamic-testimonials',
+  icon_width: section.settings.icon_width,
+  blocks: section.blocks,
+%}
+
+{% schema %}
+  {
+    "name": "Testimonials",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Icon style"
+      },
+      {
+        "type": "range",
+        "id": "icon_width",
+        "label": "Width",
+        "min": 40,
+        "max": 150,
+        "step": 5,
+        "default": 40,
+        "unit": "px"
+      },
+      {
+        "type": "header",
+        "content": "Section style"
+      },
+      {
+        "type": "checkbox",
+        "id": "outline",
+        "label": "Outline section",
+        "default": false
+      }
+    ],
+    "blocks": [
+      {
+        "type": "testimonial",
+        "name": "Testimonial",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "icon",
+            "label": "Icon"
+          },
+          {
+            "type": "textarea",
+            "id": "quote",
+            "label": "Quote"
+          },
+          {
+            "type": "text",
+            "id": "author",
+            "label": "Author"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Testimonials",
+        "category": "Text",
+        "blocks": [
+          {
+            "type": "testimonial",
+            "settings": {
+              "quote": "Absolutely unparalleled products and service. I'm confident that this store will be the next big thing in its industry, and that its products will be timeless.",
+              "author": "Steve Jordans"
+            }
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

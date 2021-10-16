@@ -1,0 +1,141 @@
+{% if collection.all_tags.size > 0 and filter_type != 'hidden' %}
+
+  {% if filter_type == 'by_group' %}
+    {% for category in categories %}
+      <div class="collection-flyout drawer" data-filter-flyout="{{ category }}">
+        <div class="collection-flyout__heading">
+          <h4 class="type-heading-1-small mt0 mb0">{{ category }}</h4>
+          <a href="#" data-close-icon>
+            {% render 'icon-close' %}
+          </a>
+        </div>
+        <div class="collection-flyout__content" data-scroll-lock-ignore>
+          <ul>
+            {% for tag in collection.all_tags %}
+              {% assign cat = tag | split: '_' | first %}
+
+              {% if cat != tag and category == cat %}
+                {% assign label = tag | remove_first: cat | remove_first: '_' %}
+
+                {% if current_tags contains tag %}
+                  {% assign is_active = true %}
+                  {% assign url = label | link_to_remove_tag: tag | split: '"' %}
+                  {% assign url = url[1] %}
+                {% else %}
+                  {% assign is_active = false %}
+                  {% assign url = label | link_to_add_tag: tag | split: '"' %}
+                  {% assign url = url[1] %}
+                {% endif %}
+
+                {% render 'filter-item' with
+                  type: 'checkbox',
+                  label: label,
+                  active: is_active,
+                  url: url,
+
+                  key: 'tag',
+                  val: tag
+                %}
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="collection-flyout__footer">
+          <button class="bttn bttn--secondary bttn--small bttn--full" data-button="clear">{{ 'collections.general.clear' | t }}</button>
+          <button class="bttn bttn--primary bttn--small bttn--full" data-button="apply">{{ 'collections.general.apply' | t }}</button>
+        </div>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  {% if filter_type == 'by_tag' %}
+    <div class="collection-flyout drawer" data-filter-flyout="__tags">
+      <div class="collection-flyout__heading">
+        <h4 class="type-heading-1-small mt0 mb0">{{ 'collections.tags.title' | t }}</h4>
+        <a href="#" data-close-icon>
+          {% render 'icon-close' %}
+        </a>
+      </div>
+      <div class="collection-flyout__content" data-scroll-lock-ignore>
+        <ul>
+          {% for tag in collection.all_tags %}
+            {% assign is_in_category = false %}
+            {% assign cat = tag | split: '_' | first %}
+            {% unless cat == tag %}
+              {% if categories contains cat %}
+                {% assign is_in_category = true %}
+              {% endif %}
+            {% endunless %}
+
+            {%- capture tag_text -%}
+              {% if is_in_category %}
+                {{ tag | remove_first: cat | remove_first: '_' }}
+              {% else %}
+                {{ tag }}
+              {% endif %}
+            {%- endcapture -%}
+
+            {% if current_tags contains tag %}
+              {% assign is_active = true %}
+              {% assign url = tag_text | link_to_remove_tag: tag | split: '"' %}
+              {% assign url = url[1] %}
+            {% else %}
+              {% assign is_active = false %}
+              {% assign url = tag_text | link_to_add_tag: tag | split: '"' %}
+              {% assign url = url[1] %}
+            {% endif %}
+
+            {% render 'filter-item' with
+              type: 'checkbox',
+              label: tag_text,
+              active: is_active,
+              url: url,
+
+              key: 'tag',
+              val: tag
+            %}
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="collection-flyout__footer">
+        <button class="bttn bttn--secondary bttn--small bttn--full" data-button="clear">{{ 'collections.general.clear' | t }}</button>
+        <button class="bttn bttn--primary bttn--small bttn--full" data-button="apply">{{ 'collections.general.apply' | t }}</button>
+      </div>
+    </div>
+  {% endif %}
+{% endif %}
+
+{% if show_sort %}
+  <div class="collection-flyout drawer" data-filter-flyout="__sort">
+    <div class="collection-flyout__heading">
+      <h4 class="type-heading-1-small mt0 mb0">{{ 'collections.sorting.title' | t }}</h4>
+      <a href="#" data-close-icon>
+        {% render 'icon-close' %}
+      </a>
+    </div>
+    <div class="collection-flyout__content" data-scroll-lock-ignore>
+      <ul>
+        {% for option in collection.sort_options %}
+          {%- assign is_active = false -%}
+          {%- if option.value == collection.sort_by -%}
+            {%- assign is_active = true -%}
+          {%- endif -%}
+          {% render 'filter-item' with
+            label: option.name,
+            type: 'radio',
+            active: is_active,
+            url: '#',
+
+            key: 'sort',
+            val: option.value
+          %}
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="collection-flyout__footer">
+      <button class="bttn bttn--primary bttn--small bttn--full" data-button="apply">{{ 'collections.general.apply' | t }}</button>
+    </div>
+  </div>
+{% endif %}
+
+<div class="collection-flyout__wash" data-filter-wash></div>

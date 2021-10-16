@@ -1,0 +1,93 @@
+{%- if section.settings.enabled == true -%}
+  {%- assign product_count = section.settings.per_row | times: section.settings.rows -%}
+
+  <section
+    data-section-id="{{ section.id }}"
+    data-section-type="static-recently-viewed"
+    class="recently-viewed section"
+  >
+    <div class="recently-viewed__wrapper recently-viewed__wrapper--{{ section.settings.alignment }} {% render 'section-style' with outlined: section.settings.outline %}">
+
+      <div class="recently-viewed__side">
+        <h2 class="type-heading-1">{{ section.settings.title }}</h2>
+      </div>
+
+      <div class="recently-viewed__products" data-slider></div>
+    </div>
+
+    <script type="application/json" data-settings-data>
+      {
+        "product_count": {{ product_count }}
+      }
+    </script>
+  </section>
+{%- endif -%}
+
+<style>
+  #shopify-section-{{section.id}} .recently-viewed__product {
+    width: calc(100%/{{ section.settings.per_row }});
+  }
+</style>
+
+
+{% schema %}
+  {
+    "name": "Recently viewed products",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "enabled",
+        "label": "Enable",
+        "default": true
+      },
+      {
+        "type": "paragraph",
+        "content": "Note: Even if enabled, this section will only appear if there are more than 3 recently viewed products."
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Recently Viewed"
+      },
+      {
+        "type": "select",
+        "id": "alignment",
+        "label": "Heading alignment",
+        "options": [
+          { "value": "left", "label": "Left" },
+          { "value": "above", "label": "Center" },
+          { "value": "right", "label": "Right" }
+        ]
+      },
+      {
+        "type": "range",
+        "id": "rows",
+        "label": "Rows",
+        "min": 1,
+        "max": 4,
+        "step": 1,
+        "default": 1
+      },
+      {
+        "type": "range",
+        "id": "per_row",
+        "label": "Products per row",
+        "min": 2,
+        "max": 4,
+        "step": 1,
+        "default": 3
+      },
+      {
+        "type": "header",
+        "content": "Section style"
+      },
+      {
+        "type": "checkbox",
+        "id": "outline",
+        "label": "Outline section",
+        "default": false
+      }
+    ]
+  }
+{% endschema %}
