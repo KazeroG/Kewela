@@ -1828,6 +1828,7 @@
             "type": "text_block",
             "settings": {
               "hb_enable_image": true,
+              "hb_image": "shopify:\/\/shop_images\/4.png",
               "hb_title": "Absorbante",
               "hb_text": "",
               "hb_button_label": "",
@@ -1838,6 +1839,7 @@
             "type": "text_block",
             "settings": {
               "hb_enable_image": true,
+              "hb_image": "shopify:\/\/shop_images\/1.png",
               "hb_title": "Sèche Rapidement",
               "hb_text": "",
               "hb_button_label": "",
@@ -1848,6 +1850,7 @@
             "type": "text_block",
             "settings": {
               "hb_enable_image": true,
+              "hb_image": "shopify:\/\/shop_images\/3.png",
               "hb_title": "Dessinée à la Main",
               "hb_text": "",
               "hb_button_label": "",
