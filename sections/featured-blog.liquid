@@ -1,0 +1,275 @@
+{% include 'setting-spacing' %}
+{% include 'setting-background-color' %}
+
+{% case section.settings.column %}
+    {% when 1 %}
+        {%- assign column = '1' -%}
+    {% when 2 %}
+        {%- assign column = '2' -%}
+    {% when 3 %}
+        {%- assign column = '3' -%}
+    {% when 4 %}
+        {%- assign column = '4' -%}
+{% endcase %}
+
+{%- assign blog_layout = blog_layout | default: section.settings.blog_layout -%}
+
+{% if section.settings.custom_color %}
+<style>
+    [data-section-id='{{ section.id }}'] .section-header {
+        color: {{ section.settings.color_heading_section }}
+    }
+</style>
+{% endif %}
+
+<div class="halo-section {{ padding_top }} {{ padding_bottom }} {{ background_color }} {{ border-top }} {{ border-bottom }}" data-section-id="{{ section.id }}" data-section-type="featured-blog-section">
+    <div class="{% if section.settings.layout == 'default' %}container{% else %}container-full{% endif %}">
+        {% if section.settings.title != blank %}
+            <div class="section-header">
+                <h2>{{ section.settings.title }}</h2>
+            </div>
+        {% endif %}
+        {%- assign blog = blogs[section.settings.blog] -%}
+        {% unless blog.articles_count == 0 %}
+            <div class="halo-row halo-row-custom halo-row-stroll column-{{ column }}"
+            {%if blog_layout == 'carousel' %}
+                data-slick='{
+                    "rows": 0,
+                    "dots": true,
+                    "arrows": false,
+                    "infinite": false,
+                    "adaptiveHeight": true,
+                    "slidesToShow": {{ column }},
+                    "slidesToScroll": 1
+                }'
+            {% endif %}>
+                {% for article in blog.articles limit: section.settings.post_limit %}
+                    <div class="halo-item">
+                        <div class="article">
+                            {% if article.image %}
+                                <div class="article-image">
+                                    <div class="image-wrapper js">
+                                        <div class="image-container" style="padding-top:{{ 1 | divided_by: article.image.aspect_ratio | times: 100}}%;">
+                                            {%- assign img_url = article.image | img_url: '370x' -%}
+                                            <img
+                                                class="article__grid-image lazyload"
+                                                src="{{ 'loading.svg' | asset_url }}"
+                                                data-src="{{ img_url }}"
+                                                data-aspectratio="{{ article.image.aspect_ratio }}"
+                                                data-sizes="auto"
+                                                alt="" data-image>
+                                        </div>
+                                    </div>
+                                    <a href="{{ article.url }}" aria-label="link"></a>
+                                </div>
+                            {% endif %}
+                            <div class="article-content">
+                                <div class="content-left">
+                                    {% if section.settings.blog_show_date %}
+                                    <div class="meta">
+                                        <span class="article__date">
+                                            {{ article.published_at | time_tag: format: 'date' }}
+                                        </span>
+                                    </div>
+                                    {% endif %}
+                                    <h3 class="title">
+                                        <a href="{{ article.url }}" aria-label="link">{{ article.title }}</a>
+                                    </h3>
+                                </div>
+                                <div class="excerpt">
+                                    {% if article.excerpt.size > 0 %}
+                                        {{ article.excerpt }}
+                                    {% else %}
+                                        {{ article.content | strip_html | truncate: 160 }}
+                                    {% endif %}
+                                </div>
+                                <span>
+                                    <a href="{{ article.url }}" class="btn btn--tertiary btn--small" aria-label="{{ 'blogs.article.read_more_title' | t: title: article.title }}" aria-label="link">
+                                        <span class="text">{{ 'blogs.article.read_more' | t }}</span>
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="halo-row halo-row-custom column-{{ column }}">
+                {% for i in (1..section.settings.post_limit) %}
+                    <div class="halo-item">
+                        <div class="article">
+                            <div class="article-image">
+                                <span class="recommended_size">370x240</span>
+                                {{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' }}
+                            </div>
+                            <div class="article-content">
+                                <h3 class="title"><a href="#">{{ 'homepage.onboarding.blog_title' | t }}</a></h3>
+                            </div>
+                            <div class="meta">
+                                {% if section.settings.blog_show_author %}
+                                    <span class="article__author">{{ 'homepage.onboarding.blog_author' | t }}</span>
+                                {% endif %}
+                            </div>
+                            <div class="excerpt">
+                                {{ 'homepage.onboarding.blog_excerpt' | t }}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endunless %}
+    </div>
+</div>
+
+{% schema %}
+{
+    "name": "Blog posts",
+    "class": "featured-blog-sections",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Section Layout"
+        },
+        {
+            "type": "select",
+            "id": "layout",
+            "label": "Blog Layout:",
+            "options": [
+                {
+                    "value": "default",
+                    "label": "Default"
+                },
+                {
+                    "value": "full",
+                    "label": "Full Width"
+                }
+            ],
+            "default": "full"
+        },
+        {
+            "type": "checkbox",
+            "id": "background-color",
+            "label": "Background Gray",
+            "default": false
+        },
+        {
+            "type": "checkbox",
+            "id": "border-top",
+            "label": "Show Border Top",
+            "default": false
+        },
+        {
+            "type": "checkbox",
+            "id": "border-bottom",
+            "label": "Show Border Bottom",
+            "default": false
+        },
+        {
+            "type": "range",
+            "id": "padding-top",
+            "label": "Spacing Top",
+            "default": 3,
+            "min": 0,
+            "max": 10,
+            "step": 1
+        },
+        {
+            "type": "range",
+            "id": "padding-bottom",
+            "label": "Spacing bottom",
+            "default": 3,
+            "min": 0,
+            "max": 10,
+            "step": 1
+        },
+        {
+            "type": "header",
+            "content": "Heading Section"
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "Recent Posts"
+        },
+        {
+            "type": "header",
+            "content": "Blog Layout"
+        },
+        {
+            "type": "select",
+            "id": "blog_layout",
+            "label": "Layout",
+            "default": "carousel",
+            "options": [
+                {
+                    "value": "grid",
+                    "label": "Grid"
+                },
+                {
+                    "value": "carousel",
+                    "label": "Carousel"
+                }
+            ]
+        },
+        {
+            "type": "range",
+            "id": "column",
+            "label": "Column",
+            "min": 1,
+            "max": 4,
+            "step": 1,
+            "default": 3
+        },
+        {
+            "type": "range",
+            "id": "post_limit",
+            "label": "Posts limit",
+            "min": 2,
+            "max": 12,
+            "step": 1,
+            "default": 3
+        },
+        {
+            "type": "header",
+            "content": "Post style"
+        },
+        {
+            "type": "blog",
+            "id": "blog",
+            "label": "Blog"
+        },
+        {
+            "type": "checkbox",
+            "id": "blog_show_date",
+            "label": "Show date",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "Custom Color"
+        },
+        {
+            "type": "checkbox",
+            "id": "custom_color",
+            "label": "Turn on custom color",
+            "default": false
+        },
+        {
+            "type": "color",
+            "id": "color_heading_section",
+            "label": "Heading Section Color"
+        }
+    ],
+    "presets": [
+        {
+            "name": "Blog posts",
+            "category": "Blog",
+            "settings": {
+                "blog": "News",
+                "post_limit": 3
+            }
+        }
+    ]
+}
+{% endschema %}

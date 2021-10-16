@@ -1,0 +1,180 @@
+{% include 'setting-spacing' %}
+
+{% if section.settings.custom_color %}
+<style>
+    [data-section-id='{{ section.id }}'] .section-header {
+        color: {{ section.settings.color_heading_section }}
+    }
+
+    [data-section-id='{{ section.id }}'] .section-header p {
+        color: {{ section.settings.color_text }}
+    }
+
+    [data-section-id='{{ section.id }}'] .instagram-load-more-2 svg {
+        color: {{ section.settings.color_icon }}
+    }
+
+</style>
+{% endif %}
+
+<section class="halo-section home-instagram-2 {{ padding_top }} {{ padding_bottom }}" id="new-instagram-{{section.id}}" data-section-id="{{ section.id }}" data-section-type="instagram">
+    <div class="container">
+        {% if section.settings.title != blank or section.settings.text_des != blank %}
+            <div class="section-header">
+                <h2>{{ section.settings.title }}</h2>
+                <p>{{ section.settings.text_des }}</p>
+            </div>
+        {% endif %}
+        <div class="instagram">
+            {% if section.settings.instagram_option == 'app' %}
+                {{ section.settings.accessToken }}
+            {% else %}
+                {% for block in section.blocks %}
+                    {% assign img_url = block.settings.instagram_image | img_url: '380x' %}
+                    {% assign img_url_2 = block.settings.instagram_image | img_url: '180x' %}
+                    
+                    {% assign img_url_full = block.settings.instagram_image | img_url: 'master' %}
+                    <div class="item__ins {% if section.settings.load_more %} hide{% endif %}">
+                        <a class="item__ins--link image--hover {% if block.settings.instagram_image != blank %} instagram__item--bg{% endif %}" href="{{ img_url_full }}" aria-label="link" data-fancybox="images-instagram">
+                            {% if block.settings.instagram_image != blank %}
+                                <img class="lazyload"
+                                    data-src="{{ img_url }}"
+                                    data-srcset="{{ img_url_2 }} 180w, {{ img_url }} 1025w"
+                                    data-sizes="auto" alt="" data-image>
+                            {% else %}
+                                {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                                <span class="recommended_size">370x370</span>
+                            {% endif %}
+                        </a>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        {% if section.settings.load_more %}
+            <div class="instagram-load-more-2 text-center">
+                <a href="javascript:void(0)" aria-label="link">
+                    <svg class="icon"><use xlink:href="#icon-plus1" /></svg>
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+{% schema %}
+  {
+    "name": "Instagram 2",
+    "class": "instagram-sections",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Section Layout"
+        },
+        {
+            "type": "range",
+            "id": "padding-top",
+            "label": "Spacing Top",
+            "default": 3,
+            "min": 0,
+            "max": 10,
+            "step": 1
+        },
+        {
+            "type": "range",
+            "id": "padding-bottom",
+            "label": "Spacing bottom",
+            "default": 3,
+            "min": 0,
+            "max": 10,
+            "step": 1
+        },
+        {
+            "type": "header",
+            "content": "Heading Section"
+        },
+        {
+            "type": "textarea",
+            "id": "title",
+            "label": "Title",
+            "default": "#Glasso Image Gallery"
+        },
+        {
+            "type": "textarea",
+            "id": "text_des",
+            "label": "Text Description",
+            "default": "This is an image gallery block but you can use this block as an instagram feed by installing an Instagram Shopify App"
+        },
+        {
+          "type" : "header",
+          "content" : "Instagram Option"
+        },
+        {
+            "type": "select",
+            "id": "instagram_option",
+            "label": "Instagram Option",
+            "options": [
+                {
+                    "value": "app",
+                    "label": "Use app Snapppt"
+                },
+                {
+                    "value": "block",
+                    "label": "Use Block Gallery Image"
+                }
+            ],
+            "default": "block"
+        },
+        {
+            "type": "text",
+            "id": "accessToken",
+            "label": "Script Instagram",
+            "info": "Insert Script Instagram from App Snapppt"
+        },
+        {
+            "type": "checkbox",
+            "id": "load_more",
+            "label": "Enabled Button Show More",
+            "default": false
+        },
+        {
+            "type": "checkbox",
+            "id": "custom_color",
+            "label": "Turn on custom color",
+            "default": false
+        },
+        {
+            "type": "color",
+            "id": "color_heading_section",
+            "label": "Heading Section Color"
+        },
+        {
+            "type": "color",
+            "id": "color_text",
+            "label": "Text Gallery Color"
+        },
+        {
+            "type": "color",
+            "id": "color_icon",
+            "label": "Icon Color"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "instagram_block",
+            "name": "Instagram Image",
+            "settings": [
+                {
+                    "type": "image_picker",
+                    "id": "instagram_image",
+                    "label": "Image"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Instagram 2",
+            "category": "Instagram"
+        }
+    ]
+  }
+{% endschema %}

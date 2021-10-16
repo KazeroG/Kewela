@@ -1,23 +1,19 @@
+
 {% comment %}
 
-  This snippet generates the structure of a comment.
-  It is used to show not only recent comments, but also comments that were
-  just published but not yet approved.
+    This snippet generates the structure of a comment.
+    It is used to show not only recent comments, but also comments that were
+    just published but not yet approved.
 
-  More information:
-   - http://docs.shopify.com/themes/liquid-variables/comment
+    More information:
+     - http://docs.shopify.com/themes/liquid-variables/comment
 
 {% endcomment %}
-<div class="comment-head">  
-  {% capture date %}
-  	<time datetime='{{ article.published_at | date: '%Y-%m-%d' }}'>
-      {{ article.published_at | date: '%b %d, %Y' }}
-  	</time>
-  {% endcapture %}
-  {% capture author %}{{ comment.author }}{% endcapture %}
-  {{ 'blogs.article.author_on_date_html' | t: date: date, author: author }}
-</div>
 
+<div class="comment-head">  
+    <span class="comment__meta-item">{{ comment.created_at | time_tag: format: 'date' }}</span>
+    <span class="comment__meta-item">{{ comment.author }}</span>
+</div>
 <div class="comment-content">
-  {{ comment.content }}
+    {{ comment.content }}
 </div>

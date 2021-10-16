@@ -1,19 +1,19 @@
 <style>
-  .translation-lab-language-switcher-container {
-    display: inline-block;
-  }
+    .translation-lab-language-switcher-container {
+        float: right;
+    }
 
-  .translation-lab-language-switcher {
-    display: block;
-    width: auto;
-    border: none;
-    outline: none;
-    text-transform: uppercase;
-    background-color: transparent;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-  }
+    .translation-lab-language-switcher {
+        display: inline-block;
+        width: auto;
+        border: none;
+        margin: 0 0 0 8px;
+        padding-top: 0;
+        padding-bottom: 0;
+        outline: none;
+        text-transform: uppercase;
+        background: transparent;
+    }
 </style>
 
 <script>
@@ -23,7 +23,6 @@
       {%- for locale in shop.published_locales %}
       {
         name: '{{locale.name}}',
-        endonym_name: '{{locale.endonym_name}}',
         iso_code: '{{locale.iso_code}}',
         primary: {{locale.primary}},
       }{% unless forloop.last %},{% endunless -%}
@@ -87,13 +86,9 @@
     }
   }
 
-  docReady(setupLanguageSwitcher);
-
-  function docReady(fn) {
-    if (document.readyState === 'complete' || document.readyState === 'interactive') {
-      setTimeout(fn, 1);
-    } else {
-      document.addEventListener('DOMContentLoaded', fn);
-    }
+  if (window.attachEvent) {
+    window.attachEvent('onload', setupLanguageSwitcher);
+  } else {
+    window.addEventListener('load', setupLanguageSwitcher, false);
   }
 </script>

@@ -2,14 +2,14 @@
 <html class="no-js" lang="{{ shop.locale }}">
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="{{ settings.color_button }}">
   <link rel="canonical" href="{{ canonical_url }}">
 
-  {%- if settings.favicon -%}
-    <link rel="shortcut icon" href="{{ settings.favicon | img_url: '32x32' }}" type="image/png" />
-  {%- endif -%}
+  {% if settings.favicon != blank %}
+    <link rel="shortcut icon" href="{{ settings.favicon | img_url: '32x32' }}" type="image/png">
+  {% endif %}
 
   {%- assign formatted_initial_value = gift_card.initial_value | money_without_trailing_zeros: gift_card.currency -%}
   {%- assign formatted_initial_value_stripped = formatted_initial_value | strip_html -%}
@@ -17,54 +17,32 @@
 
   <meta name="description" content="{{ 'gift_cards.issued.subtext' | t }}">
 
-  {%- include 'social-meta-tags' -%}
-
-  {% include 'font-face' %}
   {{ 'theme.scss.css' | asset_url | stylesheet_tag }}
   {{ 'gift-card.scss.css' | asset_url | stylesheet_tag }}
 
+  <script src="{{ 'vendor/qrcode.js' | shopify_asset_url }}" defer="defer"></script>
+
+  <script src="{{ 'vendor.js' | asset_url }}" defer="defer"></script>
+
+  <script src="{{ 'gift-card.js' | asset_url }}" defer="defer"></script>
+
   <script>
-    document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
+    var theme = {
+      strings: {
+        qrImageAlt: {{ 'gift_cards.issued.qr_image_alt' | t | json }}
+      }
+    };
   </script>
 
-  {% include 'defer-script' with 'vendor.js' %}
-  {{ 'vendor/qrcode.js' | shopify_asset_url | script_tag }}
-
   {{ content_for_header }}
-  {% include 'oldIE-js' %}
-
-  <!-- REAMAZE INTEGRATION START - DO NOT REMOVE -->
-{% include 'reamaze-config' %}
-{% include 'reamaze-sso' %}
-<!-- REAMAZE INTEGRATION END - DO NOT REMOVE -->
-
-{% render 'weglot_hreftags' %}
-{% render 'weglot_switcher' %}
 </head>
 
 <body class="template-giftcard">
-
-  <div id="PageContainer">
-
-    <div class="page-width">
-
-      {% section 'giftcard-header' %}
-
-      <main class="giftcard" role="main">
-        {{ content_for_layout }}
-      </main>
-
-      <footer class="giftcard__footer">
-        {% if gift_card.pass_url %}
-          <a class="add-to-apple-wallet" href="{{ gift_card.pass_url }}">
-            <img src="{{ 'gift-card/add-to-apple-wallet.svg' | shopify_asset_url }}" width="120" height="40" alt="{{ 'gift_cards.issued.add_to_apple_wallet' | t }}">
-          </a>
-        {% endif %}
-      </footer>
-    </div>
-
-  </div>
-
-{{ 'booster-page-speed-optimizer.js' | asset_url | script_tag }}
+  {{ content_for_layout }}
+  <ul class="visually-hidden" aria-hidden="true">
+    <li id="a11y-new-window-message">{{ 'general.accessibility.link_messages.new_window' | t }}</li>
+    <li id="a11y-external-message">{{ 'general.accessibility.link_messages.external' | t }}</li>
+    <li id="a11y-new-window-external-message">{{ 'general.accessibility.link_messages.new_window_and_external' | t }}</li>
+  </ul>
 </body>
 </html>

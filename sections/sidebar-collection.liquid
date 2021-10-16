@@ -1,0 +1,252 @@
+{% if section.settings.display_sidebar == false %}
+    <style>
+        .page .page-sidebar,
+        .page .sidebar_mobile_wrapper .sidebar_mobile {
+            display: none !important;
+        }
+
+        .page .page-content,
+        .page .page-sidebar + .page-content {
+            display: block;
+            width: 100%;
+            padding-left: 0;
+        }
+    </style>
+{% endif %}
+
+{% if current_tags == blank %}
+    {% assign has_refined = false %}
+{% else %}
+    {% assign has_refined = true %} 
+{% endif %}
+
+{% if section.settings.display_sidebar == true %}
+<div class="sidebar_close">
+    <h4>{{ section.settings.title_sidebar }}</h4>
+    <a href="javascript:void(0)" class="close" aria-label="close">
+        <svg class="icon icon-close"><use xlink:href="#icon-close"></use></svg>
+    </a>
+</div>
+<div class="sidebar_content">
+    {% for block in section.blocks %}
+        {% case block.type %}
+            {% when 'collection_1' %}
+                {% render 'widget_collection', block: block %}
+                <div class="sidebarBlock refined-widgets" {% if has_refined == false %} style="display:none"{% endif %}>
+                    <h5 class="sidebarBlock-heading">
+                        <span>{{ 'collections.filters.refined_by' | t }} </span>
+                        <a href="javascript:void(0)" class="clear text-hover" {% if has_refined == false %}style="display:none"{% endif %}>
+                            {{ 'collections.filters.clear_all' | t }}
+                        </a>
+                    </h5>
+                    <div class="sidebarBlock-content">
+                        <ul class="refined">    
+                            {% for t in current_tags %}
+                            {% assign tag = t | strip %}
+                            {% assign tag_value = tag | handleize %}
+                            <li>
+                                <input type="checkbox" value="{{ tag_value }}" {% if current_tags contains tag %}checked{% endif %}/>
+                                <a href="{{tag_value}}" class="selected-tag">
+                                  {% if settings.enable_multilang and tag contains '|' %}
+                                  <span class="lang1">{{tag | split: '|' | first}}&nbsp;X</span>
+                                  <span class="lang2">{{tag | split: '|' | last}}&nbsp;X</span>
+                                  {% else %}
+                                  <span>{{tag | split: '|' | first}}&nbsp;X</span>
+                                  {% endif %}
+                                  
+                                </a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            {% when 'recent_post' %}
+                {% render 'widget_recent_post', block: block %}
+            {% when 'product_carousel' %}
+                {% render 'widget_product_carousel', block: block %}
+            {% when 'quote' %}
+                {% render 'widget_cms_block', block: block %}
+            {% when 'image' %}
+                {% render 'widget_image_ads', block: block %}
+            {% when 'filter_color' %}
+                {% render 'widget_filter_color', block: block %}
+            {% when 'filter_text' %}
+                {% render 'widget_filter_text', block: block %}
+        {% endcase %}
+    {% endfor %}
+</div>
+{% endif %}
+
+{% schema %}
+{
+    "name": "Collection Sidebar",
+    "class": "page-sidebar",
+    "settings": [
+        {
+            "type": "text",
+            "id": "title_sidebar",
+            "label": "Heading Sidebar",
+            "default": "Shop By"
+        },
+        {
+            "type": "checkbox",
+            "id": "display_sidebar",
+            "label": "Enable Sidebar",
+            "default": true
+        }
+    ],
+    "blocks": [
+        {
+            "type": "collection_1",
+            "name": "Collection Block",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Heading",
+                    "default": "Heading"
+                },
+                {
+                    "type": "radio",
+                    "id": "collection_id",
+                    "label": "Show all \/ Only a few Collection",
+                    "options": [
+                        {
+                            "value": "show_all",
+                            "label": "Show All Collection"
+                        },
+                        {
+                            "value": "little_category",
+                            "label": "Only A Few Collection"
+                        }                    
+                    ]
+                },
+                {
+                    "type": "link_list",
+                    "id": "link_list",
+                    "label": "Choose a Collection",
+                    "default": "main-menu"
+                }
+            ]
+        },
+        {
+            "type": "recent_post",
+            "name": "Recent Post",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Heading",
+                    "default": "Heading"
+                },
+                {
+                    "type": "range",
+                    "id": "number",
+                    "label": "number post",
+                    "min": 1,
+                    "max": 5,
+                    "step": 1,
+                    "default": 3
+                }
+            ]
+        },
+        {
+            "type": "image",
+            "name": "Image Block",
+            "settings": [
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image",
+                    "info": "Recommended Image: 270x420"
+                },
+                {
+                    "type": "url",
+                    "id": "link",
+                    "label": "Link",
+                    "info": "Optional"
+                }
+            ]
+        },
+        {
+            "type": "quote",
+            "name": "Custom Block",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Heading",
+                    "default": "Heading"
+                },
+                {
+                    "type": "richtext",
+                    "id": "text",
+                    "label": "Text",
+                    "default": "<p>Use overlay text to give your customers insight into your brand. Select image and text that relates to your style and story.</p>"
+                }
+            ]
+        },
+        {
+            "type": "product_carousel",
+            "name": "Product Carousel",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Heading",
+                    "default": "Heading"
+                },
+                {
+                    "id": "collection",
+                    "type": "collection",
+                    "label": "Collection"
+                },
+                {
+                    "type": "range",
+                    "id": "number",
+                    "label": "Product Limit",
+                    "min": 1,
+                    "max": 8,
+                    "step": 1,
+                    "default": 3
+                }
+            ]
+        },
+        {
+            "type": "filter_color",
+            "name": "Filter Color",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Heading"
+                },
+                {
+                    "type": "textarea",
+                    "id": "list_tags",
+                    "label": "List Tags",
+                    "info": "Separate by a comma, i.e \"Dincidunteros, Nectellus, Solutmades\"."
+                }
+            ]
+        },
+        {
+            "type": "filter_text",
+            "name": "Filter Text",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Heading",
+                    "default": "Heading"
+                },
+                {
+                    "type": "textarea",
+                    "id": "list_tags",
+                    "label": "List Tags",
+                    "info": "Separate by a comma, i.e \"Dincidunteros, Nectellus, Solutmades\"."
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

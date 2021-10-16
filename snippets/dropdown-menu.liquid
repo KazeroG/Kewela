@@ -1,34 +1,29 @@
 <ul class="site-nav-dropdown">
-  {% for link_child_item in linklists[link_child].links %}
-  <li {% if linklists[link_child_item.handle] != empty %}class="dropdown"{% endif %}>
-    <a {% if linklists[link_child_item.handle] != empty %}class="menu__moblie"{% endif %} href="{{ link_child_item.url }}">
-      {% render 'multilang' with link_child_item.title %}
-      {% if linklists[link_child_item.handle] != empty and settings.show_dropdown_arrow %}<span class="icon-dropdown"></span>{% endif %}
-    </a>
-    {% if linklists[link_child_item.handle] != empty %}
-    <ul class="site-nav-dropdown">
-      {% for n in linklists[link_child_item.handle].links %}
-      <li {% if linklists[n.handle] != empty %}class="dropdown"{% endif %}>
-        <a {% if linklists[n.handle] != empty %}class="menu__moblie"{% endif %} href="{{ n.url }}">
-          {% render 'multilang' with n.title %}
-          {% if linklists[n.handle] != empty and settings.show_dropdown_arrow %}<span class="icon-dropdown"></span>{% endif %}
-        </a>
-        {% if linklists[n.handle] != empty %}
-        <ul class="site-nav-dropdown">
-          {% for i in linklists[n.handle].links %}
-          <li {% if linklists[i.handle] != empty %}class="dropdown"{% endif %}>
-            <a {% if linklists[i.handle] != empty %}class="menu__moblie"{% endif %} href="{{ i.url }}">
-              {% render 'multilang' with i.title %}
-              {% if linklists[i.handle] != empty and settings.show_dropdown_arrow %}<span class="icon-dropdown"></span>{% endif %}
-            </a>
-          </li>
-          {% endfor %}
-        </ul>
-        {% endif%}
-      </li>
-      {% endfor %}
-    </ul>
-    {% endif %}
-  </li>
-  {% endfor %}
+    {% for link_child_item in linklists[link_child].links %}
+    <li class="menu-lv-2{% if linklists[link_child_item.handle] != empty %} dropdown{% endif %}">
+        <p class="nav-action{% if linklists[link_child_item.handle] != empty %} menu__moblie{% else %} menu__moblie_end{% endif %}">
+            <a href="{{ link_child_item.url }}" class="link" aria-label="link"><span>{{ link_child_item.title }}</span></a>
+            {% if linklists[link_child_item.handle] != empty %}
+                <span class="icon-dropdown" data-toggle-menu-mb>&#10095;</span>
+            {% endif %}
+        </p>
+        {% if linklists[link_child_item.handle] != empty %}
+        <div class="sub-menu-mobile">
+            <div class="menu-mb-title">
+                <span class="icon-dropdown">&#10094;</span>
+                {{ link_child_item.title }}
+            </div>
+            <ul class="site-nav-dropdown">
+                {% for n in linklists[link_child_item.handle].links %}                
+                <li class="menu-lv-3">
+                    <a href="{{ n.url }}" class="nav-action menu__moblie_end" aria-label="link">
+                        <span>{{ n.title }}</span>
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </li>
+    {% endfor %}
 </ul>

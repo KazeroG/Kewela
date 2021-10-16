@@ -1,0 +1,152 @@
+{% comment %}
+    This page template is a requirement if you are submitting your theme to the Shopify Theme Store.
+    Be sure to select page.contact as the template from the admin page to have this template take effect.
+{% endcomment %}
+
+<div class="sidebar_mobile_wrapper">
+    <div class="item item-iconSidebar text-left">
+        <div class="sidebar_mobile">
+            <span class='text'>{{ 'collections.sidebar.title' | t }}:</span>
+            {% render 'icon-sidebar' %}
+        </div>
+    </div>
+</div>
+
+<div id="accordion">
+        {% if section.settings.show_question_faqs_type_1 %}
+            {% if section.settings.question_faqs_type_1_title != blank %}
+                <h3 class="question-type-heading">{{ section.settings.question_faqs_type_1_title }}</h3>
+            {% endif %}
+
+            {% for block in section.blocks %}
+                {% if block.settings.faq_type == '1' %}
+                <div class="card">
+                    <div class="card-header" id="heading-{{ block.id }}">
+                        <button class="title collapsed" data-toggle="collapse" data-target="#{{ block.id }}" aria-expanded="true" aria-controls="{{ block.id }}">
+                            {{ block.settings.question_faqs }}
+                        </button>
+                    </div>
+                    <div id="{{ block.id }}" class="collapse" aria-labelledby="heading-{{ block.id }}" data-parent="#accordion">
+                        <div class="card-body">
+                            {{ block.settings.answer_faqs }}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+            
+        {% endif %}
+
+        {% if section.settings.show_question_faqs_type_2 %}
+            {% if section.settings.question_faqs_type_2_title != blank %}
+                <h3 class="question-type-heading question-type-heading2">{{ section.settings.question_faqs_type_2_title }}</h3>
+            {% endif %}
+            
+            {% for block in section.blocks %}
+                {% if block.settings.faq_type == '2' %}
+                <div class="card">
+                    <div class="card-header" id="heading-{{ block.id }}">
+                        <button class="title collapsed" data-toggle="collapse" data-target="#{{ block.id }}" aria-expanded="true" aria-controls="{{ block.id }}">
+                            {{ block.settings.question_faqs }}
+                        </button>
+                    </div>
+                    <div id="{{ block.id }}" class="collapse" aria-labelledby="heading-{{ block.id }}" data-parent="#accordion">
+                        <div class="card-body">
+                            {{ block.settings.answer_faqs }}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+
+        {% endif %}
+
+</div>
+<div class="button-group text-right margin-top-30 button-faqs">
+    <span>{{ 'general.faq.title' | t }}</span>
+    <a class="btn btn--primary btn--big ml-4 mt-3" href="{{ section.settings.email_url }}">{{ section.settings.email_text }}</a>
+</div>
+
+{% schema %}
+{
+    "name": "FAQs Content",
+    "class": "page-content",
+    "settings": [
+        {
+            "type": "header",
+            "content": "FAQS Question"
+        },
+        {
+            "type" : "checkbox",
+            "id" : "show_question_faqs_type_1",
+            "label" : "Show FAQS Question Type 1",
+            "default": true
+        },
+        {
+            "type" : "text",
+            "id" : "question_faqs_type_1_title",
+            "label" : "FAQS Question Type 1 Title",
+            "default": "Pre-Sales Questions"
+        },
+        {
+            "type" : "checkbox",
+            "id" : "show_question_faqs_type_2",
+            "label" : "Show FAQS Question Type 2",
+            "default": true
+        },
+        {
+            "type" : "text",
+            "id" : "question_faqs_type_2_title",
+            "label" : "FAQS Question Type 2 Title",
+            "default": "Theme Questions"
+        },
+        {
+            "type" : "text",
+            "id"   : "email_text",
+            "label": "Button contact text",
+            "default": "Contact Support"
+        },
+        {
+            "type" : "url",
+            "id"   : "email_url",
+            "label": "Email contact"
+        }
+    ],
+    "blocks": [
+        {
+            "type" : "question",
+            "name" : "Question",
+            "settings":[
+                {
+                    "type" : "text",
+                    "id" : "question_faqs",
+                    "label" : "Question",
+                    "default": "Question"
+                },
+                {
+                    "type" : "html",
+                    "id" : "answer_faqs",
+                    "label" : "Answer",
+                    "default": "<p>Use overlay text to give your customers insight into your brand. Select image and text that relates to your style and story.</p>"
+                },
+                {
+                    "type": "select",
+                    "id": "faq_type",
+                    "label": "Faq Type",
+                    "options": [
+                        {
+                            "value": "1",
+                            "label": "1"
+                        },
+                        {
+                            "value": "2",
+                            "label": "2"
+                        }
+                    ],
+                    "default": "1"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

@@ -1,181 +1,216 @@
 <!doctype html>
-<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
-<!--[if IE 7]><html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en"> <![endif]-->
-<!--[if IE 9 ]><html class="ie9 no-js"> <![endif]-->
-<!--[if (gt IE 9)|!(IE)]><!--> <html class="no-js"> <!--<![endif]-->
+<html class="no-js" lang="{{ shop.locale }}">
 <head>
-
-  <!-- Basic page needs ================================================== -->
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-
-  <!-- Title and description ================================================== -->
-  <title>
-    {{ page_title }}{% if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif %}{% if current_page != 1 %} &ndash; Page {{ current_page }}{% endif %}{% unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless %}
-  </title>
-
-  {% if page_description %}
-  <meta name="description" content="{{ page_description | escape | split: '[/countdown]' | last | strip_html }}">
-  {% endif %}
-
-  <!-- Product meta ================================================== -->
-  {% render 'fb-open-graph-tags' %}
-  {% render 'twitter-card' %}
-
-  <!-- Helpers ================================================== -->
-  <link rel="canonical" href="{{ canonical_url }}">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="{{ settings.color_theme }}">
+  <meta name="Description" content="Glassos Shopify theme developed by HaloTheme">
+  <link rel="canonical" href="{{ canonical_url }}">
 
-  <!-- Favicon -->
-  {% if settings.favicon != blank %}
-  <link rel="shortcut icon" href="{{ settings.favicon | img_url: '32x32' }}" type="image/png">
-  {% endif %}
+  {%- if settings.favicon != blank -%}
+    <link rel="shortcut icon" href="{{ settings.favicon | img_url: '32x32' }}" type="image/png">
+  {%- endif -%}
 
-  <!-- fonts -->
-  {% render 'head_fonts' %}
+  {%- capture seo_title -%}
+    {%- if request.page_type == 'search' and search.performed == true -%}
+      {{ 'general.search.heading' | t: count: search.results_count }}: {{ 'general.search.results_with_count' | t: terms: search.terms, count: search.results_count }}
+    {%- else -%}
+      {{ page_title }}
+    {%- endif -%}
+    {%- if current_tags -%}
+      {%- assign meta_tags = current_tags | join: ', ' -%} &ndash; {{ 'general.meta.tags' | t: tags: meta_tags -}}
+    {%- endif -%}
+    {%- if current_page != 1 -%}
+      &ndash; {{ 'general.meta.page' | t: page: current_page }}
+    {%- endif -%}
+    {%- assign escaped_page_title = page_title | escape -%}
+    {%- unless escaped_page_title contains shop.name -%}
+      &ndash; {{ shop.name }}
+    {%- endunless -%}
+  {%- endcapture -%}
+  <title>{{ seo_title | strip }}</title>
 
-  <!-- Styles -->
-  {% render 'head_styles' %}
+  {%- if page_description -%}
+    <meta name="description" content="{{ page_description | escape }}">
+  {%- endif -%}
 
-  <!-- Scripts -->
-  {% render 'head_scripts' %}
+  {% render 'fb-open-graph-tags' %}
+  {% render 'social-meta-tags' %}
 
-  <!-- Header hook for plugins ================================================== -->
-  {{ content_for_header }}
+  {% render 'google_fonts' %}
 
-  <!--[if lt IE 9]>
-{{ '//html5shiv.googlecode.com/svn/trunk/html5.js' | script_tag }}
-<![endif]-->
+  <link href="{{ 'vendor.min.css' | asset_url }}" rel="stylesheet">
+  <link href="{{ 'theme.scss.css' | asset_url }}" rel="stylesheet">
 
-  {% comment %}
-  If you store has customers disabled, you can remove the following JS file
-  {% endcomment %}
-  {% if template contains 'customers' %}
-  {{ 'shopify_common.js' | shopify_asset_url | script_tag }}
-  {{ 'customer_area.js'  | shopify_asset_url | script_tag }}
-  {% endif %}
-
-</head>
-{% render 'search-autocomplete' %}
-{% comment %}
-Add the page template as a class for easy page or template specific styling.
-{% endcomment %}
-<body id="{{ page_title | handle }}" class="main-content1 {% if customer %}customer-logged-in {% endif %}template-{{ template | replace: '.', ' ' | truncatewords: 1, '' | handle }}" >
-  {% render 'scheme' %}
-  <nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s1">
-    <div class="gf-menu-device-wrapper">
-      <div class="gf-menu-device-container"></div>
-
-    </div>   
-
-  </nav>
-  <div class="wrapper-container">	
-    {% section 'header' %}
-    {% if template contains 'index' %}
-    {% endif%}
-    <div class="quick-view"></div>
-
-    <main class="main-content {% if template contains 'index' %}{% else %}container-fluid{% endif %}" role="main">
-      <div class="row">
-        <div class=" pull-left">
-          {% section 'navigation' %}
-          {%if template contains 'collection' or template contains 'product' %}
-          {% unless template contains 'list-collection' %}
-          {% section 'sidebar' %}
-          {% endunless %}
-          {% endif %}
-          {%if template contains 'blog'  or template contains 'article'%}
-          {% section 'sidebar-blog' %}
-          {% endif %}
-        </div>
-        <div class="{% unless template contains 'index' %} main-product pull-container {% endunless %}">
-          {% if template contains 'index' %}
-          <div class="navigation_scroll">
-            <ul>
-            </ul>
-          </div>
-          {% endif %}
-          {{ content_for_layout }}
-        </div>
-        {% unless template contains 'index' %}
-        <div class="pull-right">
-          {% if template contains 'product' or template == 'collection' %}
-          {% if template contains 'product' %}
-          {% section 'recently-viewed-products' %}	
-          {% endif %}
-          {%if template contains 'collection' %}
-          {% unless template contains 'list-collection' %}
-          {% section 'recently-viewed-products' %}
-          {% endunless %}
-          {% endif %}
-          {% endif %}
-        </div>
-        {% endunless %}
-      </div>
-    </main>
-    {% section 'footer' %}
-    {% if settings.enable_quick_view %}
-    {% render 'quick-view-template' %}
-    {% endif %}
-    {% section 'product-notification' %}
-    {% section 'cookie_popup' %}
-    {% render 'footer_scripts' %}
-    {% if template contains 'index' %}
-    {% render 'newsletter' %}
-    {% endif %}
-    {% if settings.enable_backtotop %}
-    <div id="back-top" style="display: none;"><a class="nav_up" href="#top">Back to top</a></div>
-    {% endif %}
-  </div>
-  <div 	id="mm-blocker" class="mm-slideout"></div>
-  {% if settings.display_recently_viewed_products %}
-  <!-- Begin Recently Viewed Products -->
-  {{ '//ajax.aspnetcdn.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js' | script_tag }}
-  {{ 'jquery.products.min.js' | asset_url | script_tag }}
-  {% if template contains 'product' %}
   <script>
-    Shopify.Products.recordRecentlyViewed();
+      var theme = {
+          strings: {
+              addToCart: {{ 'products.product.add_to_cart' | t | json }},
+              select_options: {{ 'products.product.select_options' | t | json }},
+              addToCartAll: {{ 'products.product.add_all_to_cart' | t | json }},
+              addToCart1: {{ 'products.product.add_to_cart1' | t | json }},
+              select_options1: {{ 'products.product.select_options1' | t | json }},
+              soldOut: {{ 'products.product.sold_out' | t | json }},
+              unavailable: {{ 'products.product.unavailable' | t | json }},
+              regularPrice: {{ 'products.product.regular_price' | t | json }},
+              removeLabel: {{ 'cart.label.remove' | t: product: '[product]' | json }},
+              sale: {{ 'products.product.on_sale' | t | json }},
+              new: {{ 'products.product.new' | t | json }},
+              bundle: {{ 'products.product.bundle' | t | json }},
+              showMore: {{ 'general.filters.show_more' | t | json }},
+              showMore1: {{ 'general.filters.show_more1' | t | json }},
+              noMore: {{ 'general.filters.no_more' | t | json }},
+              showLess: {{ 'general.filters.show_less' | t | json }},
+              addressError: {{ 'sections.map.address_error' | t | json }},
+              addressNoResults: {{ 'sections.map.address_no_results' | t | json }},
+              addressQueryLimit: {{ 'sections.map.address_query_limit_html' | t | json }},
+              authError: {{ 'sections.map.auth_error_html' | t | json }},
+              newWindow: {{ 'general.accessibility.link_messages.new_window' | t | json }},
+              external: {{ 'general.accessibility.link_messages.external' | t | json }},
+              newWindowExternal: {{ 'general.accessibility.link_messages.new_window_and_external' | t | json }},
+              quantityMinimumMessage: {{ 'products.product.quantity_minimum_message' | t | json }},
+              unitPrice: {{ 'products.product.unit_price_label' | t | json }},
+              unitPriceSeparator: {{ 'general.accessibility.unit_price_separator' | t | json }},
+              remove: {{ 'cart.general.remove' | t | json }},
+              oneCartCount: {{ 'cart.popup.cart_count' | t: count: 1 | json }},
+              otherCartCount: {{ 'cart.popup.cart_count' | t: count: '[count]' | json }},
+              quantityLabel: {{ 'cart.popup.quantity_label' | t: quantity_count: '[count]' | json }},
+              in_stock: {{ 'products.product.in_stock' | t | json }},
+              out_of_stock: {{ 'products.product.out_of_stock' | t | json }},
+              previous: {{ 'general.pagination.previous' | t | json }},
+              next: {{ 'general.pagination.next' | t | json }},
+              removedItemMessage: {{ 'cart.general.removed_item_html' | t: quantity: '[quantity]', link: '[link]' | json }},
+              cartErrorMaximum: {{ 'cart.general.cart_error_maximum' | t: quantity: '[quantity]' | json }},
+              freeShipping: {{ 'cart.shipping.free_shipping' | t | json }},
+              shippingMessage: {{ 'cart.shipping.shipping_message' | t: price: '[price]' | json }},
+              {% if settings.shipping_price != blank %}
+                priceFreeShipping: {{ settings.shipping_price }},
+              {% else %}
+                priceFreeShipping: "0",
+              {% endif %}
+              added_to_cart: {{ 'cart.popup.added_to_cart' | t | json }},
+          },
+
+          moneyFormat: {{ shop.money_format | json }},
+          moneyFormatWithCurrency: {{ shop.money_with_currency_format | json }}
+      }
+
+      window.shop_currency = "{{ shop.currency }}";
+      window.multi_lang = {{ settings.enable_multilang }};
+      window.show_multiple_currencies = {{ settings.enable_multiple_currencies }};
+      window.show_auto_currency = {{ settings.enable_auto_currency }};
+      window.enable_sidebar_multiple_choice = true;
+      window.money_format = {{ shop.money_format | json }};
+      window.label_sale = "{{ settings.type_label_sale }}";
+      window.color_swatch_recently = "{{ settings.option_color_swatch | downcase }}";
+      window.size_swatch_recently = "{{ settings.option_size_swatch | downcase }}";
+      window.router = "{{ routes.cart_url | split: '/cart' | first}}";
+      window.option_ptoduct1 = "size";
+      window.option_ptoduct2 = "color";
+      window.option_ptoduct3 = "option 3";
+      document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
   </script>
+
+
+  {%- if request.page_type contains 'customers/' -%}
+    <script src="{{ 'shopify_common.js' | shopify_asset_url }}" defer="defer"></script>
+  {%- endif -%}
+
+  {{ content_for_header }}
+</head>
+
+<body class="template-{{ request.page_type | handle }}">
+
+  {% render 'scheme' %}
+
+  <svg data-src="{{ 'icon-glassos.svg' | asset_url }}" class="icons-svg-sprite"></svg>
+
+  <a class="in-page-link visually-hidden skip-link" href="#MainContent">{{ 'general.accessibility.skip_to_content' | t }}</a>
+
+  {% if settings.header_layout == 'header_1' %}
+    {% section 'header' %}
+  {% elsif settings.header_layout == 'header_2' %}
+    {% section 'header_2' %}
   {% endif %}
-  <!-- End Recently Viewed Products -->
-  {% endif %}
-  {% render 'sweettooth-widgets' %}
-  <style>
-    {% if template contains 'index' %}
-    @media (min-width: 1025px) {
-      .navigation{
-        width:224px;
-        padding:5px 0px;    
-        position: absolute;
-        top: 136px;
-        z-index: 111;
-        left:40px;
-      }
-      .navigation .container-fluid{
-        padding:0px;
-      }
-      .header-bottom { 
-        -webkit-animation-duration: 0.8s; 
-        -moz-animation-duration: 0.8s;
-        -o-animation-duration: 0.8s;
-        animation-duration: 0.8s; 
-        position: absolute;
-        z-index: 1;
-        width: 100%;
-      }
-    }
-    {% else %}
-    .nav-bar .container-fluid{
-      padding:0px;
-    }
+ 
+
+  <div class="page-container" id="PageContainer">
+
+    <main class="main-content js-focus-hidden" id="MainContent" role="main" tabindex="-1">
+      {{ content_for_layout }}
+    </main>
+
+    {% if settings.footer_layout == 'footer_1' %}
+      {% if request.page_type != 'index' and request.page_type != 'product' %}
+        {% section 'custom-block' %}
+      {% endif %}
+      {% section 'footer' %}
+    {% elsif settings.footer_layout == 'footer_2' %}
+      {% section 'footer_2' %}
     {% endif %}
-  </style>
-  <div class="close-mu">
-    <svg viewBox="0 90 98.5 96.5" id="icon-close" width="0px" height="0px">
-      <polygon points="93.372,98.579 88.293,93.5 48.936,132.857 9.579,93.5 4.5,98.579 43.857,137.936 4.5,177.293 9.579,182.372 
-                       48.936,143.014 88.293,182.372 93.372,177.293 54.014,137.936 "></polygon>
-    </svg>
+
   </div>
+
+  {% if settings.enable_ask_an_expert %}
+  <div class="ask-an-expert" style="display: none;">
+    <a class="text" data-toggle="modal" data-target="#ask_an_expert" href="javascript:void(0)" aria-label="link" aria-describedby="a11y-external-message">
+      {% if settings.image-ask != blank %}
+          <img class="lazyload" src="{{ 'loading.svg' | asset_url }}" data-src="{{ settings.image-ask | img_url: 'master' }}" alt="" data-image>
+          <svg class="icon"><use xlink:href="#icon-ask" /></svg>
+      {% else %}
+          <span class="recommended_size">170x115</span>
+          {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+      {% endif %}
+    </a>
+  </div>
+  {% endif %}
+
+  <div class="footbar-fixed">
+      <div class="footbar-fixed-left">
+          {% if settings.show_someone-purchased == 'left' %}
+              {% render 'someone-purchased' %}
+          {% endif %}
+          {% if settings.show_gdpr == 'left' %}
+              {% render 'GDPR-modal' %}
+          {% endif %}
+      </div>
+      <div class="clearfix"></div>
+      <div class="footbar-fixed-right">
+          {% if settings.show_someone-purchased == 'right' %}
+              {% render 'someone-purchased' %}
+          {% endif %}
+          {% if settings.show_gdpr == 'right' %}
+              {% render 'GDPR-modal' %}
+          {% endif %}
+      </div>
+  </div>
+
+  <div class="halo_mobileNavigation" id="login-mobile">
+      <div class="halo_mobileNavigation_wrapper">
+      </div>
+  </div>
+
+  <div class="halo_mobileNavigation" id="cart-mobile">
+      <div class="close_header">
+          <h2 class="title">{{ 'cart.general.title' | t }} </h2>
+          <a href="javascript:void(0)" class="close" data-close-cart-preview >&#215;</a>
+      </div>
+      <div class="halo_mobileNavigation_wrapper"></div>
+  </div>
+
+  <script src="{{ 'vendor.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'lazysizes.js' | asset_url }}" async="async"></script>
+  <script src="{{ 'api.jquery.js' | shopify_asset_url }}" async="async"></script>
+  <script src="{{ 'theme.min.js' | asset_url }}" defer="defer"></script>
+  
+  {% if settings.enable_language %}
+    {% render 'language-converter' %}
+  {% endif %}
+
+  {% include 'new-currency' %}
+    
+  {% render 'popup_modal' %}
+ 
 </body>
 </html>

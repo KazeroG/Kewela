@@ -1,0 +1,22 @@
+<script src="{{ 'jquery.min.js' | asset_url }}"></script>
+<script>
+    (function($) {
+        $(document).on('page:load page:change', function() {
+            if (localStorage.getItem('storedDiscount')) {
+                var discountStored = localStorage.getItem('storedDiscount');
+                $('input[name="discount"]').val(localStorage.getItem('storedDiscount'));
+            }
+            $('form[action="/cart"]').on('submit', function() {
+                var $discountCode = $('input[name="discount"]').val();
+                localStorage.setItem('storedDiscount', $discountCode);
+            });
+        });
+    })(jQuery);
+</script>
+<div class="discount-code-field">
+    <div class="box-title text-left">
+        <h3 class="title">{{ 'cart.general.coupon_code' | t }}</h3>
+    </div>
+    <label class="cart-note__label" for="discount">{{ 'cart.general.label_coupon_code' | t }}</label>
+    <input autocomplete="off" type="text" name="discount"/>
+</div>

@@ -1,282 +1,210 @@
-{% if section.settings.show_instagram %}
-<section class="home-instagram wow fadeIn" id="home-instagram-{{ section.id }}" data-wow-delay="{{ settings.time_lazy_load }}ms">
-  <div class="container">
-    <div class="widget-title">   
-      {% if section.settings.instagram_title != blank %}
-     
-       <h3>
-      {% render 'multilang' with section.settings.instagram_title %}
-      </h3>
-      {% endif %}
-      
-      {% if section.settings.instagram_des != blank %}
-        {% if settings.enable_multilang %}
-        <p class="instagram-des lang1"><span>&nbsp;</span>{{ section.settings.instagram_des | split: '|' | first }}</p>
-        <p class="instagram-des lang2"><span>&nbsp;</span>{{ section.settings.instagram_des | split: '|' | last }}</p>
-        {% else %}
-        <p class="instagram-des"><span>&nbsp;</span>{{ section.settings.instagram_des | split: '|' | first }}</p>
-        {% endif %}
-      {% endif %}
-    </div>
+{% include 'setting-spacing' %}
 
-    {% if section.settings.type_instagram == 'app' %}
-    <div class="caption-instagram">
-      {{ section.settings.embed_code }}
-    </div>
-    {% else %}
+{% if section.settings.custom_color %}
+<style>
+    [data-section-id='{{ section.id }}'] .section-header {
+        color: {{ section.settings.color_heading_section }}
+    }
 
-    <div id="instafeed" class="row" data-instagram-feed>
-      {% for block in section.blocks %}
-      {% if block.settings.enable and block.settings.image != blank %}
-      <div class="item col-12">
-        <a {% if section.settings.type_instagram_by_gallery == 'link' %}href="{{ block.settings.link }}"{% else %} class="fancybox" rel="group" href="{{ block.settings.image | img_url: 'master' }}"{% endif %}>
-          <img src="{{ block.settings.image | img_url: '240x' }}" />
-        </a>
-      </div>
-      {% endif %}
-      {% endfor %}
-    </div>  
-    {% endif %}
+    [data-section-id='{{ section.id }}'] .section-header a {
+        color: {{ section.settings.color_text_all }}
+    }
 
+    [data-section-id='{{ section.id }}'] .section-header a:hover {
+        color: {{ section.settings.color_text_all_hover }}
+    }
 
-    {% if section.settings.display_instagram_button and section.settings.instagram_button_text != blank %}
-      {% if settings.enable_multilang %}
-      <a href="{{ section.settings.instagram_button_link }}" title="{{ section.settings.instagram_button_text | split: '|' | first }}" class="btn lang1">
-        {{ section.settings.instagram_button_text | split: '|' | first }}
-      </a>    
-      <a href="{{ section.settings.instagram_button_link }}" title="{{ section.settings.instagram_button_text | split: '|' | last }}" class="btn lang2">
-        {{ section.settings.instagram_button_text | split: '|' | last }}
-      </a>
-      {% else %}
-      <a href="{{ section.settings.instagram_button_link }}" title="{{ section.settings.instagram_button_text | split: '|' | first }}" class="btn">
-        {{ section.settings.instagram_button_text | split: '|' | first }}
-      </a> 
-      {% endif %}
-    {% endif %}
-  </div>
-</section>
-<script>
+    [data-section-id='{{ section.id }}'] .section-header a:before {
+        background-color: {{ section.settings.color_text_all }}
+    }
 
-  $(document).ready(function(){
-    var instagramBlock = $('#home-instagram-{{ section.id }} [data-instagram-feed]');
-    instagramBlock.each(function() {
-      var self = $(this);
-      self.slick({
-          slidesToShow: {{ section.settings.images_per_row }},
-          slidesToScroll: 1,
-          nextArrow: '<div class="slick-next"><i class="fa fa-angle-right" aria-hidden="true"></i></div>',
-          prevArrow: '<div class="slick-prev"><i class="fa fa-angle-left" aria-hidden="true"></i></div>',
-          responsive: [
-            {
-              breakpoint: 1200,
-              settings: {
-                slidesToShow: 4,
-                slidesToScroll: 1 
-              }
-            },
-            {
-              breakpoint: 992,
-              settings: {
-                slidesToShow: 3,
-                slidesToScroll: 1,
-                arrows:false,
-              }
-            },
-            {
-              breakpoint: 768,
-              settings: {
-                slidesToShow: 2,
-                slidesToScroll: 1,
-               arrows:false,
-              }
-            },
-            {
-              breakpoint: 370,
-              settings: {
-                slidesToShow: 1,
-                slidesToScroll: 1,
-                arrows:false,
-              }
-            }
-          ]
-        });
-    });
-    $('.fancybox').fancybox();
-  });
+    [data-section-id='{{ section.id }}'] .section-header a:hover:before {
+        background-color: {{ section.settings.color_text_all_hover }}
+    }
 
-  </script>
+    [data-section-id='{{ section.id }}'] .instagram-load-more svg {
+        color: {{ section.settings.color_icon }}
+    }
+</style>
 {% endif %}
+
+<section class="halo-section home-instagram {{ padding_top }} {{ padding_bottom }}" id="new-instagram-{{section.id}}" data-section-id="{{ section.id }}" data-section-type="instagram">
+    {% if section.settings.title != blank or section.settings.text_all != blank %}
+        <div class="section-header">
+            <h2>{{ section.settings.title }}</h2>
+            <a href="{{ section.settings.text_all_link }}" target="_blank">{{ section.settings.text_all }}</a>
+        </div>
+    {% endif %}
+    <div class="instagram">
+        {% if section.settings.instagram_option == 'app' %}
+            {{ section.settings.accessToken }}
+        {% else %}
+            {% for block in section.blocks %}
+                {% if forloop.first %}
+                    {% assign img_url = block.settings.instagram_image | img_url: '760x' %}
+                    {% assign img_url_2 = block.settings.instagram_image | img_url: '180x' %}
+                {% else %}
+                    {% assign img_url = block.settings.instagram_image | img_url: '380x' %}
+                    {% assign img_url_2 = block.settings.instagram_image | img_url: '180x' %}
+                {% endif %}
+
+                {% assign img_url_full = block.settings.instagram_image | img_url: 'master' %}
+                <div class="item__ins {% if section.settings.load_more %} hide{% endif %}" {% if block.settings.instagram_image != blank %}style="background-color: #000;"{% endif %}>
+                    <a class="item__ins--link image--hover {% if block.settings.instagram_image != blank %} instagram__item--bg{% endif %}" href="{{ img_url_full }}" aria-label="link" data-fancybox="images-instagram">
+                        {% if block.settings.instagram_image != blank %}
+                            <img class="lazyload"
+                                data-src="{{ img_url }}"
+                                data-srcset="{{ img_url_2 }} 180w, {{ img_url }} 1025w"
+                                data-sizes="auto" alt="" data-image>
+                        {% else %}
+                            {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                            {% if forloop.first %}
+                                <span class="recommended_size">760x760</span>
+                            {% else %}
+                                <span class="recommended_size">380x380</span>
+                            {% endif %}
+                        {% endif %}
+                    </a>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    {% if section.settings.load_more %}
+        <div class="instagram-load-more text-center">
+            <a href="javascript:void(0)" aria-label="link">
+                <svg class="icon"><use xlink:href="#icon-plus1" /></svg>
+            </a>
+        </div>
+    {% endif %}
+
+
+</section>
+
 {% schema %}
   {
     "name": "Instagram",
-	"class": "index-section match-nav change-color",
+    "class": "instagram-sections",
     "settings": [
-	
-      {
-        "type": "checkbox",
-        "id": "show_instagram",
-        "label": "Enable",
-        "default": true
-      },
-      {
-        "type": "color",
-        "id": "instagram_bg_color",
-        "label": "Background color",
-        "default": "#fff8ee"
-      },
-      {
-        "type": "text",
-        "id": "instagram_title",
-        "label": "Title",
-        "default": "#Ella On Instagram"
-      },
-      {
-        "type": "text",
-        "id": "instagram_des",
-        "label": "Instagram Description",
-        "default": "Phasellus lorem malesuada ligula pulvinar commodo maecenas suscipit auctom."
-      },
-      {
-        "type": "checkbox",
-        "id": "display_instagram_button",
-        "label": "Display Button Instagram?",
-        "default": true
-      },
-      {
-        "type": "text",
-        "id": "instagram_button_text",
-        "label": "Button Instagram Text",
-        "default": "View Gallery"
-      },
-      {
-        "type": "text",
-        "id": "instagram_button_link",
-        "label": "Button Instagram Link"
-      },
-      {
-          "type" : "radio",
-          "id" : "type_instagram",
-          "label" : "Show instagram by:",       
-          "options": [
-              {
-                  "value": "app",
-                  "label": "Embed Code App"
-              },
-              {
-                  "value": "default",
-                  "label": "Block image"
-              }
-          ],
-          "default": "default",
-          "info": "================="
-      },            
-      {
-        "type" : "header",
-        "content" : "Settings For embed Code app"
-      },
-      {
-        "type" : "textarea",
-        "id" : "embed_code",
-        "label" : "Embed javascript Code"
-      },            
-      {
-        "type" : "header",
-        "content" : "Settings For Image"
-      },
-      {
-          "type" : "radio",
-          "id" : "type_instagram_by_gallery",
-          "label" : "Use gallery popup or Use link for image",       
-          "options": [
-              {
-                  "value": "link",
-                  "label": "Use link for image"
-              },
-              {
-                  "value": "popup_image",
-                  "label": "Use gallery popup"
-              }
-          ],
-          "default": "popup_image",
-          "info": "================="
-      },
-      {
-        "type": "text",
-        "id": "limit",
-        "label": "Limit the number of images to show",
-        "default": "10"
-      },
-      {
-        "type": "select",
-        "id": "images_per_row",
-        "label": "Images per row",
-        "options": [
-          {
-            "value": "3",
-            "label": "3"
-          },
-          {
-            "value": "4",
-            "label": "4"
-          },
-          {
-            "value": "5",
-            "label": "5"
-          }
-        ]
-      },
-      {
-        "type": "select",
-        "id": "resolution_images",
-        "label": "Resolution of images",
-        "options": [
-          {
-            "value": "thumbnail",
-            "label": "Thumbnail"
-          },
-          {
-            "value": "low_resolution",
-            "label": "Low Resolution"
-          },
-          {
-            "value": "standard_resolution",
-            "label": "Standard Resolution"
-          }
-        ]
-      }
-	],
-  "blocks": [
-    {
-      "type": "instagram",
-      "name": "Instagram",
-      "settings": [
         {
-          "type": "checkbox",
-          "id": "enable",
-          "label" : "Enable?",
-          "default" : true
+            "type": "header",
+            "content": "Section Layout"
         },
         {
-          "type": "image_picker",
-          "id": "image",
-          "label" : "Image"
+            "type": "range",
+            "id": "padding-top",
+            "label": "Spacing Top",
+            "default": 3,
+            "min": 0,
+            "max": 10,
+            "step": 1
         },
         {
-          "type": "url",
-          "id": "link",
-          "label" : "Link"
+            "type": "range",
+            "id": "padding-bottom",
+            "label": "Spacing bottom",
+            "default": 3,
+            "min": 0,
+            "max": 10,
+            "step": 1
+        },
+        {
+            "type": "header",
+            "content": "Heading Section"
+        },
+        {
+            "type": "textarea",
+            "id": "title",
+            "label": "Title",
+            "default": "#Glasso on Instagram"
+        },
+        {
+            "type": "textarea",
+            "id": "text_all",
+            "label": "View Gallery",
+            "default": "View Gallery"
+        },
+        {
+            "type": "url",
+            "id": "text_all_link",
+            "label": "Link View Gallery"
+        },
+        {
+          "type" : "header",
+          "content" : "Instagram Option"
+        },
+        {
+            "type": "select",
+            "id": "instagram_option",
+            "label": "Instagram Option",
+            "options": [
+                {
+                    "value": "app",
+                    "label": "Use app Snapppt"
+                },
+                {
+                    "value": "block",
+                    "label": "Use Block Gallery Image"
+                }
+            ],
+            "default": "block"
+        },
+        {
+            "type": "text",
+            "id": "accessToken",
+            "label": "Script Instagram",
+            "info": "Insert Script Instagram from App Snapppt"
+        },
+        {
+            "type": "checkbox",
+            "id": "load_more",
+            "label": "Enabled Button Show More",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "custom_color",
+            "label": "Turn on custom color",
+            "default": false
+        },
+        {
+            "type": "color",
+            "id": "color_heading_section",
+            "label": "Heading Section Color"
+        },
+        {
+            "type": "color",
+            "id": "color_text_all",
+            "label": "View Gallery Color"
+        },
+        {
+            "type": "color",
+            "id": "color_text_all_hover",
+            "label": "View Gallery Color Hover"
+        },
+        {
+            "type": "color",
+            "id": "color_icon",
+            "label": "Icon Color"
         }
-      ]
-    }
-  ],
-	"presets": [
-          {
+    ],
+    "blocks": [
+        {
+            "type": "instagram_block",
+            "name": "Instagram Image",
+            "settings": [
+                {
+                    "type": "image_picker",
+                    "id": "instagram_image",
+                    "label": "Image"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
             "name": "Instagram",
             "category": "Instagram"
-          }
-        ]
+        }
+    ]
   }
 {% endschema %}
-<style>
-.home-instagram { background-color: {{ section.settings.instagram_bg_color }}; }
-</style>

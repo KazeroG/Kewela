@@ -1,234 +1,206 @@
-<div class="sidebar-toggle">
-<a class='option-sidebar left' id='displayTextLeft' href='javascript:void(0)'>
-  <span class="sidebar_more" {% if settings.enable_multilang %}data-translate="collections.sidebar.sidebar_more"{% endif %}>
-  {{ 'collections.sidebar.sidebar_more_blog' | t }}
-  </span>
-  <span class="show_hide">Show<i class="fa fa-angle-down" aria-hidden="true"></i></span>
-</a>
+{% if section.settings.display_sidebar == false %}
+    <style>
+        .page .page-sidebar,
+        .page .sidebar_mobile_wrapper .sidebar_mobile {
+            display: none !important;
+        }
+
+        .page .page-content,
+        .page .page-sidebar + .page-content {
+            display: block;
+            width: 100%;
+            padding-left: 0;
+        }
+    </style>
+{% endif %}
+
+{% if section.settings.position_sidebar == 'right' %}
+    <style>
+        @media only screen and (min-width: 1025px) {
+            .page .page-sidebar {
+                float: right;
+                padding-left: 15px;
+                padding-right: 0;
+            }
+
+            .page .page-sidebar + .page-content {
+                padding-left: 0;
+                padding-right: 15px;
+            }
+        }
+    </style>
+{% endif %}
+
+{% if section.settings.display_sidebar == true %}
+<div class="sidebar_close">
+    <a href="javascript:void(0)" class="close">
+        <span class="icon">&#215;</span>
+        <span class="text">{{ 'general.accessibility.close_modal' | t }}</span>
+    </a>
 </div>
-<div class="sidebar col-xs-12">
-{% if section.settings.sidebar_recent_art %}
-  {% render 'widget_article' %}
-{% endif %}
-
-{% if section.settings.sidebar_tag %}
-  <div class="widget widget-tags sidebarblock">
-    {% if blog.all_tags.size > 0 %}
-    <div class="widget-title">
-      <h3>
-        <span {% if settings.enable_multilang %}data-translate="blogs.article.tags"{% endif %}>
-          Tag cloud
-        </span>
-      </h3>
-    </div>
-    <div class="widget-content">
-      <ul>
-      {% for tag in blog.all_tags %}
-        {% if current_tags contains tag %}
-          <li class="active">{{ tag | link_to_remove_tag: tag }}</li>
-        {% else %}
-          <li>{{ tag | link_to_tag: tag }}</li>
-        {% endif %}
-      {% endfor %}
-      </ul>
-    </div>
-    {% endif %}
-  </div>
-{% endif %}
-
-{% for block in section.blocks %}
-  {% case block.type %}
-  {% when 'product' %}
-      <div class="widget widget-featured-product sidebarblock" id="block-{{ block.id }}">
-        {% if block.settings.title != blank %}
-        <div class="widget-title">   
-          <h3>{% render 'multilang' with block.settings.title %}</h3>
-        </div>
-        {% endif %}
-        {% if block.settings.collection == blank %}
-          <div class="grid-view-item no-product" style ="margin: 0 0 30px;">
-             <a href="#" class="center">
-               <div class="grid-view-item__image">
-                 {% capture current %}{% cycle 1 %}{% endcapture %}
-                 {{ 'product-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
-               </div>
-               <div class="product-title"><span>Your product's name</span></div>
-               </a>
-             <div class="center">
-              <span> $200.00 </span>
-             </div>
-           </div>
-        {% else %}
-          <div class="widget-product widget-content">
-            <div class="products-grid owl-carousel"
-                 data-owl='{
-                           "pagination": false,
-                           "navigation": true,
-                           "singleItem": true
-                           }'>
-            {% for product in collections[block.settings.collection].products limit:block.settings.limit %}
-              <div class="{% if settings.product_image_border %}grid-item-border {% endif %}grid-item">
-                {% render 'product-grid-item-sidebar', grid_image_width: '150x' %}
-              </div>
-            {% endfor %}
-            </div> 
-          </div>
-        {% endif %}
-      </div>
-     
-      <script>
-      jQuery(document).ready(function() {
-        jQuery("#block-{{ block.id }} .products-grid").owlCarousel({
-          pagination: false,
-          navigation: true,
-          singleItem: true
-        });
-      });
-      </script>
-    {% when 'image' %}
-      {% if block.settings.image != blank %}
-        {%- assign img_url = block.settings.image | img_url: '1024x1024' -%}
-      {% else %}
-        {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
-      {% endif %}
-
-      <div class="widget sidebar-banner">
-      {% if block.settings.link != blank %}
-        <a href="{{ block.settings.link }}">
-      {% endif %}
-        <img src="{{ img_url }}" alt="">
-      {% if block.settings.link != blank %}
-        </a>
-      {% endif %}
-      </div>
-    {% when 'quote' %}        
-      <div class="widget sidebar-cms-custom">
-        {% if block.settings.title != blank %}
-        <div class="widget-title">
-            <h3>{% render 'multilang' with block.settings.title %}</h3>
-        </div>
-        {% endif %}
-        <div class="widget-content">
-          {% if block.settings.quote != blank %}
-          	 {% if settings.enable_multilang %}
-                <div class="rte-setting lang1">{{ block.settings.quote | split: '|' | first }}</div>
-                <div class="rte-setting lang2">{{ block.settings.quote | split: '|' | last }}</div>
-              {% else %}
-              <div class="rte-setting">{{ block.settings.quote | split: '|' | first }}</div>
-              {% endif %}
-          {% endif %}
-        </div>
-      </div>        
-  {% endcase %}
-{% endfor %}
+<div class="sidebar_content">
+    {% for block in section.blocks %}
+        {% case block.type %}
+            {% when 'filter' %}
+                {% render 'widget_filter_tags', block: block %}
+            {% when 'collection_1' %}
+                {% render 'widget_collection', block: block %}
+            {% when 'recent_post' %}
+                {% render 'widget_recent_post', block: block %}
+            {% when 'quote' %}
+                {% render 'widget_cms_block', block: block %}
+            {% when 'image' %}
+                {% render 'widget_image_ads', block: block %}
+            {% when 'search' %}
+                {% render 'widget_search_blog', block: block %}
+        {% endcase %}
+    {% endfor %}
 </div>
-<style>
-{% if section.settings.display_sidebar_blog_page %}
-  @media (min-width: 1025px) {
-    .template-article .sidebar-toggle,
-    .template-blog .sidebar-toggle{display:none}
-    .template-article .sidebar,
-  	.template-blog .sidebar { display: block!important; }
-  }
-  @media (max-width: 1024px) {
-    .template-article .sidebar,
-    .template-blog .sidebar  { display: none; }	
-    .template-article #displayTextLeft,
-    .template-blog #displayTextLeft { display: block;    margin: 0; }
-    .template-blog .main-product,
-    .template-article .main-product {
-    margin-top:30px;
-    }
-  }
-{% else %}
-   .template-article .sidebar,
-  .template-blog .sidebar  { display: none!important; }
-   .template-article .col-main,
-  .template-blog .col-main { width: 100%!important; }
-  @media (max-width: 1024px) {
-     .template-article #displayTextLeft,
-    .template-blog #displayTextLeft { display: none; }
-  }
 {% endif %}
-   </style>
+
 {% schema %}
-  {
-    "name": "Sidebar",
+{
+    "name": "Blog Sidebar",
+    "class": "page-sidebar",
     "settings": [
-	  {
-        "type": "checkbox",
-        "id": "display_sidebar_blog_page",
-        "label": "Enable Sidebar",
-        "default": true
-      },
-      {
-        "type": "checkbox",
-        "id": "sidebar_recent_art",
-        "label": "Show Block Recent Article",
-        "default": true
-      }
-     
+        {
+            "type": "checkbox",
+            "id": "display_sidebar",
+            "label": "Enable Sidebar",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "position_sidebar",
+            "label": "Position Sidebar on:",
+            "options": [
+                {
+                    "value": "left",
+                    "label": "Left"
+                },
+                {
+                    "value": "right",
+                    "label": "Right"
+                }
+            ],
+            "default": "left"
+        }
     ],
-	"blocks": [
-	{
-        "type": "product",
-        "name": "Product Slider",
-        "settings": [
-		 
-          {
-            "type": "text",
-            "id": "title",
-            "label": "Title"
-          },
-          {
-            "id": "collection",
-            "type": "collection",
-            "label": "Collection"
-          },
-          {
-            "type": "text",
-            "id": "limit",
-            "label": "Number of products to show",
-            "default": "8"
-          }
-        ]
-      },
-      {
-        "type": "image",
-        "name": "Block Image",
-        "settings": [
-          {
-            "type": "image_picker",
-            "id": "image",
-            "label": "Image"
-          },
-          {
-            "type": "url",
-            "id": "link",
-            "label": "Link",
-            "info": "Optional"
-          }
-        ]
-      },
-      {
-        "type": "quote",
-        "name": "Custom Block",
-        "settings": [
-          {
-            "type": "text",
-            "id": "title",
-            "label": "Heading",
-            "default": "Custom Block"
-          },
-          {
-            "type": "richtext",
-            "id": "quote",
-            "label": "Text",
-            "default": "<p>Add customer reviews and testimonials to showcase your store’s happy customers.</p>"
-          }
-        ]
-      }
+    "blocks": [
+        {
+            "type": "search",
+            "name": "Search",
+            "settings": [
+                {
+                    "type": "checkbox",
+                    "id": "enable_search",
+                    "label": "Enable Search",
+                    "default": true
+                }
+            ]
+        },
+        {
+            "type": "collection_1",
+            "name": "Collection Block",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Heading",
+                    "default": "Heading"
+                },
+                {
+                    "type": "radio",
+                    "id": "collection_id",
+                    "label": "Show all \/ Only a few Collection",
+                    "options": [
+                        {
+                            "value": "show_all",
+                            "label": "Show All Collection"
+                        },
+                        {
+                            "value": "little_category",
+                            "label": "Only A Few Collection"
+                        }                    
+                    ]
+                },
+                {
+                    "type": "link_list",
+                    "id": "link_list",
+                    "label": "Choose a Collection",
+                    "default": "main-menu"
+                }
+            ]
+        },
+        {
+            "type": "recent_post",
+            "name": "Recent Post",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Heading",
+                    "default": "Heading"
+                },
+                {
+                    "type": "range",
+                    "id": "number",
+                    "label": "number post",
+                    "min": 1,
+                    "max": 5,
+                    "step": 1,
+                    "default": 3
+                }
+            ]
+        },
+        {
+            "type": "filter",
+            "name": "Tags",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Heading",
+                    "default": "Browse Tags"
+                }
+            ]
+        },
+        {
+            "type": "image",
+            "name": "Image Block",
+            "settings": [
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image",
+                    "info": "Recommended Image: 270x420"
+                },
+                {
+                    "type": "url",
+                    "id": "link",
+                    "label": "Link",
+                    "info": "Optional"
+                }
+            ]
+        },
+        {
+            "type": "quote",
+            "name": "Custom Block",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Heading",
+                    "default": "Heading"
+                },
+                {
+                    "type": "richtext",
+                    "id": "text",
+                    "label": "Text",
+                    "default": "<p>Custom CMS block displayed at the left sidebar on the Catalog Page. Put your own content here: text, html, images, media... or whatever you like.</p>"
+                }
+            ]
+        }
     ]
-    
-  }
+}
 {% endschema %}

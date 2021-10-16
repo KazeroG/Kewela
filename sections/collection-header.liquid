@@ -1,50 +1,186 @@
-<header class="page-header">
-  {% if section.settings.display_image_cat %}
-    <div class="img_cart">
-      {% if section.settings.img_cat != blank %}
-      <img src="{{ section.settings.img_cat | img_url :"master"}}" alt="{{ collection.title | split: '|' | first }}" />
-     {% else %}
-        {% capture current %}{% cycle 2%}{% endcapture %}
-        {{ 'lifestyle-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
-       {% endif %}
-    </div>
-  {% endif %}
+{% comment %}
+    Documentation - http://docs.shopify.com/support/your-website/navigation/creating-a-breadcrumb-navigation
+{% endcomment %}
 
-  {% if settings.enable_multilang %}
-  <h2 class="text-center">
-    <span class="lang1">{{ collection.title | split: '|' | first }}</span>
-    <span class="lang2">{{ collection.title | split: '|' | last }}</span>
-  </h2>
-  {% else %}
-  	<h2>{{ collection.title | split: '|' | first }}</h2>
-  {% endif %}
-
-  {% if collection.description != ''  %}
-  <div class="collection-des text-center">
-    {% if settings.enable_multilang %}      
-      <div class="rte lang1">{{ collection.description | split: '[lang2]' | first }}</div>
-      <div class="rte lang2">{{ collection.description | split: '[lang2]' | last }}</div>
-    {% else %}
-  	  <div class="rte">{{ collection.description | split: '[lang2]' | first }}</div>
+<style>
+    {% if section.settings.custom_color %}
+        .collection-banner .collection-hero .page-heading{
+            color: {{ section.settings.color_title_collection }}
+        }
+        .collection-banner .collection-hero .collection-description{
+            color: {{ section.settings.color_description }}
+        }
     {% endif %}
-  </div>
-  {% endif %}      
-</header>
+</style>
+
+{% unless template == 'index' %}
+{% if section.settings.show_collection_image %}
+    {% if section.settings.display_collection_image_all %}
+        {% if section.settings.collection_image != blank %}
+            <div class="collection-hero">
+                <img class="lazyload" src="{{ 'loading.svg' | asset_url }}" data-src="{{ section.settings.collection_image | img_url: '1890x280' }}" alt="" data-image>
+                <div class="container content-pc">
+                    <div class="wrap-title">
+                        <h1 class="page-heading">
+                            {{ collection.title }}
+                        </h1>
+                        {% if collection.description != blank %}
+                            <div class="collection-description">
+                                {{ collection.description }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="collection-hero">
+                {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                <div class="container content-pc">
+                    <div class="wrap-title">
+                        <h1 class="page-heading">
+                            {{ collection.title }}
+                        </h1>
+                        {% if collection.description != blank %}
+                            <div class="collection-description">
+                                {{ collection.description }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% else %}
+        {% for block in section.blocks %}
+            {% assign collection_id = collections[block.settings.collection_id] %}
+            {% if collection_id.handle == collection.handle %}
+                {% if block.settings.image != blank %}
+                    <div class="collection-hero">
+                        <img class="lazyload" src="{{ 'loading.svg' | asset_url }}" data-src="{{ block.settings.image | img_url: '1890x280' }}" alt="" data-image>
+                        <div class="container">
+                            <div class="wrap-title">
+                                <h1 class="page-heading">
+                                    {{ collection.title }}
+                                </h1>
+                                {% if collection.description != blank %}
+                                    <div class="collection-description">
+                                        {{ collection.description }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="collection-hero">
+                        {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                        <div class="container">
+                            <div class="wrap-title">
+                                <h1 class="page-heading">
+                                    {{ collection.title }}
+                                </h1>
+                                {% if collection.description != blank %}
+                                    <div class="collection-description">
+                                        {{ collection.description }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif%}
+            {% endif%}
+        {% endfor %}
+    {% endif %}
+{% endif %}
+
+<div class="container wrapper-content-mb">
+    <div class="breadcrumb-wrapper">
+        <ul class="breadcrumb">
+            <li class="item">
+                <a href="/" aria-label="link">{{ 'general.breadcrumbs.home' | t }}</a>  
+                {% render 'icon-chevron-right' %}
+            </li>
+            <li class="item is-active">
+                {% capture url %}/collections/{{ collection.handle }}{% endcapture %}
+                <a href="{{ url }}" title="{{ collection.title }}" aria-label="link">{{ collection.title }}</a>
+                {% render 'icon-chevron-right' %}
+            </li>
+        </ul>  
+    </div>
+    <div class="collection-hero content-mb">
+        <div class="wrap-title">
+            <h1 class="page-heading">
+                {{ collection.title }}
+            </h1>
+            {% if collection.description != blank %}
+                <div class="collection-description">
+                    {{ collection.description }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endunless %}
+
 {% schema %}
-  {
-    "name": "Collection Header",
+{
+    "name": "Collection Banners",
+    "class": "collection-banner",
     "settings": [
-	   {
-        "type": "checkbox",
-        "id": "display_image_cat",
-        "label": "Display Image Category?",
-        "default": true
-      },
-      {
-        "type": "image_picker",
-        "id": "img_cat",
-        "label": "Image Category"
-      }
-	]
-  }
+        {
+            "type": "header",
+            "content": "Collection Header"
+        },
+        {
+            "type": "checkbox",
+            "id": "show_collection_image",
+            "label": "Enable Collection Banner",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "display_collection_image_all",
+            "label": "Enable All Collection Banner?",
+            "default": true
+        },
+        {
+            "type": "image_picker",
+            "id": "collection_image",
+            "label": "Image All Collection"
+        },
+        {
+            "type": "checkbox",
+            "id": "custom_color",
+            "label": "Turn on custom color",
+            "default": false
+        },
+        {
+            "type": "color",
+            "id": "color_title_collection",
+            "label": "Title Collection Color"
+        },
+        {
+            "type": "color",
+            "id": "color_description",
+            "label": "Description Collection Color"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "collection",
+            "name": "Collection",
+            "settings": [
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image",
+                    "info": "Recommended Image: Width x Height (1890 x 280)px"
+                },
+                {
+                    "label": "Collection",
+                    "id": "collection_id",
+                    "type": "collection"
+                }
+            ]
+        }
+    ]
+}
 {% endschema %}

@@ -1,0 +1,25 @@
+<div class="sidebarBlock sidebarBlock_filter">
+    <h5 class="sidebarBlock-heading" data-toggle="collapse1" data-target="#{{ block.id }}">
+        <span>{{ block.settings.title }}</span>
+        <a href="javascript:void(0)" class="clear text-hover" aria-label="link" {% if has_refined == false %}style="display:none"{% endif %}>
+            {{ 'collections.filters.clear' | t }}
+        </a>
+    </h5>
+    <div class="sidebarBlock-content filter-color collapse show" id="{{ block.id }}">
+        <ul class="list-tags content">
+            {% assign tags = block.settings.list_tags | split: ',' %}
+            {% for t in tags %}
+                {% assign tag = t | strip %}
+                {% assign tag_value = tag | handleize %}
+                {% assign current_tags_value = current_tags | handleize %}
+                {% if collection.tags contains tag %}
+                    <li>
+                        <input type="checkbox" value="{{ tag_value }}" {% if current_tags contains tag %}checked{% endif %}/>
+                        <a href="javascript:void(0)" aria-label="link" {% if current_tags contains tag %}class="active"{% endif %} title="{{tag}}" style="background-color: {{ tag_value }}; background-image: url({{ tag_value | handle | append: '.png' | file_url }})">
+                        </a>
+                    </li>
+                {% endif %}      
+            {% endfor %}
+        </ul>
+    </div>
+</div>

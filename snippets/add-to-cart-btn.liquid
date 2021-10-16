@@ -1,0 +1,37 @@
+{% assign variantCount = product.variants | size %}
+<div class="product-action">
+    <form action="/cart/add" method="post" class="variants" id="{{id}}-{{ product.id }}" data-id="product-actions-{{ product.id }}" enctype="multipart/form-data">
+        {% if product.available %}
+            {% if variantCount > 1 %}
+                <a class="btn product-btn product-btn-icon" href="{{ product.url }}" aria-label="button">
+                    <span>
+                        <svg class="icon"><use xlink:href="#icon-plus" /></svg>
+                        {{ 'products.product.select_options' | t }}
+                    </span>
+                </a>
+            {% else %}
+                <input type="hidden" name="id" value="{{ product.variants[0].id }}" />
+                <input type="hidden" name="quantity" value="1" />
+                {% if variant.inventory_management %}
+                    {% if variant.inventory_quantity > 0%}
+                        <button data-btn-addToCart class="btn product-btn" type="submit" data-form-id="#{{id}}-{{ product.id }}">
+                            {{ 'products.product.add_to_cart' | t }} 
+                        </button>
+                    {% else %}
+                        <button data-btn-addToCart class="btn product-btn" type="submit" data-form-id="#{{id}}-{{ product.id }}">
+                            {{ 'products.product.pre_order' | t }} 
+                        </button>
+                    {% endif %}
+                {% else %}
+                    <button data-btn-addToCart class="btn product-btn" type="submit" data-form-id="#{{id}}-{{ product.id }}">
+                        {{ 'products.product.add_to_cart' | t }} 
+                    </button>
+                {% endif %}
+            {% endif %}
+        {% else %}
+            <button class="btn product-btn product-btn-soldOut" type="submit" disabled="disabled">
+                {{ 'products.product.sold_out' | t }}
+            </button>
+        {% endif %}
+    </form>
+</div>

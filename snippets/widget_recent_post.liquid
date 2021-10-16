@@ -1,0 +1,25 @@
+<div class="sidebarBlock">
+    <h5 class="sidebarBlock-heading"><span >{{ block.settings.title }}</span></h5>
+    <div class="sidebarBlock-content">
+        <div class="recentPosts_List recentPosts--col1">
+            {% for article in blog.articles limit : block.settings.number %}
+                <div class="item">
+                    <div class="recentPost-image">
+                        <img id="{{ img_id }}"
+                         class="lazyload"
+                         src="{{ article.image | img_url: '150x80' }}"
+                         data-src="{{ img_url }}"
+                         data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+                         data-aspectratio="{{ article.image.aspect_ratio }}"
+                         data-sizes="auto"
+                         alt="">
+                     </div>
+                    <div class="recentPost-sidebar">
+                        <p class="date">{{ article.published_at | date: "%B %d, %Y" }}</em>
+                        <h5 class="title"><a href="{{ article.url }}" aria-label="link">{{ article.title }}</a></h5>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>

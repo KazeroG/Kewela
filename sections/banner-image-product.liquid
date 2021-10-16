@@ -1,0 +1,65 @@
+{% include 'setting-spacing' %}
+
+{%- assign img_url = section.settings.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+
+<div class="halo-section banner-custom-product {% if section.settings.custom_block %}hero-custom-block-margin{% endif %} {{ padding_top }} {{ padding_bottom }}" data-section-id="{{ section.id }}" data-section-type="hero-section">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="hero hero-content-custom-1 hero--large full-image">
+          <div class="hero-image-wrapper">
+              <div class="hero-image1">
+                  {% if section.settings.image == blank %}
+                    <div class="placeholder-background">
+                        <span class="recommended_size">1890x450</span>
+                        {{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' }}
+                    </div>
+                  {% else %}
+                    <img class="lazyload" src="{{ 'loading.svg' | asset_url }}" data-src="{{ section.settings.image | img_url: 'master' }}" alt="" data-image>
+                  {% endif %}
+              </div>
+          </div>
+         
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+    "name": "Full Width Banner Image",
+    "class": "banner-image-product-sections",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Section Layout"
+        },
+        {
+            "type": "range",
+            "id": "padding-top",
+            "label": "Spacing Top",
+            "default": 0,
+            "min": 0,
+            "max": 10,
+            "step": 1
+        },
+        {
+            "type": "range",
+            "id": "padding-bottom",
+            "label": "Spacing bottom",
+            "default": 0,
+            "min": 0,
+            "max": 10,
+            "step": 1
+        },
+        {
+            "type": "header",
+            "content": "Banner Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+        }
+    ]
+}
+{% endschema %}

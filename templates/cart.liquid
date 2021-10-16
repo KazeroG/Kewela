@@ -1,4 +1,12 @@
-<div class="row">
-  {% render 'breadcrumb' %}
-{% section 'cart-template' %}
+{% comment %}
+  The contents of the cart.liquid template can be found in /sections/cart-template.liquid
+{% endcomment %}
+
+<div class="container">
+	{% render 'breadcrumb' %}
+    <div class="page page-cart">
+		{% section 'cart-template' %}
+	</div>
 </div>
+{% section 'section-product-lookbook' %}
+

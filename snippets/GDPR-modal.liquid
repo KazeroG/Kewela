@@ -1,0 +1,19 @@
+{% if settings.display_gdpr %}
+<div id="accept-cookies" class="cookieMessage {% if settings.display_gdpr_mb %}cookieMessage-mb{% endif %} hide"> 
+    <div class="des">
+        <span>{{ settings.gdpr_content }}</span>
+        <span>
+            {% if settings.gdpr_privacy_policy_text != blank %}
+                <a target="_blank" href="{{ settings.gdpr_privacy_policy_link }}" aria-label="link" class="notification-cookies privacy-link">
+                    {{ settings.gdpr_privacy_policy_text }}
+                </a>
+            {% endif %}
+        </span>
+    </div>
+    {% if settings.gdpr_accept_cookies_text != blank %}
+        <a href="#" class="notification-cookies accept_cookies_link" aria-label="link" data-accept-cookie>
+            {{ settings.gdpr_accept_cookies_text }}
+        </a>
+    {% endif %}
+</div>
+{% endif %}

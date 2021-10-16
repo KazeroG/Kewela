@@ -1,0 +1,39 @@
+{% if show_product_variant %}
+    <div class="selector-wrapper swatch product-form__item">
+        {% for option in product.options_with_values %}
+            {% assign option_size_swatch = settings.option_size_swatch | downcase %}
+            {% assign option_name = option.name | downcase %}
+            {% if option_name == option_size_swatch %}
+                {% assign option_index0 = forloop.index0 %}
+                {% assign option_count = 0 %}
+                {% for variant in product.variants %}
+                    {% assign value = variant.options[option_index0] %}
+                    {% unless values contains value %}
+                    {% if option_count < 5 %}
+                        {% assign values = values | join: ';' %}
+                        {% assign values = values | append: ';' | append: value %}
+                        {% assign values = values | split: ';' %}
+                        <div class="swatch-element size {% unless variant.available %}soldout{% endunless %}">
+                            <a title="{{ value }}" href="{{ product.url }}?variant={{ variant.id }}">{{ value }}</a>
+                        </div>
+                    {% assign option_count = option_count | plus : 1 %} 
+                    {% endif %}
+                    {% endunless %}
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+        {% for option in product.options_with_values %}
+            {% assign option_size_swatch = settings.option_size_swatch | downcase %}
+            {% assign option_name = option.name | downcase %}
+            {% if option_name == option_size_swatch %}
+                {% if option.values.size > 5 %}
+                    <div class="product-card__variant--item product-card__variant--item--last">
+                        <a href="{{ product.url}}" aria-label="size">
+                            +{{ option.values.size | minus : 5 }}
+                        </a>
+                    </div>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endif %}

@@ -1,0 +1,103 @@
+<div class="about-us-content" data-section-id="{{ section.id }}" data-section-type="about-us-content-section">
+  <div class="container">
+    {% if section.settings.left_heading != blank or section.settings.left_content != blank %}
+    <div class="col-left">
+      {% if section.settings.left_heading != blank %}
+        <h3 class="heading">{{ section.settings.left_heading }}</h3>
+      {% endif %}
+      {% if section.settings.left_content != blank %}
+      <div class="content">
+        {{ section.settings.left_content }}
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+    {% if section.settings.right_heading != blank or section.settings.right_content != blank %}
+    <div class="col-right">
+      {% if section.settings.right_heading != blank %}
+        <h3 class="heading">{{ section.settings.right_heading }}</h3>
+      {% endif %}
+      {% if section.settings.right_content != blank %}
+      <div class="content">
+        {{ section.settings.right_content }}
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+{% if section.settings.custom_color %}
+  .about-us-content .heading{
+    color:  {{ section.settings.heading_color }};
+  }
+  .about-us-content .heading:after{
+    background-color:  {{ section.settings.heading_color }};
+  }
+  .about-us-content .content{
+    color: {{ section.settings.text_color }};
+  }
+{% endif %}
+</style>
+
+{% schema %}
+{
+  "name": "About Us Content",
+  "class": "about-us-content-sections",
+  "settings": [
+    {
+      "type":"header",
+      "content":"Left Column"
+    },
+    {
+      "type":"text",
+      "id":"left_heading",
+      "label":"Heading",
+      "default":"About Store"
+    },
+    {
+      "type":"textarea",
+      "id":"left_content",
+      "label":"Content",
+      "default":"Quisquemos sodales suscipit tortor ditaemcos condimentum de cosmo lacus meleifend menean diverra loremous. Nullam sit amet orci rutrum risus laoreet semper vel non magna. Mauris vel sem a lectus vehicula ultricies. Etiam semper sollicitudin lectus indous scelerisque. Curabitur vel tristique lacus. Nam risus mauris, accumsan et eleifend vitae, dignissim at eros. Vivamus pellentesque duiex a interdum."
+    },
+    {
+      "type":"header",
+      "content":"Right Column"
+    },
+    {
+      "type":"text",
+      "id":"right_heading",
+      "label":"Heading",
+      "default":"Contact Us"
+    },
+    {
+      "type":"textarea",
+      "id":"right_content",
+      "label":"Content",
+      "default":"Quisquemos sodales suscipit tortor ditaemcos condimentum de cosmo lacus meleifend menean diverra loremous. Nullam sit amet orci rutrum risus laoreet semper vel non magna. Mauris vel sem a lectus vehicula ultricies. Etiam semper sollicitudin lectus indous scelerisque. Curabitur vel tristique lacus. Nam risus mauris, accumsan et eleifend vitae, dignissim at eros. Vivamus pellentesque duiex a interdum."
+    }, 
+    {
+        "type": "header",
+        "content": "Custom Color"
+    },
+    {
+        "type": "checkbox",
+        "id": "custom_color",
+        "label": "Turn on custom color",
+        "default": false
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Content Color"
+    }
+  ]
+}
+{% endschema %}

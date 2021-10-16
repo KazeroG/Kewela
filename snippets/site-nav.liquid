@@ -1,171 +1,238 @@
 {% comment %}
-  List out your main-menu linklist (default)
-  More info on linklists:
+    List out your main-menu linklist (default)
+    More info on linklists:
     - http://docs.shopify.com/themes/liquid-variables/linklists
 {% endcomment %}
+{% assign i = 0 %}
+{% assign count_menu = section.settings.show_more_menu %}
+{% for link in linklists[main_menu].links %}
+    {% assign i = forloop.index %}
+    {% assign cat = link.title | handleize %}
+    {% if section.settings.display_megamenu %}
 
-<ul class="site-nav">
-    {% if section.settings.horizontal_linklist != blank %}
-    {% assign menu = linklists[section.settings.horizontal_linklist].links %}
-    {% else %}
-    {% assign menu = linklists.main-menu.links %}
-    {% endif %}
-    {% for link in menu %}
-  	{% assign i = forloop.index | downcase %}
-    {% assign cat = link.title | downcase %}
-  
-  	{% if section.settings.display_megamenu %}
-      
-      	{% assign is_megamenu = false %}
+        {% assign is_megamenu = false %}
+
         {% for block in section.blocks %}
-      	  {% for i in (1..4) %}
-  
-          {% capture cap_megamenu_item %}megamenu_items_{{ i }}{% endcapture %}  
-          {% capture cap_banner_first_style %}banner_first_style_{{ i }}{% endcapture %}
-          {% capture cap_banner_second_style %}banner_second_style_{{ i }}{% endcapture %}
-          {% capture cap_banner_third_style %}banner_third_style_{{ i }}{% endcapture %}
-  
-          {% capture cap_link_banner_first_style %}link_banner_first_style_{{ i }}{% endcapture %}
-  		  {% capture cap_link_banner_second_style %}link_banner_second_style_{{ i }}{% endcapture %}
-  		  {% capture cap_link_banner_third_style %}link_banner_third_style_{{ i }}{% endcapture %}
-  
-           {% capture cap_featured_product %}featured_product_{{ i }}{% endcapture %}
-          {% capture cap_title_featured_product %}title_featured_product_{{ i }}{% endcapture %}
-        {% comment %}  {% capture cap_main_linklist %}main_linklist_{{ i }}{% endcapture %}{% endcomment %}
-  
-  		  {% comment %}
-            For style 4
-          {% endcomment %}
-          {% capture cap_banner_four_style %}banner_four_style_{{ i }}{% endcapture %}
-  
-          {% if block.settings[cap_megamenu_item] != blank %}
 
-            {% assign megamenu_item = block.settings[cap_megamenu_item] | downcase %}
-            {% if megamenu_item == cat %}
-              {% assign is_megamenu = true %}
-              {% assign block_style = block.type %}
-  
-  			  {% assign banner_first_style = block.settings[cap_banner_first_style] %}
-  			  {% assign banner_second_style = block.settings[cap_banner_second_style] %}
-  			  {% assign banner_third_style = block.settings[cap_banner_third_style] %}
-  			  
-  			  {% assign link_banner_first_style = block.settings[cap_link_banner_first_style] %}
-  			  {% assign link_banner_second_style = block.settings[cap_link_banner_second_style] %}
-  			  {% assign link_banner_third_style = block.settings[cap_link_banner_third_style] %}
-  
-  			  {% assign featured_product = block.settings[cap_featured_product] %}
-  			  {% assign title_featured_product = block.settings[cap_title_featured_product] %}  			  
-  			  {%- assign product = all_products[featured_product] -%}
-  				
-  			  {% assign text_under_menu = block.settings.text_under_menu %}
-              {% assign color_under_text = block.settings.color_under_text %}
-              {% assign font_size_under = block.settings.font_size_under %}
-              {% assign background_text = block.settings.background_text %}
-  {% assign featured_collection = block.settings.collection %}
-  			  {% comment %}
-  				For style 4
-  			  {% endcomment %}
-  			  {% assign banner_four_style = block.settings[cap_banner_four_style] %}	
-  			  
-  
-  
-  			  {% assign main_linklist = block.settings[cap_main_linklist] %}
-  
-  
-            {% endif %}
-          {% endif %}
-  		  
-  		  {% case block.settings.width %}
-        	{% when 'small' %}
-  			{%- assign width_product = '120x160' -%}
-        	{% when 'medium' %}
-  			{%- assign width_product = '180x220' -%}
-        	{% when 'large' %}
-  			{%- assign width_product = '220x260' -%}
-  		  {% endcase %}
-  
-  
-          {% endfor %}
+            {% for i in (1..6) %}
+
+                {% capture cap_megamenu_item %}megamenu_items_{{ i }}{% endcapture %}
+
+                {% capture cap_banner_first_style %}banner_first_style_{{ i }}{% endcapture %}
+                {% capture cap_link_banner_first_style %}link_banner_first_style_{{ i }}{% endcapture %}
+
+                {% capture cap_banner_second_style %}banner_second_style_{{ i }}{% endcapture %}
+                {% capture cap_link_banner_second_style %}link_banner_second_style_{{ i }}{% endcapture %}
+
+                {% capture cap_banner_third_style %}banner_third_style_{{ i }}{% endcapture %}
+                {% capture cap_link_banner_third_style %}link_banner_third_style_{{ i }}{% endcapture %}
+
+
+                {% capture cap_title_top_brand %}title_top_brand{% endcapture %}
+                {% capture cap_text_link_top_brand %}text_link_top_brand{% endcapture %}
+                {% capture cap_link_top_brand %}link_top_brand{% endcapture %}
+                {% capture cap_banner_brand_top_1 %}banner_brand_top_1{% endcapture %}
+                {% capture cap_link_brand_top_1 %}link_brand_top_1{% endcapture %}
+                {% capture cap_banner_brand_top_2 %}banner_brand_top_2{% endcapture %}
+                {% capture cap_link_brand_top_2 %}link_brand_top_2{% endcapture %}
+                {% capture cap_banner_brand_top_3 %}banner_brand_top_3{% endcapture %}
+                {% capture cap_link_brand_top_3 %}link_brand_top_3{% endcapture %}
+                {% capture cap_banner_brand_top_4 %}banner_brand_top_4{% endcapture %}
+                {% capture cap_link_brand_top_4 %}link_brand_top_4{% endcapture %}
+                {% capture cap_banner_brand_top_5 %}banner_brand_top_5{% endcapture %}
+                {% capture cap_link_brand_top_5 %}link_brand_top_5{% endcapture %}
+                {% capture cap_banner_brand_top_6 %}banner_brand_top_6{% endcapture %}
+                {% capture cap_link_brand_top_6 %}link_brand_top_6{% endcapture %}
+
+
+                {% if block.settings[cap_megamenu_item] != blank %}
+                    {% assign megamenu_item = block.settings[cap_megamenu_item] | handleize %}
+
+                    {% if megamenu_item == cat %}
+                        {% assign is_megamenu = true %}
+                        {% assign block_style = block.type %}
+
+                        {%- assign title_featured_product = block.settings.title_featured_product -%}
+                        {%- assign featured_product = block.settings.featured_product -%}
+                        {%- assign featured_product_2 = block.settings.featured_product_2 -%}
+                        {%- assign featured_product_3 = block.settings.featured_product_3 -%}
+                        {%- assign product = all_products[featured_product] -%}
+                        {%- assign product_2 = all_products[featured_product_2] -%}
+                        {%- assign product_3 = all_products[featured_product_3] -%}
+
+                        {%- assign banner_first_style = block.settings[cap_banner_first_style] -%}
+                        {%- assign link_banner_first_style = block.settings[cap_link_banner_first_style] -%}
+
+                        {%- assign banner_second_style = block.settings[cap_banner_second_style] -%}
+                        {%- assign link_banner_second_style = block.settings[cap_link_banner_second_style] -%}
+
+                        {%- assign banner_third_style = block.settings[cap_banner_third_style] -%}
+                        {%- assign link_banner_third_style = block.settings[cap_link_banner_third_style] -%}
+
+
+
+                        {%- assign title_top_brand = block.settings[cap_title_top_brand] -%}
+                        {%- assign text_link_top_brand = block.settings[cap_text_link_top_brand] -%}
+                        {%- assign link_top_brand = block.settings[cap_link_top_brand] -%}
+                        {%- assign banner_brand_top_1 = block.settings[cap_banner_brand_top_1] -%}
+                        {%- assign link_brand_top_1 = block.settings[cap_link_brand_top_1] -%}
+                        {%- assign banner_brand_top_2 = block.settings[cap_banner_brand_top_2] -%}
+                        {%- assign link_brand_top_2 = block.settings[cap_link_brand_top_2] -%}
+                        {%- assign banner_brand_top_3 = block.settings[cap_banner_brand_top_3] -%}
+                        {%- assign link_brand_top_3 = block.settings[cap_link_brand_top_3] -%}
+                        {%- assign banner_brand_top_4 = block.settings[cap_banner_brand_top_4] -%}
+                        {%- assign link_brand_top_4 = block.settings[cap_link_brand_top_4] -%}
+                        {%- assign banner_brand_top_5 = block.settings[cap_banner_brand_top_5] -%}
+                        {%- assign link_brand_top_5 = block.settings[cap_link_brand_top_5] -%}
+                        {%- assign banner_brand_top_6 = block.settings[cap_banner_brand_top_6] -%}
+                        {%- assign link_brand_top_6 = block.settings[cap_link_brand_top_6] -%}
+
+                       
+
+                        
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+
         {% endfor %}
-  
-  	{% endif %}  
-  	{% if section.settings.enable_new %}
-	{% assign items_list_new = section.settings.megamenu_items_new | split:"," | strip | downcase %}
-	{% endif %}
-  	{% assign new = link.title | downcase %}
-    <li class="item{% if is_megamenu %} dropdown mega-menu{% else %}{% if linklists[link.handle] != empty %} dropdown{% endif %}{% endif %}{% if section.settings.enable_new and items_list_new contains new %} icon_new{% endif %}">
-      <a class="{% if link.active %}current{% endif %} {%if linklists[link.handle] != empty %}menu__moblie {% endif %}" href="{{ link.url }}">
-        <span>
-          {% if settings.enable_multilang %}
-          <span class="lang1">{{ link.title | split: '|' | first }}</span>
-          <span class="lang2">{{ link.title | split: '|' | last }}</span>
-          {% else %}
-          {{ link.title | split: '|' | first }}
-          {% endif %}
-        </span>
-        {% if linklists[link.handle] != empty and section.settings.show_dropdown_arrow %}
-        <span class="icon-dropdown">
-        <i class="fa fa-angle-right" aria-hidden="true"></i>
-        </span>
-        {% endif %}
-      </a> 	
-    
-      {% comment %}
-      Check if menu item is Mega menu
-      {% endcomment %}
-      
-      {% assign link_child = link.handle %}
-      {% if section.settings.display_megamenu %}  
-      
-      	{% if is_megamenu %}
-          <div class="site-nav-dropdown {% if is_megamenu %} mega-menu-dropdown{% endif %} shadow {{ block_style }}">
-            <div class="close_mega">
-              <a href="javascript:void(0)">
-                <span></span>
-              </a>
-            </div>
-            <div class="container">
-               <a href="{{ link.url }}"class="menu-title text-center">
-               {% render 'multilang' with  link.title %}
-      			</a> 
-              <div class="row">{% render 'mega-menu',
-              						link_child: link_child,
-                                    megamenu_item: megamenu_item,
-                                    is_megamenu: is_megamenu,
-                                    block_style: block_style,
-                                    banner_first_style: banner_first_style,
-                                    banner_second_style: banner_second_style,
-                                    banner_third_style: banner_third_style,
-                                    link_banner_first_style: link_banner_first_style,
-                                    link_banner_second_style: link_banner_second_style,
-                                    link_banner_third_style: link_banner_third_style,
-                                    featured_product: featured_product,
-                                    title_featured_product: title_featured_product,
-                                    product: product,
-                                    text_under_menu: text_under_menu,
-                                    color_under_text: color_under_text,
-                                    font_size_under: font_size_under,
-                                    background_text: background_text,
-                                    featured_collection: featured_collection,
-                                    banner_four_style: banner_four_style,
-                                    main_linklist: main_linklist
-                				%}</div>
-            </div>
-          </div>
-        {% else %}
-          {% if linklists[link.handle] != empty %}
-            {% render 'dropdown-menu',
-            	link_child: link_child
-      		%}
-          {% endif %}
-        {% endif %}
-      
-      {% else %}
+    {% endif %}
+
+    {% if section.settings.label_1 != blank %}
+        {% assign label_1_collection = section.settings.label_1_collection | split:"," | strip | downcase | handle %}
+        {% assign label_1_link = link.title | downcase | handle  %}
+    {% endif %}
+
+    {% if section.settings.label_2 != blank %}
+        {% assign label_2_collection = section.settings.label_2_collection | split:"," | strip | downcase | handle %}
+        {% assign label_2_link = link.title | downcase | handle  %}
+    {% endif %}
+
+    {% if section.settings.label_3 != blank %}
+        {% assign label_3_collection = section.settings.label_3_collection | split:"," | strip | downcase | handle %}
+        {% assign label_3_link = link.title | downcase | handle  %}
+    {% endif %}
+
+    {% if i > count_menu %}
+    <li class="menu-lv-1 item wrap-show-more {% if linklists[link.handle] != empty %}dropdown{% endif %} no-mega-menu">
+        <p class="nav-action{%if linklists[link.handle] != empty %} menu__moblie{% else %} menu__moblie_end{% endif %}">
+            <a href="{{ link.url }}" aria-label="link">
+                <span>{{ link.title }}</span>
+            </a>
+            {% if linklists[link.handle] != empty %}
+                <span class="icon-dropdown" data-toggle-menu-mb>&#10095;</span>
+            {% endif %}
+        </p>
         {% if linklists[link.handle] != empty %}
+        <div class="sub-menu-mobile">
+          <div class="menu-mb-title">
+            <span class="icon-dropdown">&#10094;</span>
+            {{ link.title }}
+          </div>
+          {% assign link_child = link.handle %}
+          {% if linklists[link.handle] != empty %}
           {% render 'dropdown-menu', link_child: link_child %}
+          {% endif %}
+        </div>
         {% endif %}
-      {% endif %}
-      
     </li>
-  {% endfor %}
-</ul>
+    {% else %}
+    <li class="menu-lv-1 item {{ block_style }}{% if linklists[link.handle] != empty %} dropdown{% if is_megamenu %} mega-menu{% else %} no-mega-menu{% endif %}{% endif %}">
+        <p class="nav-action{%if linklists[link.handle] != empty %} menu__moblie{% else %} menu__moblie_end{% endif %}">
+            <a href="{{ link.url }}" aria-label="link">
+                {{ link.title }}
+                {% if label_1_collection contains label_1_link %}
+                    <span class="icon-label label_1">
+                        {{ section.settings.label_1 }}
+                    </span>
+                {% endif %}
+
+                {% if label_2_collection contains label_2_link %}
+                    <span class="icon-label label_2">
+                        {{ section.settings.label_2 }}
+                    </span>
+                {% endif %}
+
+                {% if label_3_collection contains label_3_link %}
+                    <span class="icon-label label_3">
+                        {{ section.settings.label_3 }}
+                    </span>
+                {% endif %}
+            </a>
+            {% if linklists[link.handle] != empty %}
+                {% if settings.header_layout == 'header_1' %}
+                    <span class="icon-dropdown" data-toggle-menu-mb>&#10095;</span>
+                {% else %}
+                    <span class="icon-dropdown icon-dropdown-pc" data-toggle-menu-mb><svg aria-hidden="true" focusable="false" role="presentation" class="icon icon--wide icon-chevron-down" viewBox="0 0 498.98 284.49"><defs><style>.cls-1{fill:#231f20}</style></defs><path class="cls-1" d="M80.93 271.76A35 35 0 0 1 140.68 247l189.74 189.75L520.16 247a35 35 0 1 1 49.5 49.5L355.17 511a35 35 0 0 1-49.5 0L91.18 296.5a34.89 34.89 0 0 1-10.25-24.74z" transform="translate(-80.93 -236.76)"></path></svg></span>
+                    <span class="icon-dropdown icon-dropdown-mb" data-toggle-menu-mb>&#10095;</span>
+                {% endif %}
+            {% endif %}
+        </p>
+        {% if linklists[link.handle] != empty %}
+            <div class="sub-menu-mobile">
+                <div class="menu-mb-title">
+                    <span class="icon-dropdown">&#10094;</span>
+                    {{ link.title }}
+                </div>
+                {% assign link_child = link.handle %}
+                {% if section.settings.display_megamenu and is_megamenu %}
+                    <div class="site-nav-dropdown {{ block_style }}">
+                        <div class="container">
+                            {% render 'mega-menu', 
+                                link_child: link_child, 
+                                block_style: block_style,
+                                title_featured_product: title_featured_product,
+                                product: product,
+                                product_2: product_2,
+                                product_3: product_3,
+                                featured_product: featured_product,
+                                featured_product_2: featured_product_2,
+                                featured_product_3: featured_product_3,
+                                banner_first_style: banner_first_style,
+                                link_banner_first_style: link_banner_first_style,
+                                banner_second_style: banner_second_style,
+                                link_banner_second_style: link_banner_second_style,
+                                banner_third_style: banner_third_style,
+                                link_banner_third_style: link_banner_third_style,
+
+                                title_top_brand: title_top_brand,
+                                text_link_top_brand: text_link_top_brand,
+                                link_top_brand: link_top_brand,
+                                banner_brand_top_1: banner_brand_top_1,
+                                link_brand_top_1: link_brand_top_1,
+                                banner_brand_top_2: banner_brand_top_2,
+                                link_brand_top_2: link_brand_top_2,
+                                banner_brand_top_3: banner_brand_top_3,
+                                link_brand_top_3: link_brand_top_3,
+                                banner_brand_top_4: banner_brand_top_4,
+                                link_brand_top_4: link_brand_top_4,
+                                banner_brand_top_5: banner_brand_top_5,
+                                link_brand_top_5: link_brand_top_5,
+                                banner_brand_top_6: banner_brand_top_6,
+                                link_brand_top_6: link_brand_top_6
+                            %}
+                        </div>
+                    </div>
+                {% else %}
+                    {% if linklists[link.handle] != empty %}
+                        {% render 'dropdown-menu', link_child: link_child %}
+                    {% endif %}
+                {% endif %}
+            </div>
+        {% endif %}
+    </li>
+    {% endif %}
+    
+{% endfor %}
+{% if i > count_menu %}
+<li class="menu-lv-1 item dropdown no-mega-menu item-show-more">
+  <p class="nav-action menu__moblie_end">
+    <a href="#" aria-label="link">
+      ...
+    </a>
+  </p>
+  <div class="sub-menu-mobile sub-menu-mobile1">
+    <ul class="site-nav-dropdown site-nav-dropdown1">  
+    </ul>
+  </div>
+</li>
+{% endif %}

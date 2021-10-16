@@ -1,39 +1,36 @@
-<div class="wishlist-product" data-wishlist-content>
-    <div class="wrapper-overflow">
-        <div class="wishlist-header t-header">
-            <h4 class="column col-img col-title"{% if settings.enable_multilang %} data-translate="wishlist.general.product_image"{% endif %}>
-                {{ 'wishlist.general.product_image' | t }}
-            </h4>
-
-            <h4 class="column col-prod col-title"{% if settings.enable_multilang %} data-translate="wishlist.general.product_name"{% endif %}>
-                {{ 'wishlist.general.product_name' | t }}
-            </h4>       
-
-            <h4 class="column col-price col-title text-center"{% if settings.enable_multilang %} data-translate="wishlist.general.unit_price"{% endif %}>
-                {{ 'wishlist.general.unit_price' | t }}
-            </h4> 
-
-            <h4 class="column col-options col-title text-center"{% if settings.enable_multilang %} data-translate="products.product.add_to_cart"{% endif %}>
-                {{ 'products.product.add_to_cart' | t }}
-            </h4>
-
-            <h4 class="column col-remove col-title text-center"{% if settings.enable_multilang %} data-translate="cart.general.remove"{% endif %}>
-                {{ 'cart.general.remove' | t }}
-            </h4>
-        </div>
-
-        <div class="wishlist-content t-body" data-wishlist-container>
-        
-        </div>   
-    </div>
-
-     <div class="wishlist-footer t-footer">
+<div class="wishlist_table_wrapper">
+    <table class="wishlist_table" data-wishlist-content>
+        <thead>
+            <tr class="wishlist_row">
+                <th class="wishlist_col wishlist_image text-center">
+                    <span class="text">{{ 'wishlist.general.product_image' | t }}</span>
+                </th>
+                <th class="wishlist_col wishlist_name text-left">
+                    <span class="text">{{ 'wishlist.general.product_name' | t }}</span>
+                </th>
+                <th class="wishlist_col wishlist_price text-center">
+                    <span class="text">{{ 'wishlist.general.unit_price' | t }}</span>
+                </th>
+                <th class="wishlist_col wishlist_remove text-center">
+                    <span class="text">{{ 'wishlist.general.remove' | t }}</span>
+                </th>
+                <th class="wishlist_col wishlist_add text-center">
+                    <span class="text">{{ 'products.product.add_to_cart' | t }}</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody data-wishlist-container>
+        </tbody>
+    </table>
+</div>
+<div class="wishlist-footer">
+    <div class="button-share">
         <a class="share" href="mailto:?subject= {{ page.title | strip_html }}&amp;body=">
-            <span {% if settings.enable_multilang %}data-translate="wishlist.general.share_wishlist"{% endif %}>
-                {{ 'wishlist.general.share_wishlist' | t }}            
-            </span>
+            <svg class="icon"><use xlink:href="#icon-email" /></svg>
+            <span>{{ 'wishlist.general.share_wishlist' | t }}</span>
         </a>
-
-        <ul id="wishlist-paginate" class="wishlist-pagination"></ul>
+    </div>
+    <div class="wishlist_pagination">
+        <ul id="wishlist_pagination" class="pagination"></ul>
     </div>
 </div>

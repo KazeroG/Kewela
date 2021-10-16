@@ -1,0 +1,44 @@
+<div class="header-Mobile-item text-left">
+    <div class="items item--hamburger">
+        <a class="mobileMenu-toggle" href="javascript:void(0)" data-mobile-menu-toggle="menu" aria-label="menu">
+            <span class="mobileMenu-toggleIcon">Toggle menu</span>
+        </a>
+    </div>
+    {% if section.settings.enable_header_search %}
+        <div class="items item--searchMobile">
+            <a class="navUser-action" href="javascript:void(0)" data-search="quickSearch" aria-label="search">
+                <div class="navUser-icon">
+                    <svg class="icon icon-search"><use xlink:href="#icon-search" /></svg>
+                    <svg class="icon icon-close"><use xlink:href="#icon-close" /></svg>
+                </div>
+            </a>
+        </div>
+    {% endif %}
+</div>
+<div class="header-Mobile-item text-center">
+    <div class="items">
+    </div>
+</div>
+<div class="header-Mobile-item text-right">
+    {% if section.settings.enable_header_account and shop.customer_accounts_enabled %}
+        <div class="items item--account">
+            {% if customer %}
+                <a class="navUser-action" href="/account" aria-label="account">
+                    <svg class="icon"><use xlink:href="#icon-user" /></svg>
+                </a>
+            {% else %}
+                <a class="navUser-action" href="javascript:void(0)" data-login-toggle aria-label="account">
+                    <svg class="icon"><use xlink:href="#icon-user" /></svg>
+                </a>
+            {% endif %}
+        </div>
+    {% endif %}
+    {% if section.settings.enable_header_cart %}
+        <div class="items item--cart themevale_cart">
+            <a class="navUser-action" data-cart-preview data-options="align:right" href="javascript:void(0)" aria-label="cart">
+                <svg class="icon"><use xlink:href="#icon-cart" /></svg>
+                <span class="countPill cart-quantity" data-cart-count>{{ cart.item_count }}</span>
+            </a>
+        </div>
+    {% endif %}
+</div>

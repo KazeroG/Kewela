@@ -1,0 +1,192 @@
+{% include 'setting-spacing' %}
+
+{% if section.settings.custom_color %}
+<style>
+    [data-section-id='{{ section.id }}'] .card-text-overlay .content .title {
+        color: {{ section.settings.color_heading }};
+    }
+
+    [data-section-id='{{ section.id }}'] .card-text-overlay .content .sub-title {
+        color: {{ section.settings.color_sub_heading }} !important;
+    }
+
+</style>
+{% endif %}
+
+<div class="halo-section banner-block {{ padding_top }} {{ padding_bottom }} {{ background_color }} {{ border-top }} {{ border-bottom }}" data-section-id="{{ section.id }}" data-section-type="banner block">
+    <div class="container-fluid">
+        {% if section.blocks.size > 0 %}
+            <div class="halo-row column-2 halo-row-special">
+                <div class="halo-item one">
+                    {% for block in section.blocks %}
+                        {% if forloop.index == 1 %}
+                        <div class="halo-item-chid">
+                            <div class="card-text-overlay card-text-overlay--light">
+                                <div class="image {% if block.settings.image == blank %}no-image{% endif %}">
+                                    {% if block.settings.image != blank %}
+                                        <img class="lazyload" src="{{ 'loading.svg' | asset_url }}" data-src="{{ block.settings.image | img_url: 'master' }}" alt="" data-image>
+                                    {% else %}
+                                        <span class="recommended_size">945x770</span>
+                                        {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                                    {% endif %}
+                                </div>
+                                <div class="content">
+                                    {% if block.settings.title != blank or block.settings.sub_title != blank %}
+                                        <h4 class="sub-title">
+                                            {{ block.settings.sub_title }}
+                                        </h4>
+                                        <h3 class="title">
+                                            {{ block.settings.title }}
+                                        </h3>
+                                    {% endif %}
+                                </div>
+                                {% if block.settings.link != blank %}
+                                    <a class="link" href="{{ block.settings.link }}" aria-label="link"></a>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <div class="halo-item two">
+                    {% for block in section.blocks %}
+                        {% if forloop.index != 1 %}
+                        <div class="halo-item-chid">
+                            <div class="card-text-overlay card-text-overlay--light">
+                                <div class="image {% if block.settings.image == blank %}no-image{% endif %}">
+                                    {% if block.settings.image != blank %}
+                                        <img class="lazyload" src="{{ 'loading.svg' | asset_url }}" data-src="{{ block.settings.image | img_url: 'master' }}" alt="" data-image>
+                                    {% else %}
+                                        {% if forloop.index == 4 %}
+                                            <span class="recommended_size">945x385</span>
+                                            {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                                        {% else %}
+                                            <span class="recommended_size">480x385</span>
+                                            {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+                                <div class="content">
+                                    {% if block.settings.title != blank or block.settings.sub_title != blank %}
+                                        <h4 class="sub-title">
+                                            {{ block.settings.sub_title }}
+                                        </h4>
+                                        <h3 class="title">
+                                            {{ block.settings.title }}
+                                        </h3>
+                                    {% endif %}
+                                </div>
+                                {% if block.settings.link != blank %}
+                                    <a class="link" href="{{ block.settings.link }}" aria-label="link"></a>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+{% schema %}
+{
+    "name": "Full Width Banner Image 1",
+    "class": "banner-image-full-width-1-section",
+    "max_blocks": 4,
+    "settings": [
+        {
+            "type": "header",
+            "content": "Section Layout"
+        },
+        {
+            "type": "range",
+            "id": "padding-top",
+            "label": "Spacing Top",
+            "default": 3,
+            "min": 0,
+            "max": 10,
+            "step": 1
+        },
+        {
+            "type": "range",
+            "id": "padding-bottom",
+            "label": "Spacing bottom",
+            "default": 3,
+            "min": 0,
+            "max": 10,
+            "step": 1
+        },
+        {
+            "type": "header",
+            "content": "Custom Color"
+        },
+        {
+            "type": "checkbox",
+            "id": "custom_color",
+            "label": "Turn on custom color",
+            "default": false
+        },
+        {
+            "type": "color",
+            "id": "color_heading",
+            "label": "Heading Block Color"
+        },
+        {
+            "type": "color",
+            "id": "color_sub_heading",
+            "label": "Sub Heading Block Color"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "banner_block",
+            "name": "Another Block",
+            "settings": [
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image"
+                },
+                {
+                    "type": "url",
+                    "id": "link",
+                    "label": "Link (Optional)"
+                },
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Heading",
+                    "default": "Cosmopolis"
+                },
+                {
+                    "type": "text",
+                    "id": "sub_title",
+                    "label": "Sub Heading",
+                    "default": "New Collection"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Full Width Banner Image 1",
+            "category": "Banners",
+            "blocks": [
+                {
+                    "type": "banner_block"
+                },
+                {
+                    "type": "banner_block"
+                },
+                {
+                    "type": "banner_block"
+                },
+                {
+                    "type": "banner_block"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

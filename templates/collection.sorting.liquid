@@ -5,13 +5,13 @@
     {%- elsif tag contains 'page=' -%}
         {%- assign page = tag | remove: 'page=' -%}        
     {%- endif -%}
-{%- endfor -%} 
+{%- endfor -%}
 {%- assign end = limit | times: page -%}
 {%- assign start = end | minus: limit | plus: 1 -%}
 {%- for product in collections[collection.handle].products limit: end -%}
     {%- if forloop.index >= start -%}
-    <div class="grid-item col-6 col-md-4 col-lg-3 col5{% if settings.product_image_border %} grid-item-border{% endif %} ">
-      {% render 'product-grid-item' with product as product %}
+    <div class="halo-item" data-index="{{ forloop.index }}">        
+        {% render 'product-card-grid' with product as product, serial: forloop.index %}
     </div>
     {%- endif -%}
 {%- endfor -%}
