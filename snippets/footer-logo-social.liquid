@@ -1,0 +1,15 @@
+<div class="footer__logo-social">
+  {% if block.settings.logo %}
+    <style>
+      .footer__logo a {
+        height: {{ block.settings.desktop_logo_height }}px;
+      }
+    </style>
+    {%- assign footer_logo_size = block.settings.desktop_logo_height | prepend: 'x' -%}
+    <div class="footer__logo">
+      <a href="/">
+        <img src="{{ block.settings.logo | img_url: footer_logo_size, scale: 2 }}" alt="{{ block.settings.logo.alt | default: shop.name }}" class="lazyload">
+      </a>
+    </div>
+  {% endif %}
+</div>

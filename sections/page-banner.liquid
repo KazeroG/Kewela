@@ -1,0 +1,71 @@
+{% for block in section.blocks %}
+  {% if page.handle == block.settings.page %}
+<div id="CollectionSection" data-section-id="{{ section.id }}" data-section-type="collection-template">
+    <div id="section-{{block.id}}" class="collection-hero loading--delayed">
+      <div class="collection-hero__image lazyload"
+             data-optimumx="1.4"
+             data-expand="-150"
+             {% if block.settings.image %}data-bgset="{{ block.settings.image | img_url: '750x' }} 750w, {{ block.settings.image | img_url: '1000x' }} 1000w, {{ block.settings.image | img_url: '1500x' }} 1500w"{% endif %}>
+          {%- if block.settings.image == nil -%}
+          <div class="PlaceholderBackground PlaceholderSvg--dark">
+            {%- capture image_name -%}lifestyle-{% cycle 'anchor': '1', '2' %}{%- endcapture -%}
+            {{ image_name | placeholder_svg_tag: 'PlaceholderBackground__Svg' }}
+          </div>
+          {%- endif -%}
+        </div>
+      <noscript>
+        <div
+             class="collection-hero__image"
+             style="background-image: url({{ block.settings.image | img_url: '1400x' }});";
+             ></div>
+      </noscript>
+      {%- if block.settings.title != blank -%}
+      <div class="collection-hero__content">
+        <div class="page-width">
+          <header class="section-header section-header--hero">
+            <h1 class="section-header__title section-header__title--medium">
+              <div class="animation-cropper">
+                <div class="animation-contents">
+                  {{ block.settings.title }}
+                </div>
+              </div>
+            </h1>
+          </header>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+</div>
+  {% endif %}
+{% endfor %}
+
+{% schema %}
+  {
+    "name": "Page banner",
+	"class": "section-page-banner",
+    "settings": [],
+	"blocks": [
+      {
+        "type": "select",
+        "name": "Banner Content",
+        "settings": [
+          {
+            "id": "page",
+            "type": "page",
+            "label": "Select page for Banner"
+          },
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

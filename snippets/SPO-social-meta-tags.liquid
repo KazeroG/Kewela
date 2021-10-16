@@ -1,0 +1,238 @@
+<!-- /snippets/SPO-social-meta-tags.liquid -->
+<!-- version: 20181206 -->
+
+<!-- SEO Product Optimizer -->
+{% assign metas = product.metafields.global %}
+{% assign shop_metas = shop.metafields.shop %}
+{%- assign og_url = canonical_url -%}
+{%- assign fb_app_id = 1015003798605559 -%}
+
+<meta property="fb:app_id" content="{{ fb_app_id }}" />
+<meta property="og:url" content="{{ og_url }}">
+{% if template contains 'product' %}
+  <!-- This part handle your product page   -->
+  {% if metas['title_tag'] %}
+    <!-- Google -->
+    <title>{{ metas['title_tag'] | escape }} &ndash; {{ shop.name | escape }}</title>
+    <meta property="description" content="{{ metas['description_tag'] | truncate: 160 | escape }}">
+    <meta property="keywords" content="{{ metas['keywords_tag'] | escape }}">
+    <!-- Google End -->
+  {% else %}
+    <title>
+      {{ product.title | strip_html | escape }} &ndash; {{ shop.name | escape }}
+    </title>
+    <meta property="description" content="{{ product.description | strip_html | truncate: 160 | escape }}">
+  {% endif %}
+  <!-- Facebook -->
+  {% if metas['og:image'] %}
+    <meta property="og:image" content="http://{{ metas['og:image'] }}">
+    <meta property="og:image:secure_url" content="https://{{ metas['og:image'] }}">
+    <meta property="og:image:width" content="{{ metas['og:image:width'] }}">
+    <meta property="og:image:height" content="{{ metas['og:image:height'] }}">
+    <meta property="og:title" content="{{ metas['og:title'] | escape }}">
+    <meta property="og:description" content="{{ metas['og:description'] | escape }}">
+  {% else %}
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{{ product.title | strip_html | escape }}">
+    <meta property="og:description" content="{{ product.description | strip_html | truncate: 160 | escape }}">
+    {% if shop_metas['og:image:default'] == 'first' %}
+      <meta property="og:image" content="http:{{ product.images.first | img_url: 'master' }}">
+      <meta property="og:image:secure_url" content="https:{{ product.images.first | img_url: 'master' }}">
+      <meta property="og:image:width" content="{{ product.images.first.width }}">
+      <meta property="og:image:height" content="{{ product.images.first.height }}">
+    {% elsif shop_metas['og:image:default'] == 'last' %}
+      <meta property="og:image" content="http:{{ product.images.last | img_url: 'master' }}">
+      <meta property="og:image:secure_url" content="https:{{ product.images.last | img_url: 'master' }}">
+      <meta property="og:image:width" content="{{ product.images.last.width }}">
+      <meta property="og:image:height" content="{{ product.images.last.height }}">
+    {% else %} <!-- default - list 3 products -->
+      {% for image in product.images reversed limit:3 %}
+        <meta property="og:image" content="http:{{ image | img_url: '630x630' }}">
+        <meta property="og:image:secure_url" content="https:{{ image | img_url: '630x630' }}">
+      {% endfor %}
+    {% endif %}
+  {% endif %}
+
+  <!-- Twitter -->
+  {% if metas['twitter:image'] %}
+    <meta name="twitter:card" content="{{ metas['twitter:card'] }}">
+    <meta name="twitter:title" content="{{ metas['twitter:title'] | escape }}">
+    <meta name="twitter:description" content="{{ metas['twitter:description'] | escape }}">
+    <meta name="twitter:image" content="https://{{ metas['twitter:image'] }}">
+  {% else %}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ product.title | strip_html | escape }}">
+    <meta name="twitter:description" content="{{ product.description | strip_html | truncate: 160 | escape }}">
+    {% if shop_metas['twitter:image:default'] == 'first' %}
+      <meta property="twitter:image" content="https:{{ product.images.first | img_url: 'master' }}">
+    {% elsif shop_metas['twitter:image:default'] == 'last' %}
+      <meta property="twitter:image" content="https:{{ product.images.last | img_url: 'master' }}">
+    {% else %} <!-- default - list 3 products -->
+      {% for image in product.images reversed limit:3 %}
+        <meta property="twitter:image" content="https:{{ image | img_url: 'grande' }}">
+      {% endfor %}
+    {% endif %}
+  {% endif %}
+
+{% elsif template contains 'collection' %}
+  {% assign col_metas = collection.metafields.global %}
+  <!-- This part handle your collection page   -->
+  {% if col_metas['title_tag'] %}
+  <!-- Google -->
+    <title>{{ col_metas['title_tag'] | escape }} &ndash; {{ shop.name | escape }}</title>
+    <meta property="description" content="{{ col_metas['description_tag'] | escape }}">
+    <meta property="keywords" content="{{ col_metas['keywords_tag'] | escape }}">
+  <!-- Google End -->
+  {% else %}
+  <title>
+    {{ collection.title | strip_html | escape }} &ndash; {{ shop.name | escape }}
+    </title>
+    <meta property="description" content="{{ collection.excerpt_or_content | strip_html | truncate: 160 | escape }}">
+  {% endif %}
+
+  {% if col_metas['og:image'] %}
+    <!-- Facebook -->
+    <meta property="og:image" content="http://{{ col_metas['og:image'] }}">
+    <meta property="og:image:secure_url" content="https://{{ col_metas['og:image'] }}">
+    <meta property="og:image:width" content="{{ col_metas['og:image:width'] }}">
+    <meta property="og:image:height" content="{{ col_metas['og:image:height'] }}">
+    <meta property="og:title" content="{{ col_metas['og:title'] | escape }}">
+    <meta property="og:description" content="{{ col_metas['og:description'] | escape }}">
+    <!-- Facebook End  -->
+  {% else %}
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{{ collection.title | strip_html | escape }}">
+    <meta property="og:description" content="{{ collection.excerpt_or_content | strip_html | truncate: 160 | escape }}">
+    {% if collection.image %}
+      <meta property="og:image" content="http:{{ collection | img_url: '1024x1024' }}">
+      <meta property="og:image:secure_url" content="https:{{ collection | img_url: '1024x1024' }}">
+    {% endif %}
+  {% endif %}
+
+  {% if col_metas['twitter:image'] %}
+    <!-- Twitter -->
+    <meta name="twitter:card" content="{{ col_metas['twitter:card'] }}">
+    <meta name="twitter:title" content="{{ col_metas['twitter:title'] | escape }}">
+    <meta name="twitter:description" content="{{ col_metas['twitter:description'] | escape }}">
+    <meta name="twitter:image" content="https://{{ col_metas['twitter:image'] }}">
+    <!-- Twitter End -->
+  {% else %}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ collection.title | strip_html | escape }}">
+    <meta name="twitter:description" content="{{ collection.excerpt_or_content | strip_html | truncate: 160 | escape }}">
+    {% if collection.image %}
+      <meta property="twitter:image" content="https:{{ collection | img_url: '1024x1024' }}">
+    {% endif %}
+  {% endif %}
+
+{% elsif template contains 'article' %}
+
+  {% assign blog_metas = article.metafields.global %}
+  <!-- This part handle your article page   -->
+
+  {% if blog_metas['title_tag'] %}
+  <!-- Google -->
+    <title>{{ blog_metas['title_tag'] | escape }} &ndash; {{ shop.name | escape }}</title>
+    <meta property="description" content="{{ blog_metas['description_tag'] | escape }}">
+    <meta property="keywords" content="{{ blog_metas['keywords_tag'] | escape }}">
+  <!-- Google End -->
+  {% else %}
+  <title>
+    {{ article.title | strip_html | escape }} &ndash; {{ shop.name | escape }}
+    </title>
+    <meta property="description" content="{{ article.excerpt_or_content | strip_html | truncate: 160 | escape }}">
+  {% endif %}
+
+  {% if blog_metas['og:image'] %}
+    <!-- Facebook -->
+    <meta property="og:image" content="http://{{ blog_metas['og:image'] }}">
+    <meta property="og:image:secure_url" content="https://{{ blog_metas['og:image'] }}">
+    <meta property="og:image:width" content="{{ blog_metas['og:image:width'] }}">
+    <meta property="og:image:height" content="{{ blog_metas['og:image:height'] }}">
+    <meta property="og:title" content="{{ blog_metas['og:title'] | escape }}">
+    <meta property="og:description" content="{{ blog_metas['og:description'] | escape }}">
+    <!-- Facebook End  -->
+  {% else %}
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{{ article.title | strip_html | escape }}">
+    <meta property="og:description" content="{{ article.excerpt_or_content | strip_html | truncate: 160 | escape }}">
+  {% if article.image %}
+      <meta property="og:image" content="http:{{ article | img_url: '1024x1024' }}">
+      <meta property="og:image:secure_url" content="https:{{ article | img_url: '1024x1024' }}">
+    {% endif %}
+  {% endif %}
+
+  {% if blog_metas['twitter:image'] %}
+    <!-- Twitter -->
+    <meta name="twitter:card" content="{{ blog_metas['twitter:card'] }}">
+    <meta name="twitter:title" content="{{ blog_metas['twitter:title'] | escape }}">
+    <meta name="twitter:description" content="{{ blog_metas['twitter:description'] | escape }}">
+    <meta name="twitter:image" content="https://{{ blog_metas['twitter:image'] }}">
+    <!-- Twitter End -->
+  {% else %}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ article.title | strip_html | escape }}">
+    <meta name="twitter:description" content="{{ article.excerpt_or_content | strip_html | truncate: 160 | escape }}">
+  {% if article.image %}
+      <meta property="twitter:image" content="https:{{ article | img_url: '1024x1024' }}">
+    {% endif %}
+  {% endif %}
+
+{% else %}
+
+  <!-- This part handle your none product page share -->
+  {% if shop_metas['meta_title'] %}
+    <title>
+    {{ page_title | escape }}
+    {% unless page_title contains shop.name %} &ndash;
+      {{ shop.name | escape }}
+    {% endunless %}
+    </title>
+
+    {% if page_description %}
+      <meta name="description" content="{{ page_description | escape }}">
+    {% endif %}
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{{ shop_metas['meta_title'] | escape }}">
+    <meta property="og:description" content="{{ shop_metas['meta_description'] | escape }}">
+    <meta property="og:image" content="http://{{ shop_metas['banner_image'] }}">
+    <meta property="og:image:secure_url" content="https://{{ shop_metas['banner_image'] }}">
+    {% if shop_metas['banner_image_width'] %}
+      <meta property="og:image:width" content="{{ shop_metas['banner_image_width'] }}">
+      <meta property="og:image:height" content="{{ shop_metas['banner_image_height'] }}">
+    {% endif %}
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ shop_metas['meta_title'] | escape }}">
+    <meta name="twitter:description" content="{{ shop_metas['meta_description'] | escape }}">
+    <meta name="twitter:image" content="https://{{ shop_metas['banner_image'] }}">
+  {% else %}
+    <title>
+      {{ page_title | escape }}
+      {% unless page_title contains shop.name %} &ndash;
+        {{ shop.name | escape }}
+      {% endunless %}
+    </title>
+    <meta property="description" content="{{ page_description | escape }}">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{{ page_title | escape }}">
+    <meta property="og:description" content="{{ page_description | escape }}">
+  {% if settings.logo_use_image %}
+      <meta property="og:image" content="http:{{ 'logo.png' | asset_url }}">
+      <meta property="og:image:secure_url" content="https:{{ 'logo.png' | asset_url }}">
+    {% endif %}
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ page_title | escape }}">
+    <meta name="twitter:description" content="{{ page_description | escape }}">
+  {% if settings.logo_use_image %}
+      <meta property="twitter:image" content="https:{{ 'logo.png' | asset_url }}">
+    {% endif %}
+  {% endif %}
+
+{% endif %}
+
+
+<!-- END - SEO Product Optimizer -->
