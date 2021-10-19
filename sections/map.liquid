@@ -1,3 +1,16 @@
+{%- liquid
+  assign display_map = false
+  assign onboarding = false
+  assign bg_image = section.settings.background_image
+
+  if section.settings.api_key == blank and bg_image == blank
+    assign onboarding = true
+  endif
+  if section.settings.api_key != blank and section.settings.map_address
+    assign display_map = true
+  endif
+-%}
+
 <script>
   theme.strings.addressError = {{ 'sections.map.address_error' | t | json }};
   theme.strings.addressNoResults = {{ 'sections.map.address_no_results' | t | json }};
@@ -5,20 +18,9 @@
   theme.strings.authError = {{ 'sections.map.auth_error_html' | t | json }};
 </script>
 
-{%- assign display_map = false -%}
-{%- assign onboarding = false -%}
-{%- assign bg_image = section.settings.background_image -%}
-
-{%- if section.settings.api_key == blank and bg_image == blank -%}
-  {%- assign onboarding = true -%}
-{%- endif -%}
-{%- if section.settings.api_key != blank and section.settings.map_address -%}
-  {%- assign display_map = true -%}
-{%- endif -%}
-
-{% if bg_image.src != blank %}
-  {% unless display_map %}
-    {% style %}
+{%- if bg_image.src != blank -%}
+  {%- unless display_map -%}
+    {%- style -%}
       .map-{{ section.id }} {
         background-size: cover;
         background-position: center;
@@ -31,38 +33,38 @@
           padding-top: {{ 1 | divided_by: bg_image.aspect_ratio | times: 100 }}%;
         }
       }
-    {% endstyle %}
-  {% endunless %}
+    {%- endstyle -%}
+  {%- endunless -%}
 {% endif %}
 
 <div class="map-section" data-section-id="{{ section.id }}" data-section-type="map" data-aos="map-section__animation">
-  {% if section.settings.title != blank or section.settings.address != blank %}
+  {%- if section.settings.title != blank or section.settings.address != blank -%}
     <div class="page-width">
       <div class="map-section__overlay-wrapper">
         <div class="animation-cropper">
           <div class="animation-contents">
             <div class="map-section__overlay">
-              {% if section.settings.map_title != blank %}
+              {%- if section.settings.map_title != blank -%}
                 <h3 class="h4 text-spacing">{{ section.settings.map_title | escape }}</h3>
-              {% endif %}
-              {% if section.settings.address != blank %}
+              {%- endif -%}
+              {%- if section.settings.address != blank -%}
                 <div class="rte-setting text-spacing">{{ section.settings.address }}</div>
-                {% if section.settings.show_button %}
-                  <a href="https://maps.google.com?daddr={{ section.settings.map_address | escape }}" class="btn btn--secondary btn--small" target="_blank">{{ 'sections.map.get_directions' | t }}</a>
-                {% endif %}
-              {% endif %}
+                {%- if section.settings.show_button -%}
+                  <a href="https://maps.google.com?daddr={{ section.settings.map_address | escape }}" class="btn btn--secondary btn--small" target="_blank" rel="noopener" aria-label="{{ section.settings.map_title | escape }}">{{ 'sections.map.get_directions' | t }}</a>
+                {%- endif -%}
+              {%- endif -%}
             </div>
           </div>
         </div>
       </div>
     </div>
-  {% endif %}
-  <a class="map-section__link" href="https://www.google.ca/maps/place/{{ section.settings.map_address | escape }}" target="_blank" aria-label="{{ section.settings.map_address | escape }}"></a>
+  {%- endif -%}
+  <a class="map-section__link" href="https://www.google.com/maps/place/{{ section.settings.map_address | escape }}" target="_blank" rel="noopener" aria-label="{{ section.settings.map_address | escape }}"></a>
   {%- if onboarding -%}
     <div class="map-onboarding">
       {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
     </div>
-  {% endif %}
+  {%- endif -%}
   <div
     id="Map-{{ section.id }}"
     data-map
@@ -161,8 +163,7 @@
     ],
     "presets": [
       {
-        "name": "Map",
-        "category": "Store information"
+        "name": "Map"
       }
     ]
   }

@@ -1,4 +1,4 @@
-{% paginate customer.addresses by 5 %}
+{%- paginate customer.addresses by 5 -%}
 
 <div class="page-width page-content">
 
@@ -85,16 +85,14 @@
           </p>
 
           <input type="submit" class="btn" value="{{ 'customer.addresses.add' | t }}">
-          <button type="button" class="text-link address-new-toggle">&nbsp;&nbsp;{{ 'customer.addresses.cancel' | t }}</button>
+          <p>
+            <button type="button" class="text-link address-new-toggle">{{ 'customer.addresses.cancel' | t }}</button>
+          </p>
 
         {% endform %}
       </div>
 
-      {% comment %}
-        List all customer addresses with a unique edit form.
-        Also add pagination in case they have a large number of addresses
-      {% endcomment %}
-      {% for address in customer.addresses %}
+      {%- for address in customer.addresses -%}
         {% if address == customer.default_address %}
           <p class="h4">{{ 'customer.addresses.default' | t }}</p>
         {% endif %}
@@ -172,10 +170,10 @@
           {% endform %}
         </div>
 
-      {% endfor %}
+      {%- endfor -%}
 
-      {% if paginate.pages > 1 %}
-        {% include 'pagination' %}
+      {%- if paginate.pages > 1 -%}
+        {%- render 'pagination', paginate: paginate -%}
       {% endif %}
 
     </div>
@@ -183,4 +181,4 @@
   </div>
 </div>
 
-{% endpaginate %}
+{%- endpaginate -%}

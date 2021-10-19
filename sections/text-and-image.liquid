@@ -1,64 +1,99 @@
-{% if section.settings.divider %}<div class="section--divider">{% endif %}
+{%- if section.settings.divider -%}<div class="section--divider">{%- endif -%}
 
-<div class="page-width">
-  {% capture image_layout %}
-    <div class="feature-row__item">
-      <div style="margin: 0 auto; max-width: {{ section.settings.image_width }}px;">
-        {% if section.settings.image != blank %}
-          {% if section.settings.button_label != blank and section.settings.button_link != blank %}<a href="{{ section.settings.button_link }}">{% endif %}
-          <div class="image-wrap" style="height: 0; padding-bottom: {{ 100 | divided_by: section.settings.image.aspect_ratio }}%;">
-            {%- assign img_url = section.settings.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
-            <img class="feature-row__image lazyload"
-                data-src="{{ img_url }}"
-                data-widths="[180, 360, 540, 720, 900, 1080]"
-                data-aspectratio="{{ section.settings.image.aspect_ratio }}"
-                data-sizes="auto"
-                alt="{{ section.settings.image.alt }}">
-          </div>
-          {% if section.settings.button_label != blank and section.settings.button_link != blank %}</a>{% endif %}
-        {% else %}
-          <div class="image-wrap">
-            {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
-          </div>
-        {% endif %}
+{%- liquid
+  assign overlap_images = true
+  if section.settings.image != blank and section.settings.image2 == blank
+    assign overlap_images = false
+  endif
+-%}
+
+<div class="index-section">
+
+  <div class="page-width feature-row-wrapper">
+    {%- capture image_layout -%}
+      <div class="feature-row__item{% if overlap_images %} feature-row__item--overlap-images{% endif %}" style="max-width: {{ section.settings.image_width }}px" data-aos>
+          {%- if section.settings.image != blank -%}
+            <div>
+              {%- if section.settings.button_label != blank and section.settings.button_link != blank -%}<a href="{{ section.settings.button_link }}">{%- endif -%}
+                <div class="image-wrap" style="height: 0; padding-bottom: {{ 100 | divided_by: section.settings.image.aspect_ratio }}%;">
+                  {%- assign img_url = section.settings.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+                  <img class="feature-row__image lazyload"
+                    data-src="{{ img_url }}"
+                    data-widths="[180, 360, 540, 750, 900, 1080]"
+                    data-aspectratio="{{ section.settings.image.aspect_ratio }}"
+                    data-sizes="auto"
+                    alt="{{ section.settings.image.alt }}">
+                </div>
+              {%- if section.settings.button_label != blank and section.settings.button_link != blank -%}</a>{%- endif -%}
+            </div>
+          {%- endif -%}
+          {%- if section.settings.image2 != blank -%}
+            <div>
+              {%- if section.settings.button_label != blank and section.settings.button_link != blank -%}<a href="{{ section.settings.button_link }}">{%- endif -%}
+                <div class="image-wrap" style="height: 0; padding-bottom: {{ 100 | divided_by: section.settings.image2.aspect_ratio }}%;">
+                  {%- assign img_url = section.settings.image2 | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+                  <img class="feature-row__image lazyload"
+                    data-src="{{ img_url }}"
+                    data-widths="[180, 360, 540, 750, 900, 1080]"
+                    data-aspectratio="{{ section.settings.image2.aspect_ratio }}"
+                    data-sizes="auto"
+                    alt="{{ section.settings.image2.alt }}">
+                </div>
+              {%- if section.settings.button_label != blank and section.settings.button_link != blank -%}</a>{%- endif -%}
+            </div>
+          {%- endif -%}
+          {%- if section.settings.image == blank and section.settings.image2 == blank -%}
+            <div>
+              <div class="image-wrap">
+                {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+              </div>
+            </div>
+            <div>
+              <div class="image-wrap">
+                {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+              </div>
+            </div>
+          {%- endif -%}
       </div>
+    {%- endcapture -%}
+
+    <div class="feature-row">
+      {%- if section.settings.layout == 'left' -%}
+        {{ image_layout }}
+      {%- endif -%}
+
+      <div class="feature-row__item feature-row__text feature-row__text--{{ section.settings.layout }} text-{{ section.settings.align_text }}" data-aos>
+        {%- if section.settings.subtitle != blank -%}
+          <div class="subheading appear-delay{% cycle '','-1','-2','-3','-4' %}">{{ section.settings.subtitle }}</div>
+        {%- endif -%}
+        {%- if section.settings.title != blank -%}
+          <div class="h1 appear-delay{% cycle '','-1','-2','-3','-4' %}">{{ section.settings.title | escape }}</div>
+        {%- endif -%}
+        {%- if section.settings.text != blank -%}
+          <div class="rte appear-delay{% cycle '','-1','-2','-3','-4' %}">{{ section.settings.text }}</div>
+        {%- endif -%}
+        {%- if section.settings.button_label != blank -%}
+          <div class="appear-delay{% cycle '','-1','-2','-3','-4' %}">
+            <a href="{{ section.settings.button_link }}" class="btn{% if section.settings.button_style == 'secondary' %} btn--tertiary{% endif %}">
+              {{ section.settings.button_label }}
+            </a>
+          </div>
+        {%- endif -%}
+      </div>
+
+      {%- if section.settings.layout == 'right' -%}
+        {{ image_layout }}
+      {%- endif -%}
     </div>
-  {% endcapture %}
-
-  <div class="feature-row" data-aos>
-    {% if section.settings.layout == 'left' %}
-      {{ image_layout }}
-    {% endif %}
-
-    <div class="feature-row__item feature-row__text feature-row__text--{{ section.settings.layout }} larger-text">
-      {% if section.settings.subtitle != blank %}
-        <p class="subtitle">{{ section.settings.subtitle }}</p>
-      {% endif %}
-      {% if section.settings.title != blank %}
-        <h2 class="h3">{{ section.settings.title | escape }}</h2>
-      {% endif %}
-      {% if section.settings.text != blank %}
-        <div class="rte featured-row__subtext">{{ section.settings.text }}</div>
-      {% endif %}
-      {% if section.settings.button_label != blank %}
-        <a href="{{ section.settings.button_link }}" class="btn">
-          {{ section.settings.button_label }}
-        </a>
-      {% endif %}
-    </div>
-
-    {% if section.settings.layout == 'right' %}
-      {{ image_layout }}
-    {% endif %}
   </div>
+
 </div>
 
-{% if section.settings.divider %}</div>{% endif %}
+{%- if section.settings.divider -%}</div>{%- endif -%}
 
 {% schema %}
   {
     "name": "Image with text",
-    "class": "index-section",
     "settings": [
       {
         "type": "image_picker",
@@ -66,20 +101,24 @@
         "label": "Image"
       },
       {
+        "type": "image_picker",
+        "id": "image2",
+        "label": "Image 2"
+      },
+      {
         "type": "range",
         "id": "image_width",
         "label": "Image width",
-        "default": 500,
-        "min": 100,
-        "max": 500,
+        "default": 700,
+        "min": 200,
+        "max": 700,
         "step": 10,
         "unit": "px"
       },
       {
         "type": "text",
         "id": "subtitle",
-        "label": "Subheading",
-        "default": "Improved"
+        "label": "Subheading"
       },
       {
         "type": "text",
@@ -96,8 +135,7 @@
       {
         "type": "text",
         "id": "button_label",
-        "label": "Button label",
-        "default": "Optional button"
+        "label": "Button label"
       },
       {
         "type": "url",
@@ -106,9 +144,45 @@
       },
       {
         "type": "select",
+        "id": "button_style",
+        "label": "Button style",
+        "default": "primary",
+        "options": [
+          {
+            "value": "primary",
+            "label": "Primary"
+          },
+          {
+            "value": "secondary",
+            "label": "Secondary"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "align_text",
+        "label": "Text alignment",
+        "default": "left",
+        "options": [
+          {
+            "value": "left",
+            "label": "Left"
+          },
+          {
+            "value": "center",
+            "label": "Centered"
+          },
+          {
+            "value": "right",
+            "label": "Right"
+          }
+        ]
+      },
+      {
+        "type": "select",
         "id": "layout",
         "label": "Layout",
-        "default": "left",
+        "default": "right",
         "options": [
           {
             "value": "left",
@@ -129,8 +203,7 @@
     ],
     "presets": [
       {
-        "name": "Image with text",
-        "category": "Image"
+        "name": "Image with text"
       }
     ]
   }

@@ -12,7 +12,7 @@
     },
     "404": {
       "title": "404 Seite nicht gefunden",
-      "subtext_html": "Die von Ihnen angeforderte Seite existiert nicht. Klicken Sie <a href=\"/\">hier</a>, um den Einkauf fortzusetzen."
+      "subtext_html": "Die von Ihnen angeforderte Seite existiert nicht. Klicken Sie <a href='{{ url }}'>hier</a>, um den Einkauf fortzusetzen."
     },
     "pagination": {
       "previous": "Zurück",
@@ -26,7 +26,7 @@
       "signup_form_email_label": "E-Mail",
       "signup_form_success": "Wir senden Ihnen eine E-Mail, kurz bevor wir eröffnen!",
       "admin_link_html": "Sind Sie der Geschäftsinhaber? <a href=\"/admin\" class=\"text-link\">Melden Sie sich hier an</a>",
-      "password_link": "Mit Passwort betreten",
+      "password_link": "Passwort",
       "powered_by_shopify_html": "Dieser Shop wird mit Hilfe von {{ shopify }} betrieben werden"
     },
     "breadcrumbs": {
@@ -50,6 +50,7 @@
     },
     "search": {
       "view_more": "Mehr sehen",
+      "collections": "Kollektionen:",
       "pages": "Seiten:",
       "articles": "Artikel:",
       "no_results_html": "Ihre Suche nach \"{{ terms }}\" hat keine Ergebnisse hervorgebracht.",
@@ -67,6 +68,12 @@
       "close_menu": "Menü schließen",
       "expand_submenu": "Menü maximieren",
       "collapse_submenu": "Menü minimieren"
+    },
+    "currency": {
+      "dropdown_label": "Währung"
+    },
+    "language": {
+      "dropdown_label": "Sprache"
     }
   },
   "sections": {
@@ -76,6 +83,10 @@
       "address_no_results": "Keine Ergebnisse für diese Adresse",
       "address_query_limit_html": "Sie haben die Google- API-Nutzungsgrenze überschritten. Betrachten wir zu einem <a href=\"https://developers.google.com/maps/premium/usage-limits\">Premium-Paket</a> zu aktualisieren.",
       "auth_error_html": "Es gab ein Problem bei Google Maps Konto zu authentifizieren. Erstellen und die <a href=\"https://developers.google.com/maps/documentation/javascript/get-api-key\">JavaScript- API</a> und <a href=\"https://developers.google.com/maps/documentation/geocoding/get-api-key\">Geocoding API</a> -Berechtigungen der App aktivieren."
+    },
+    "slideshow": {
+      "play_slideshow": "Diashow abspielen",
+      "pause_slideshow": "Pause Diashow"
     }
   },
   "blogs": {
@@ -111,12 +122,11 @@
       "update": "Einkaufswagen aktualisieren",
       "checkout": "Zur Kasse",
       "empty": "Ihr Einkaufswagen ist im Moment leer.",
-      "continue_browsing_html": "Mit der Suche <a href=\"/collections/all\">hier</a> fortfahren.",
+      "continue_browsing_html": "Mit der Suche <a href='{{ url }}'>hier</a> fortfahren.",
       "close_cart": "Einkaufswagen schließen",
       "savings_html": "Sie sparen {{ savings }}",
       "reduce_quantity": "Artikelmenge um eins reduzieren",
       "increase_quantity": "Artikelmenge um eins erhöhen",
-      "orders_processed_in_currency_html": "Bestellungen werden in {{ currency }} bearbeitet.",
       "terms": "Ich stimme den Nutzungsbedingungen zu",
       "terms_html": "Ich stimme den <a href='{{ url }}' target='_blank'>Nutzungsbedingungen</a> zu",
       "terms_confirm": "Sie müssen den Verkaufsbedingungen zustimmen, um auszuchecken"
@@ -212,8 +222,8 @@
     },
     "order": {
       "title": "Bestellung {{ name }}",
-      "date": "Aufgegeben am {{ date }}",
-      "cancelled": "Bestellung storniert am {{ date }}",
+      "date_html": "Aufgegeben am {{ date }}",
+      "cancelled_html": "Bestellung storniert am {{ date }}",
       "cancelled_reason": "Grund: {{ reason }}",
       "billing_address": "Rechnungsadresse",
       "payment_status": "Zahlungsstatus",
@@ -227,7 +237,7 @@
       "price": "Preis",
       "quantity": "Menge",
       "total": "Gesamt",
-      "fulfilled_at": "Geliefert am {{ date }}",
+      "fulfilled_at_html": "Geliefert am {{ date }}",
       "subtotal": "Zwischensumme"
     },
     "recover_password": {
@@ -279,23 +289,41 @@
   },
   "products": {
     "general": {
+      "color_swatch_trigger": "Farbe",
       "save_html": "Sparen {{ saved_amount }}",
       "collection_return": "Zurück zur {{ collection }}",
       "next_product": "Nächster: {{ title }}",
       "sale_price": "Sonderpreis",
       "regular_price": "Normaler Preis",
-      "from_text_html": "Von {{ price }}"
+      "from_text_html": "Von {{ price }}",
+      "reviews": "Rezensionen"
     },
     "product": {
+      "description": "Beschreibung",
+      "in_stock_label": "Auf Lager",
       "stock_label": "{{ count }} auf Lager",
       "sold_out": "Ausverkauft",
       "unavailable": "Nicht verfügbar",
       "quantity": "Menge",
       "add_to_cart": "In den Einkaufswagen legen",
       "preorder": "Vorbestellung",
+      "include_taxes": "inkl. MwSt.",
+      "shipping_policy_html": "zzgl. <a href='{{ link }}'>Versandkosten<\/a>",
       "will_not_ship_until": "Wird nach dem {{ date }} versendet",
       "will_be_in_stock_after": "Wird nach dem {{ date }} auf Lager sein",
-      "waiting_for_stock": "Inventar auf dem Weg"
+      "waiting_for_stock": "Inventar auf dem Weg",
+      "view_in_space": "In Ihrem Bereich ansehen",
+      "view_in_space_label": "„Ansicht in Ihrem Raum“ lädt den Artikel im Augmented-Reality-Fenster"
+    }
+  },
+  "store_availability":{
+    "general":{
+      "view_store_info": "Ansicht speichern Informationen",
+      "check_other_stores": "Prüfen Sie die Verfügbarkeit von anderen Shops",
+      "pick_up_available": "Pickup verfügbar",
+      "pick_up_currently_unavailable": "Pickup derzeit nicht verfügbar",
+      "pick_up_available_at_html": "Pickup verfügbar unter <strong> {{location_name}} <\/strong>",
+      "pick_up_unavailable_at_html": "Pickup derzeit nicht verfügbar unter <strong> {{location_name}} <\/strong>"
     }
   },
   "gift_cards": {

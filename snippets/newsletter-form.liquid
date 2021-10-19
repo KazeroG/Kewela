@@ -1,11 +1,11 @@
 {%- assign newsletter_form_id = 'newsletter-' | append: section_id -%}
-{% form 'customer', id: newsletter_form_id %}
-  {% if form.posted_successfully? %}
+{%- form 'customer', id: newsletter_form_id -%}
+  {%- if form.posted_successfully? -%}
     <div class="note note--success">{{ 'general.newsletter_form.newsletter_confirmation' | t }}</div>
-  {% endif %}
-  {% if form.errors and form.context == snippet_context %}
+  {%- endif -%}
+  {%- if form.errors and form.context == snippet_context -%}
     {{ form.errors | default_errors }}
-  {% endif %}
+  {%- endif -%}
 
   <label for="Email-{{ section_id }}" class="hidden-label">{{ 'general.newsletter_form.newsletter_email' | t }}</label>
   <input type="hidden" name="contact[tags]" value="prospect,newsletter">
@@ -21,4 +21,4 @@
       </button>
     </span>
   </div>
-{% endform %}
+{%- endform -%}

@@ -1,4 +1,4 @@
-{% if section.settings.mode != 'disabled' %}
+{%- if section.settings.mode != 'disabled' -%}
 
 <div
   id="NewsletterPopup-{{ section.id }}"
@@ -13,11 +13,11 @@
       <div class="modal__centered-content">
 
         <div class="newsletter">
-          {% if section.settings.popup_title != blank %}
+          {%- if section.settings.popup_title != blank -%}
             <h2 class="h1">{{ section.settings.popup_title }}</h2>
-          {% endif %}
+          {%- endif -%}
 
-          {% if section.settings.popup_image %}
+          {%- if section.settings.popup_image -%}
             <div class="image-wrap small--hide" style="height: 0; padding-bottom: {{ 100 | divided_by: section.settings.popup_image.aspect_ratio }}%;">
               {%- assign img_url = section.settings.popup_image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
               <img class="lazyload lazypreload" role="presentation"
@@ -27,27 +27,27 @@
                   data-sizes="auto"
                   alt="{{ section.settings.popup_image.alt }}">
             </div>
-          {% endif %}
+          {%- endif -%}
 
-          {% if section.settings.popup_text != blank %}
+          {%- if section.settings.popup_text != blank -%}
             <div class="rte">
               {{ section.settings.popup_text }}
             </div>
-          {% endif %}
+          {%- endif -%}
 
-          {% if section.settings.enable_newsletter %}
-          <div class="popup-cta">
-            {% include 'newsletter-form', section_id: section.id, snippet_context: 'popup' %}
-          </div>
-          {% endif %}
+          {%- if section.settings.enable_newsletter -%}
+            <div class="popup-cta">
+              {%- render 'newsletter-form', section_id: section.id, snippet_context: 'popup' -%}
+            </div>
+          {%- endif -%}
 
-          {% if section.settings.enable_button %}
+          {%- if section.settings.enable_button -%}
           <div class="popup-cta">
             <a href="{{ section.settings.button_link }}" class="btn">
               {{ section.settings.button_label }}
             </a>
           </div>
-          {% endif %}
+          {%- endif -%}
 
          <button type="button" class="text-close js-modal-close">{{ section.settings.close_text }}</button>
         </div>
@@ -61,7 +61,7 @@
   </div>
 </div>
 
-{% endif %}
+{%- endif -%}
 
 {% schema %}
   {

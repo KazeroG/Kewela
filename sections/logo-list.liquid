@@ -1,13 +1,13 @@
-{% style %}
+{%- style -%}
 .logo-bar--{{ section.id }} {
   opacity: {{ section.settings.logo_opacity | divided_by: 100.0 }};
 }
-{% endstyle %}
+{%- endstyle -%}
 
-{% if section.settings.divider %}<div class="section--divider">{% endif %}
+{%- if section.settings.divider -%}<div class="section--divider">{%- endif -%}
 
 <div class="page-width" data-aos="logo__animation">
-  {% if section.settings.title != blank %}
+  {%- if section.settings.title != blank -%}
     <div class="section-header">
       <h2 class="section-header__title">{{ section.settings.title | escape }}</h2>
     </div>
@@ -15,7 +15,7 @@
 
   {% if section.blocks.size > 0 %}
     <div class="logo-bar logo-bar--{{ section.id }}">
-      {% for block in section.blocks %}
+      {%- for block in section.blocks -%}
         <div class="logo-bar__item" {{ block.shopify_attributes }}>
           {% if block.settings.link != blank %}
             <a href="{{ block.settings.link }}" class="logo-bar__link">
@@ -35,12 +35,12 @@
             </a>
           {% endif %}
         </div>
-      {% endfor %}
+      {%- endfor -%}
     </div>
   {% endif %}
 </div>
 
-{% if section.settings.divider %}</div>{% endif %}
+{%- if section.settings.divider -%}</div>{%- endif -%}
 
 
 {% schema %}
@@ -93,7 +93,6 @@
     "presets": [
       {
         "name": "Logo list",
-        "category": "Image",
         "blocks": [
           {
             "type": "logo_image"

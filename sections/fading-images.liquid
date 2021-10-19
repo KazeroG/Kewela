@@ -4,13 +4,13 @@
   data-interval="{{ section.settings.slide_speed | times: 1000 }}"
   data-count="{{ section.blocks.size }}">
 
-  {% style %}
+  {%- style -%}
     .fading-images--{{ section.id }} .fading-images-overlay__title {
       background-color: {{ section.settings.title_bg_color }};
       color: {{ section.settings.title_color }};
       font-size: {{ section.settings.title_size | times: 0.5 }}px;
     }
-    @media only screen and (min-width: 590px) {
+    @media only screen and (min-width: 769px) {
       .fading-images--{{ section.id }} .fading-images-overlay__title {
         font-size: {{ section.settings.title_size }}px;
       }
@@ -28,100 +28,92 @@
     .fading-images--{{ section.id }} .finished-image {
       animation-duration: 1000ms;
     }
-  {% endstyle %}
+  {%- endstyle -%}
 
   {%- assign natural_height = false -%}
+  {%- assign natural_mobile_height = false -%}
   {% if section.settings.desktop_height == 'natural' %}
     {% comment %}
       Get first image's aspect ratio
     {% endcomment %}
-    {% for block in section.blocks limit: 1 %}
-      {% if block.settings.image != blank %}
+    {%- for block in section.blocks limit: 1 -%}
+      {%- if block.settings.image != blank -%}
         {%- assign natural_height = true -%}
-        {%- capture natural_height_ratio -%}{{ 100 | divided_by: block.settings.image.aspect_ratio }}%{% endcapture %}
-      {% endif %}
-    {% endfor %}
-  {% endif %}
+        {%- capture natural_height_ratio -%}{{ 100 | divided_by: block.settings.image.aspect_ratio }}%{%- endcapture -%}
+      {%- endif -%}
+      {%- if section.settings.mobile_height == 'auto' -%}
+        {%- assign natural_mobile_height = true -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
 
-  {% if natural_height %}
-    {% style %}
+  {%- if natural_height -%}
+    {%- style -%}
       .hero-natural--{{ section.id }} {
         position: relative;
         height: 0;
         padding-bottom: {{ natural_height_ratio }};
       }
-    {% endstyle %}
-  {% endif %}
-
-  {%- if natural_height -%}
-    <div class="hero-natural--{{ section.id }}">
+    {%- endstyle -%}
   {%- endif -%}
 
-  <div
-    class="hero hero--{{ section.id }} hero--{{ section.settings.desktop_height }} hero--mobile--{{ section.settings.mobile_height }} fading-images fading-images--{{ section.id }} fading-images-overlay__overlay loading"
-    {% if natural_height %}
-      data-natural="true"
-    {% endif %}>
-    {%- if section.settings.link -%}
-      <a href="{{ section.settings.link }}" class="hero__slide-link">
-    {%- endif -%}
+  <div class="{% if natural_height %}hero-natural--{{ section.id }}{% endif %}">
+    <div
+      {% if natural_height %}
+        data-natural="true"
+      {% endif %}
+      data-mobile-natural="{{ natural_mobile_height }}"
+      class="hero hero--{{ section.id }} hero--{{ section.settings.desktop_height }} hero--mobile--{{ section.settings.mobile_height }} fading-images fading-images--{{ section.id }} fading-images-overlay__overlay loading">
+      {%- if section.settings.link -%}
+        <a href="{{ section.settings.link }}" class="hero__slide-link">
+      {%- endif -%}
 
-    <div class="hero__text-wrap hero__text-wrap--absolute">
-      <div class="page-width text-center">
-        <div class="hero__text-content {{ section.settings.text_align }}">
-          <div class="fading-images-overlay__titles{% if section.settings.title_font == 'heading' %} fading-images-overlay__titles--heading-style{% endif %}">
-            <div class="animation-cropper">
-              <div class="fading-images-overlay__title fading-images-overlay__title--1"></div>
-            </div>
-            {% if section.settings.title_lines == "2" %}
+      <div class="hero__text-wrap hero__text-wrap--absolute">
+        <div class="page-width text-center">
+          <div class="hero__text-content {{ section.settings.text_align }}">
+            <div class="fading-images-overlay__titles{% if section.settings.title_font == 'heading' %} fading-images-overlay__titles--heading-style{% endif %}">
               <div class="animation-cropper">
-                <div class="fading-images-overlay__title fading-images-overlay__title--2"></div>
+                <div class="fading-images-overlay__title fading-images-overlay__title--1"></div>
               </div>
-            {% endif %}
+              {%- if section.settings.title_lines == "2" -%}
+                <div class="animation-cropper">
+                  <div class="fading-images-overlay__title fading-images-overlay__title--2"></div>
+                </div>
+              {%- endif -%}
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    {% for block in section.blocks %}
-      {% if block.settings.image != blank %}
-        <div
-          class="fading-images__item fading-images__item--{{ block.id }} lazyload"
-          data-bgset="{% include 'bgset', image: block.settings.image %}"
-          data-sizes="auto"
-          data-slide-index="{{ forloop.index }}"
-          data-slide-title1="{{ block.settings.slide_title1 }}"
-          data-slide-title2="{{ block.settings.slide_title2 }}"
-          style="background-position: {{ block.settings.focal_point }};">
-        </div>
-        <noscript>
-          <div
-            class="fading-images__item fading-images__item--{{ block.id }}"
+      {%- for block in section.blocks -%}
+        {%- if block.settings.image != blank -%}
+          {%- assign img_url = block.settings.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+          <img class="fading-images__item fading-images__item--{{ block.id }} lazyload"
+            src="{{ block.settings.image | img_url: '300x' }}"
+            data-src="{{ img_url }}"
+            data-aspectratio="{{ block.settings.image.aspect_ratio }}"
+            data-sizes="auto"
             data-slide-index="{{ forloop.index }}"
             data-slide-title1="{{ block.settings.slide_title1 }}"
             data-slide-title2="{{ block.settings.slide_title2 }}"
-            style="background-image: url({{ block.settings.image | img_url: '1400x' }}); background-position: {{ block.settings.focal_point }};">
+            alt="{{ block.settings.image.alt | escape }}"
+            style="object-position: {{ block.settings.focal_point }};">
+        {%- else -%}
+          {%- capture placeholder -%}lifestyle-{% cycle 1, 2 %}{%- endcapture -%}
+          <div class="fading-images__item fading-images__item--{{ block.id }} lazyloaded"
+            data-slide-index="{{ forloop.index }}"
+            data-slide-title1="{{ block.settings.slide_title1 }}"
+            data-slide-title2="{{ block.settings.slide_title2 }}">
+              {{ placeholder | placeholder_svg_tag: 'placeholder-svg' }}
           </div>
-        </noscript>
-      {% else %}
-        {% capture placeholder %}lifestyle-{% cycle 1,2 %}{% endcapture %}
-        <div class="fading-images__item fading-images__item--{{ block.id }} lazyloaded"
-          data-slide-index="{{ forloop.index }}"
-          data-slide-title1="{{ block.settings.slide_title1 }}"
-          data-slide-title2="{{ block.settings.slide_title2 }}">
-            {{ placeholder | placeholder_svg_tag: 'placeholder-svg' }}
-        </div>
-      {% endif %}
-    {% endfor %}
+        {%- endif -%}
+      {%- endfor -%}
 
-    {%- if section.settings.link -%}
-      </a>
-    {%- endif -%}
-  </div>
-
-  {%- if natural_height -%}
+      {%- if section.settings.link -%}
+        </a>
+      {%- endif -%}
     </div>
-  {%- endif -%}
+  </div>
 
 </div>
 
@@ -331,7 +323,7 @@
             "default": "center center",
             "options": [
               {
-                "value": "top left",
+                "value": "20% 0",
                 "label": "Top left"
               },
               {
@@ -339,11 +331,11 @@
                 "label": "Top center"
               },
               {
-                "value": "top right",
+                "value": "80% 0",
                 "label": "Top right"
               },
               {
-                "value": "center left",
+                "value": "20% 50%",
                 "label": "Left"
               },
               {
@@ -351,11 +343,11 @@
                 "label": "Center"
               },
               {
-                "value": "center right",
+                "value": "80% 50%",
                 "label": "Right"
               },
               {
-                "value": "bottom left",
+                "value": "20% 100%",
                 "label": "Bottom left"
               },
               {
@@ -363,7 +355,7 @@
                 "label": "Bottom center"
               },
               {
-                "value": "bottom right",
+                "value": "80% 100%",
                 "label": "Bottom right"
               }
             ]
@@ -384,7 +376,6 @@
     "presets": [
       {
         "name": "Fading image hero",
-        "category": "Image",
         "blocks": [
           {
             "type": "image",
