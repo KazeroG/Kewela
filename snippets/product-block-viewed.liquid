@@ -1,8 +1,0 @@
-<div class="prd-block_viewed">
-    <i class="icon-time"></i>
-    {% assign min = product.price | divided_by: 1000 | floor %}
-    {% assign max =  product.price | divided_by: 1000 | floor | plus:5 %}
-    {% assign diff = max | minus: min %}
-    {% assign randomNumber = "now" | date: "%N" | modulo: diff | plus: min %}
-    <span>{{ section.settings.promo_view_text | default:settings.qw_promo_view_text | replace:'N1',randomNumber }} {{ section.settings.promo_view_range | default:settings.qw_promo_view_range }}</span>
-</div>

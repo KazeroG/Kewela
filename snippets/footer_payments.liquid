@@ -1,8 +1,0 @@
-{% if section.settings.show_methods_of_payment %}
-    {% for i in (1..12) %}
-        {% capture code %}icon-code-{{ i }}{% endcapture %}
-        {% if settings[code] != blank %}
-            <li><i class="{{ settings[code] }}"></i></li>
-        {% endif %}
-    {% endfor %}
-{% endif %}

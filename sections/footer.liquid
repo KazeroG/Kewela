@@ -1,371 +1,241 @@
-{%- assign style = section.settings.style -%}
-{%- assign settings_outer_margin = section.settings.outer_margin -%}
-{%- unless template == 'index' -%}
-{%- if section.settings.only_copyright -%}
-   {%- assign style = '5' -%}
-{%- endif -%}
-{%- endunless -%}
-{%- assign style_file = 'footer-style-' | append:style -%}
-{% include style_file %}
+<footer class="site-footer">
+  <div class="page-width">
+
+    <div class="grid">
+      {% assign row_width = 0 %}
+      {% for block in section.blocks %}
+        {% assign row_width = row_width | plus: block.settings.container_width %}
+        {% style %}
+        @media only screen and (min-width: 590px) {
+          .footer__item--{{ block.id }} {
+            width: {{ block.settings.container_width }}%;
+          }
+        }
+        {% endstyle %}
+
+        {% if row_width > 100 %}
+          <div class="footer__clear small--hide"></div>
+          {% assign row_width = row_width | minus: 100 %}
+        {% endif %}
+
+        {% case block.type %}
+        {% when 'logo_social' %}
+          <div {{ block.shopify_attributes }} class="grid__item small--hide footer__item--{{ block.id }}">
+            {% include 'footer-logo-social', block: block, first_instance: true %}
+          </div>
+        {% when 'custom' %}
+          <div {{ block.shopify_attributes }} class="grid__item footer__item--{{ block.id }}">
+            {% include 'footer-custom-text', block: block %}
+          </div>
+        {% when 'newsletter' %}
+          <div {{ block.shopify_attributes }} class="grid__item footer__item--{{ block.id }}">
+            {% include 'footer-newsletter', block: block %}
+          </div>
+        {% when 'menu' %}
+          <div {{ block.shopify_attributes }} class="grid__item footer__item--{{ block.id }}">
+            {% include 'footer-menu', block: block %}
+          </div>
+        {% endcase %}
+      {% endfor %}
+      {% for block in section.blocks %}
+        {% if block.type == 'logo_social' %}
+          <div class="grid__item medium-up--hide">
+            {% include 'footer-logo-social', block: block %}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    {% if section.settings.show_payment_icons %}
+      {% unless shop.enabled_payment_types == empty %}
+        <ul class="inline-list payment-icons">
+          {% for type in shop.enabled_payment_types %}
+            <li class="icon--payment">
+              {{ type | payment_type_svg_tag: class:'icon icon--full-color' }}
+            </li>
+          {% endfor %}
+        </ul>
+      {% endunless %}
+    {% endif %}
+
+    {% if section.settings.show_copyright %}
+      <p class="footer__copyright">
+        &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}
+        {% if section.settings.copyright_text != blank %}
+          {{ section.settings.copyright_text }}
+        {% endif %}
+      </p>
+    {% endif %}
+
+  </div>
+</footer>
+
 {% schema %}
-{
-"name": "Footer",
-"settings": [
-{
-"type": "header",
-"content": "Layout"
-},
-{
-"type": "select",
-"id": "outer_margin",
-"label": "Outer top margin",
-"options":[
-{"value":"mt-0","label":"None"},
-{"value":"holder-mt-xsmall","label":"XSmall"},
-{"value":"holder-mt-small","label":"Small"},
-{"value":"holder-mt-medium","label":"Medium (default)"},
-{"value":"holder-mt-large","label":"Large"}
-],
-"default": "holder-mt-medium"
-},
-{
-"type": "select",
-"id": "outer_margin_index",
-"label": "Outer top margin (only for Home Page)",
-"options":[
-{"value":"mt-0","label":"None"},
-{"value":"holder-mt-xsmall","label":"XSmall"},
-{"value":"holder-mt-small","label":"Small"},
-{"value":"holder-mt-medium","label":"Medium (default)"},
-{"value":"holder-mt-large","label":"Large"}
-],
-"default": "holder-mt-medium"
-},
-{
-"type": "select",
-"id": "style",
-"label": "Style",
-"options": [
-{ "value": "1", "label": "Footer 1 (Default)" },
-{ "value": "2", "label": "Footer 2" },
-{ "value": "3", "label": "Footer 3" },
-{ "value": "4", "label": "Footer 4"},
-{ "value": "5", "label": "Footer 5 (compact)"},
-{ "value": "6", "label": "Footer 6"},
-{ "value": "7", "label": "Footer 7"}
-],
-"default": "6"
-},{
-   "type":      "checkbox",
-   "id":        "only_copyright",
-   "label":     "Enable only copyright on all pages except Home Page",
-   "default":   false
-},
-{
-"type": "header",
-"content": "Logo"
-},
-{
-"type": "checkbox",
-"id": "logo_yes",
-"label": "Enable",
-"default":true
-},
-{
-"type": "image_picker",
-"id": "logo",
-"label": "Logo image"
-},
-{
-"type": "range",
-"id": "logo_max_width",
-"label": "Custom logo max width",
-"min": 52,
-"max": 300,
-"step": 4,
-"unit": "px",
-"default": 172
-},
-{
-"type": "range",
-"id": "logo_max_width_mobile",
-"label": "Custom logo max width for Mobile (max 768px)",
-"min": 50,
-"max": 220,
-"step": 2,
-"unit": "px",
-"default": 140
-},
-{
-"type": "header",
-"content": "Navigation 1"
-},
-{
-"type": "checkbox",
-"id": "navigation_1_yes",
-"label": "Enable",
-"default":true
-},
-{
-"type": "link_list",
-"id": "navigation_1",
-"label": "Choose navigation 1",
-"default":"main-menu"
-   },
-   {
-   "type": "checkbox",
-   "id": "navigation_1_hide_title",
-   "label": "Hide Navigation Title",
-   "default":false
-   },
-{
-"type": "text",
-"id": "navigation_1_title",
-"label": "Title"
-},
-{
-"type": "header",
-"content": "Navigation 2"
-},
-{
-"type": "checkbox",
-"id": "navigation_2_yes",
-"label": "Enable",
-"default":false
-},
-{
-"type": "link_list",
-"id": "navigation_2",
-"label": "Choose navigation 2",
-"default":"main-menu"
-   },
-   {
-   "type": "checkbox",
-   "id": "navigation_2_hide_title",
-   "label": "Hide Navigation Title",
-   "default":false
-   },
-{
-"type": "text",
-"id": "navigation_2_title",
-"label": "Title"
-},
-{
-"type": "header",
-"content": "Navigation 3"
-},
-{
-"type": "checkbox",
-"id": "navigation_3_yes",
-"label": "Enable",
-"default":false
-},
-{
-"type": "link_list",
-"id": "navigation_3",
-"label": "Choose navigation 3",
-"default":"main-menu"
-   },
-   {
-   "type": "checkbox",
-   "id": "navigation_3_hide_title",
-   "label": "Hide Navigation Title",
-   "default":false
-   },
-{
-"type": "text",
-"id": "navigation_3_title",
-"label": "Title"
-},
-{
-"type": "header",
-"content": "Shop Info"
-},
-{
-"type": "paragraph",
-"content":"setup in General Settings / Shop Info (footer)"
-},
-{
-"type": "checkbox",
-"id": "shop_info_yes",
-"label": "Enable",
-"default": true,
-"info":"*only for Footer 1,2,6"
-},
-{
-"type": "checkbox",
-"id": "shop_info_index_yes",
-"label": "Show 'Shop Info' only for Index Page",
-"default": true
-},
-{
-"type": "header",
-"content": "Social media"
-},
-{
-"type": "paragraph",
-"content": "setup in General Settings / Social media"
-},
-{
-"type": "checkbox",
-"id": "social_icons",
-"label": "Enable",
-"default": true
-},
-{
-"type": "text",
-"id": "social_icons_title",
-"label": "Title",
-"default":"OUR SOCIALS"
-},
-{
-"type": "header",
-"content": "Newsletter Subscription"
-},
-{
-"type": "paragraph",
-"content": "setup in General Settings / Newsletter Subscription"
-},
-{
-"type": "checkbox",
-"id": "newsletter",
-"label": "Enable",
-"default": true,
-"info":"*only for Footer 2"
-},
-{
-"type": "text",
-"id": "newsletter_title",
-"label": "Title",
-"default":"NEWSLETTER"
-},
-{
-"type": "header",
-"content": "Methods of Payment"
-},
-{
-"type": "paragraph",
-"content": "setup in General Settings / Methods of Payment (footer)"
-},
-{
-"type": "checkbox",
-"id": "show_methods_of_payment",
-"label": "Enable",
-"default": true
-},
-{
-"type": "text",
-"id": "methods_of_payment_title",
-"label": "Title",
-"default":"SAFE PAYMENTS"
-},
-{
-"type": "header",
-"content": "Phone"
-},
-{
-"type": "checkbox",
-"id": "show_phone",
-"label": "Enable",
-"default": true,
-"info":"*only for Footer 1,6"
-},
-{
-"type": "text",
-"id": "phone_title",
-"label": "Phone Title",
-"default":"GOT QUESTIONS?"
-},
-{
-"type":      "text",
-"id":        "phone",
-"label":     "Phone",
-"default":   "+1-202-555-0168"
-},
-{
-"type": "header",
-"content": "Contacts"
-},
-{
-"type": "checkbox",
-"id": "show_support",
-"label": "Enable",
-"default": true
-},
-{
-"type": "text",
-"id": "support_title",
-"label": "Contact Title",
-"default":"CONTACT INFO"
-},
-{
-"type": "textarea",
-"id": "support_time",
-"label": "Contact Text",
-"default":"<ul> <li>E-mail: <a href='mailto:F_o_x_s_h_o_p@gmail.com'>F_o_x_s_h_o_p@gmail.com</a></li> <li>Hours: 10:00 - 18:00, Mon - Fri</li> <li><a href='#'>Video Presentation</a></li> <li><a href='#' class='link-special'>Online Support</a></li> <li><a href='#' class='link-special'>Online Doc</a></li> </ul>"
-},
-{
-"type": "header",
-"content": "Custom Block"
-},
-{
-"type": "checkbox",
-"id": "show_short_description",
-"label": "Enable",
-"default": true,
-"info":"*only for Footer 1,2,6"
-},
-{
-"type": "text",
-"id": "short_description_title",
-"label": "Title",
-"default":"ABOUT US"
-},
-{
-"type": "textarea",
-"id": "short_description",
-"label": "About Us",
-"default":"<p>STORE - worldwide fashion store<br>since 2015.</p><p>We sell over 5000+ branded products</p>"
-},
-{
-"type": "header",
-"content": "Voucher Banner"
-},
-{
-"type": "checkbox",
-"id": "show_voucher",
-"label": "Enable",
-"default": false,
-"info":"*only for Footer 1,6"
-},
-{
-"type": "text",
-"id": "voucher_title",
-"label": "Title",
-"default":"VOUCHERS & DISCOUNTS"
-},
-{
-"type": "text",
-"id": "voucher_text",
-"label": "Text",
-"default":"<span class='custom-color'>FOXIC</span> THEME"
-},
-{
-"type": "header",
-"content": "Copyright"
-},
-{
-"type": "checkbox",
-"id": "show_copyright",
-"label": "Enable",
-"default": true
-},
-{
-"type": "textarea",
-"id": "copyright",
-"label": "Copyright",
-"default": "<a href='https://foxic-theme.myshopify.com/'>FOXshop</a> ©2020 copyright"
-}
-]
-}
+  {
+    "name": "Footer",
+    "max_blocks": 12,
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "show_payment_icons",
+        "label": "Show payment icons",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "show_copyright",
+        "label": "Show copyright"
+      },
+      {
+        "type": "text",
+        "id": "copyright_text",
+        "label": "Additional copyright text"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "logo_social",
+        "name": "Logo and social",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "logo",
+            "label": "Logo image"
+          },
+          {
+            "type": "range",
+            "id": "desktop_logo_height",
+            "label": "Logo height",
+            "default": 50,
+            "min": 20,
+            "max": 120,
+            "unit": "px"
+          },
+          {
+            "type": "range",
+            "id": "container_width",
+            "label": "Column width",
+            "default": 20,
+            "min": 15,
+            "max": 95,
+            "unit": "%"
+          }
+        ]
+      },
+      {
+        "type": "menu",
+        "name": "Menu",
+        "settings": [
+          {
+            "type": "checkbox",
+            "id": "show_footer_title",
+            "label": "Show title",
+            "default": true
+          },
+          {
+            "type": "link_list",
+            "id": "menu",
+            "label": "Choose a menu",
+            "default": "footer",
+            "info": "This menu won't show dropdown items"
+          },
+          {
+            "type": "range",
+            "id": "container_width",
+            "label": "Column width",
+            "default": 20,
+            "min": 15,
+            "max": 95,
+            "unit": "%"
+          }
+        ]
+      },
+      {
+        "type": "newsletter",
+        "name": "Newsletter",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "checkbox",
+            "id": "show_footer_title",
+            "label": "Show title",
+            "default": true
+          },
+          {
+            "type": "paragraph",
+            "content": "Any customers who sign up will have an account created for them in Shopify. [View customers](/admin/customers)."
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Heading",
+            "default": "Sign up and save"
+          },
+          {
+            "type": "richtext",
+            "id": "richtext",
+            "label": "Text",
+            "info": "Optional",
+            "default": "<p>Subscribe to get special offers, free giveaways, and once-in-a-lifetime deals.</p>"
+          },
+          {
+            "type": "range",
+            "id": "container_width",
+            "label": "Column width",
+            "default": 20,
+            "min": 15,
+            "max": 95,
+            "unit": "%"
+          }
+        ]
+      },
+      {
+        "type": "custom",
+        "name": "Custom text",
+        "settings": [
+          {
+            "type": "checkbox",
+            "id": "show_footer_title",
+            "label": "Show title",
+            "default": true
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Heading",
+            "default": "Custom text"
+          },
+          {
+            "type": "richtext",
+            "id": "text",
+            "label": "Text",
+            "default": "<p>Add your own custom text here.</p>"
+          },
+          {
+            "type": "range",
+            "id": "container_width",
+            "label": "Column width",
+            "default": 20,
+            "min": 15,
+            "max": 95,
+            "unit": "%"
+          }
+        ]
+      }
+    ],
+    "default": {
+      "settings": {},
+      "blocks": [
+        {
+          "type": "menu",
+          "settings": {}
+        },
+        {
+          "type": "logo_social",
+          "settings": {}
+        }
+      ]
+    }
+  }
 {% endschema %}

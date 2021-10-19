@@ -1,6 +1,0 @@
-{% assign min = section.settings.avarage_users_count | default:settings.qw_avarage_users_count | minus:5 %}
-{% assign max =  section.settings.avarage_users_count | default:settings.qw_avarage_users_count | plus:5 %}
-{% assign diff = max | minus: min %}
-{% assign randomNumber = "now" | date: "%N" | modulo: diff | plus: min %}
-{% capture real_time_users %}<span class="prd-block_visitiors-count js-visitors-now" data-vmax="{{ max }}" data-vmin="{{ min }}">{{ randomNumber }}</span>{% endcapture %}
-<div class="prd-block_visitiors">{{ section.settings.avarage_users_text | default:settings.qw_avarage_users_text | replace:'N1',real_time_users }} </div>

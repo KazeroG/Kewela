@@ -1,38 +1,80 @@
-{% paginate search.results by 10 %}
-<div class="holder">
-  <div class="container">
-    <div class="page-title text-center" data-collection-title>
-      <h1> {% if search.performed == false %} {{ 'general.search.title' | t }} {% else %}{{ 'general.search.results_with_count' | t: terms: search.terms, count: search.results_count }} {% endif %} </h1>
-    </div>
-      <div class="row">
-        <div class="col-lg aside">
-          <div class="prd-grid-wrap">
-            <div class="prd-grid product-listing data-to-show-5 data-to-show-md-3 data-to-show-sm-2 js-category-grid" data-product-listing>
-                {%- for item in search.results -%}
-                    {% if item.object_type == 'product' %}
-                        {% include 'product-card', product: item %}
-                        {% elsif item.object_type == 'page' or item.object_type == 'article' %}
-                      <div class="prd card">
-                        <div class="card-body">
-                          <h3><a href="{{ item.url }}">{{ item.title }}</a></h3>
-                          <p>{{ item.content | strip_html | escape | truncate: 100 }}...</p>
-                          <a class="btn mt-15" href="{{ item.url }}">{{ "blogs.article.read_more" | t }}</a>
-                        </div>
-                      </div>
-                    {% endif %}
-                {%- endfor -%}
-            </div>
+{% paginate search.results by 12 %}
+
+<div class="page-width page-content">
+
+  {% include 'breadcrumbs' %}
+
+  <div class="grid">
+    <div class="grid__item">
+      <header class="section-header">
+        <h1 class="section-header__title">
+          {{ 'general.search.title' | t }}
+        </h1>
+      </header>
+
+      {% include 'search-bar', search_btn_style: 'btn', search_bar_location: 'search-bar--page' %}
+
+      {% if search.performed %}
+
+        <hr class="hr--medium">
+
+        <div data-section-id="{{ section.id }}" data-section-type="collection-template">
+          <h2>
+            {{ 'general.search.result_count' | t: count: search.results_count }}
+          </h2>
+          {% if search.results_count == 0 %}
+            {{ 'general.search.no_results_html' | t: terms: search.terms }}
+          {% endif %}
+
+          <div class="grid grid--uniform">
+            {% for item in search.results %}
+
+              {% if item.object_type == 'product' %}
+                {% assign product = item %}
+                {% include 'product-grid-item' %}
+              {% else %}
+                <div class="grid__item grid-search medium-up--one-quarter medium--one-half">
+                  <div class="grid-search__page">
+                    <a href="{{ item.url }}" class="grid-search__page-link">
+                      <span class="grid-search__page-content">
+                        <span class="h4">{{ item.title }}</span>
+                        {% if item.object_type == 'article' and item.image %}
+                          {%- assign img_url = item.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+                          <img class="grid-product__image lazyload"
+                              data-src="{{ img_url }}"
+                              data-widths="[180, 360, 540]"
+                              data-aspectratio="{{ item.image.aspect_ratio }}"
+                              data-sizes="auto"
+                              alt="{{ item.title | escape }}">
+                        {% endif %}
+                        {{ item.content | strip_html | truncatewords: 60 }}
+                      </span>
+                    </a>
+                  </div>
+                </div>
+              {% endif %}
+
+            {% endfor %}
+
+            {% for item in search.results %}
+              {% if item.object_type == 'product' %}
+                {% if settings.quick_shop_enable %}
+                  {% assign product = item %}
+                  {% include 'quick-shop-modal' %}
+                {% endif %}
+              {% endif %}
+            {% endfor %}
           </div>
         </div>
-      </div>
-      {% if search.performed %}
+
         {% if paginate.pages > 1 %}
-        <div class="pagination-wrap d-flex justify-content-center mt-4">
-              {% include 'pagination' %}
-        </div>
+          {% include 'pagination' %}
         {% endif %}
+
       {% endif %}
-    {% section 'collection-shop-info' %}
+
+    </div>
   </div>
 </div>
+
 {% endpaginate %}

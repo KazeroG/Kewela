@@ -1,6 +1,0 @@
-{%- assign preview_parse = link_title | split:'::' -%}
-{%- if preview_parse[2] != blank -%}
-<span class="submenu-link-image">
-    <img class="lazyload"  data-srcset="{{ preview_parse[2] | file_img_url:'200x' }} 1x, {{ preview_parse[2] | file_img_url:'220x', scale:1.5 }} 2x" alt="{{ link_title }}">
-</span>
-{%- endif -%}

@@ -1,21 +1,131 @@
 <!doctype html>
 <html class="no-js" lang="{{ shop.locale }}">
 <head>
-     {% include 'head' %}
-     {{ content_for_header }}
-</head>
-{%- assign settings_maxwidth = settings.maxwidth -%}
-<body class="template-{{ request.page_type | handle }} page-{{ template.suffix }} {% if settings.equal_height %}equal-height{% endif %} {% if settings.ajax_cart %}ajax_cart{% endif %} {% if settings.rtl or template contains 'rtl' %}rtl{% endif %} {% if settings.rounded_elements %}has-rounded-elements{% endif %}  {% if template contains 'collection' %}{% if settings_filter_style == 'hidden_horizontal' or settings_filter_style == 'visible_horizontal'%}has-horizontal-filter{% endif %}{% endif %} {% if settings.product_style_swatch == 'square' %}has-squared-color-swatch{% endif %} {% unless settings.button_round %}has-squared-btns{% endunless %} {% unless settings.button_uppercase %}has-btn-not-upper{% endunless %} {% if settings.button_round %}{{ settings.button_round_style }}{% endif %}  {% if settings.image_loader == 'background' %}has-loader-bg{% endif %} {% if settings_maxwidth < 1600 %}has-sm-container{% endif %} {% if settings.minicart_auto_open %}minicart_auto_open{% endif %}  {% if settings.maxwidth < 1400 %}body-not-wide{% endif %}" data-time-locale="{{ 'theme.countdown.days' | t }}/{{ 'theme.countdown.hours' | t }}/{{ 'theme.countdown.minutes' | t }}/{{ 'theme.countdown.seconds' | t }}">
-{% render 'body-loader' %}
-{% section 'header' %}
-<div class="page-content">
-    {% include 'breadcrumbs' %}
-    {{ content_for_layout }}
-</div>
-{% section 'footer' %}
-{% include 'side-left-right' %}
-{% section 'promo-products' %}
-{% include 'before-body-js' %}
-</body>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="{{ settings.color_button }}">
+  <link rel="canonical" href="{{ canonical_url }}">
+  <meta name="format-detection" content="telephone=no">
 
+  {%- if settings.favicon -%}
+    <link rel="shortcut icon" href="{{ settings.favicon | img_url: '32x32' }}" type="image/png" />
+  {%- endif -%}
+
+  {% include 'seo-title' %}
+  <title>{{ seo_title }}</title>
+
+  {%- if page_description -%}
+  <meta name="description" content="{{ page_description | escape }}">
+  {%- endif -%}
+
+  {% include 'social-meta-tags' %}
+
+  {% include 'font-face' %}
+  {{ 'theme.scss.css' | asset_url | stylesheet_tag }}
+
+  <script>
+    document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
+
+    window.theme = window.theme || {};
+    theme.strings = {
+      addToCart: {{ 'products.product.add_to_cart' | t | json }},
+      soldOut: {{ 'products.product.sold_out' | t | json }},
+      unavailable: {{ 'products.product.unavailable' | t | json }},
+      stockLabel: {{ 'products.product.stock_label' | t: count: '[count]' | json }},
+      willNotShipUntil: {{ 'products.product.will_not_ship_until' | t: date: '[date]' | json }},
+      willBeInStockAfter: {{ 'products.product.will_be_in_stock_after' | t: date: '[date]' | json }},
+      waitingForStock: {{ 'products.product.waiting_for_stock' | t | json }},
+      cartSavings: {{ 'cart.general.savings_html' | t: savings: '[savings]' | json }},
+      cartEmpty: {{ 'cart.general.empty' | t | json }},
+      cartTermsConfirmation: {{ 'cart.general.terms_confirm' | t | json }}
+    };
+    theme.settings = {
+      dynamicVariantsEnable: true,
+      dynamicVariantType: {{ settings.variant_type | json }},
+      cartType: {{ settings.cart_type | json }},
+      currenciesEnabled: {{ settings.enable_currencies | json }},
+      nativeMultiCurrency: {{ shop.enabled_currencies.size }} > 1 ? true : false,
+      moneyFormat: {{ shop.money_format | json }},
+      predictiveSearch: {{ settings.predictive_search_enabled }},
+      predictiveSearchType: {{ settings.search_type | json }},
+      inventoryThreshold: {{ settings.inventory_threshold }},
+      quickView: {{ settings.quick_shop_enable }},
+      themeName: 'Motion',
+      themeVersion: "4.5.0"
+    };
+  </script>
+
+  {{ content_for_header }}
+
+  <script src="{{ 'vendor-scripts-v7.js' | asset_url | split: '?' | first }}" defer="defer"></script>
+
+  {% if settings.enable_currencies %}
+    {% unless shop.enabled_currencies.size > 1 %}
+      <script src="/services/javascripts/currencies.js" defer="defer"></script>
+      <script src="{{ 'currencies.jquery.min.js' | asset_url | split: '?' | first }}" defer="defer"></script>
+    {% endunless %}
+    <link rel="stylesheet" href="{{ 'currency-flags.css' | asset_url }}">
+  {% endif %}
+
+  <script src="{{ 'theme.js' | asset_url }}" defer="defer"></script>
+
+  {%- if template contains 'customers' -%}
+    <script src="{{ 'shopify_common.js' | shopify_asset_url }}" defer="defer"></script>
+  {%- endif -%}
+</head>
+
+<body class="template-{{ template | replace: '.', ' ' | truncatewords: 1, '' | handle }}{% if settings.enable_currencies %} currencies-enabled{% endif %}" data-transitions="{{ settings.animate_page_transitions }}">
+
+  {% if settings.animate_page_transitions %}
+    <script type="text/javascript">window.setTimeout(function() { document.body.className += " loaded"; }, 25);</script>
+  {% endif %}
+
+  <a class="in-page-link visually-hidden skip-link" href="#MainContent">{{ 'general.accessibility.skip_to_content' | t }}</a>
+
+  <div id="PageContainer" class="page-container">
+    <div class="transition-body">
+
+    {% section 'header' %}
+
+      <main class="main-content" id="MainContent">
+        {{ content_for_layout }}
+      </main>
+
+      {% section 'footer' %}
+
+    </div>
+  </div>
+
+  {% section 'newsletter-popup' %}
+
+  {%- if settings.cart_type == 'drawer' -%}
+    {%- include 'ajax-cart-template' -%}
+  {%- endif -%}
+
+  {%- if settings.enable_currencies -%}
+    {%- include 'currency-modal' -%}
+  {%- endif -%}
+
+  {%- if settings.predictive_search_enabled -%}
+    {%- include 'predictive-template' -%}
+  {%- endif -%}
+
+  {% comment %}
+    Custom markup for slider arrows using theme icons
+  {% endcomment %}
+  <div class="hide">
+    <button id="prevArrowTemplate" class="slick-prev" aria-label="{{ 'general.pagination.previous' | t }}" type="button">
+      <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-chevron-left" viewBox="0 0 284.49 498.98"><path d="M249.49 0a35 35 0 0 1 24.75 59.75L84.49 249.49l189.75 189.74a35.002 35.002 0 1 1-49.5 49.5L10.25 274.24a35 35 0 0 1 0-49.5L224.74 10.25A34.89 34.89 0 0 1 249.49 0z"/></svg>
+      <span class="icon__fallback-text">{{ 'general.pagination.previous' | t }}</span>
+    </button>
+    <button id="nextArrowTemplate" class="slick-next" aria-label="{{ 'general.pagination.next' | t }}" type="button">
+      <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-chevron-right" viewBox="0 0 284.49 498.98"><path d="M35 498.98a35 35 0 0 1-24.75-59.75l189.74-189.74L10.25 59.75a35.002 35.002 0 0 1 49.5-49.5l214.49 214.49a35 35 0 0 1 0 49.5L59.75 488.73A34.89 34.89 0 0 1 35 498.98z"/></svg>
+      <span class="icon__fallback-text">{{ 'general.pagination.next' | t }}</span>
+    </button>
+  </div>
+
+  {% include 'video-modal' %}
+  {% include 'photoswipe-template' %}
+</body>
 </html>
