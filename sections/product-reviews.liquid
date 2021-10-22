@@ -1,0 +1,32 @@
+<div class="theme-product-reviews-full container strongly-spaced-row">
+  <div id="shopify-product-reviews" data-id="{{ product.id }}">{{ product.metafields.spr.reviews }}</div>
+</div>
+
+
+{% schema %}
+{
+  "name": "Product reviews",
+  "class": "section-product-reviews",
+  "templates": ["product"],
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Add reviews by installing the [Shopify Product Reviews app](https:\/\/apps.shopify.com\/product-reviews)"
+    },
+    {
+      "type": "paragraph",
+      "content": "You may need to reload the page before reviews display correctly."
+    },
+    {
+      "type": "paragraph",
+      "content": "Check the general theme settings for more options."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product reviews",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

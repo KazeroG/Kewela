@@ -1,0 +1,204 @@
+<div data-section-type="faq" data-components="accordion">
+  <div class="container fully-spaced-row">
+    <div class="faq-layout">
+      {% if section.settings.show_index %}
+        <div class="faq-index">
+          <div class="faq-index__inner">
+            {% if section.settings.index_heading != blank %}
+              <div class="faq-index__heading">{{ section.settings.index_heading }}</div>
+            {% endif %}
+            <div class="faq-index-item">
+              <a class="faq-index-item__link" href="#faq">{{ page.title | escape }}</a>
+            </div>
+            {%- for block in section.blocks -%}
+              {% if block.type == 'heading' %}
+                <div class="faq-index-item">
+                  <a class="faq-index-item__link" href="#faq-{{ block.settings.title | handle }}">{{ block.settings.title }}</a>
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
+      <div class="faq-list">
+        {% if section.settings.title != blank %}
+          {% if section.settings.use_h1 == blank %}
+            <h1 id="faq">{{ section.settings.title | escape }}</h1>
+          {% else %}
+            <h2 id="faq" class="h1-style">{{ section.settings.title | escape }}</h2>
+          {% endif %}
+        {% endif %}
+
+        {% if section.settings.text != blank %}
+          <div class="rte">{{ section.settings.text }}</div>
+        {% endif %}
+
+        {% if section.settings.show_search %}
+          <div class="faq-search">
+            <span class="faq-search__icon">{% render 'svg-search' %}</span>
+            <input type="text" class="faq-search__input" autocomplete="off" placeholder="{{ 'faq.search.placeholder' | t | escape }}" aria-label="{{ 'faq.search.label' | t | escape }}">
+          </div>
+        {% endif %}
+
+        {% capture accordion_content %}
+          {%- for block in section.blocks -%}
+            <div class="faq-row" {{ block.shopify_attributes }}>
+              {% if block.type == 'heading' %}
+                <h3 class="faq-content faq-content--heading" id="faq-{{ block.settings.title | handle }}">{{ block.settings.title }}</h3>
+
+              {% elsif block.type == 'content' %}
+                <div class="faq-content faq-content--text rte">{{ block.settings.content }}</div>
+
+              {% elsif block.type == 'button' %}
+                <div class="faq-content faq-content--button">
+                  <a class="btn btn--primary" href="{{ block.settings.link }}">{{ block.settings.title }}</a>
+                </div>
+
+              {% elsif block.type == 'question' %}
+                <div class="faq-question-container">
+                  {% render 'accordion-item',
+                      title: block.settings.title,
+                      content: block.settings.answer,
+                      add_content_class: 'rte',
+                      item_open: false
+                  %}
+                </div>
+              {% endif %}
+            </div>
+          {%- endfor -%}
+        {% endcapture %}
+        {%
+          render "accordion",
+            allow_multi_open: false,
+            content: accordion_content
+        %}
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% schema %}
+  {
+    "name": "FAQ",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title",
+        "default": "FAQ"
+      },
+      {
+        "type": "checkbox",
+        "id": "use_h1",
+        "label": "Set as primary page heading",
+        "info": "Uses <h1> tag (used for SEO and accessibility). One per page recommended.",
+        "default": false
+      },
+      {
+        "type": "richtext",
+        "id": "text",
+        "label": "Description"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_search",
+        "label": "Show search",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Index column"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_index",
+        "label": "Show index column",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "index_heading",
+        "label": "Heading",
+        "default": "How can we help?"
+      }
+    ],
+    "max_blocks": 100,
+    "blocks": [
+      {
+        "type": "question",
+        "name": "Question",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Question",
+            "default": "Question"
+          },
+          {
+            "type": "richtext",
+            "id": "answer",
+            "label": "Answer",
+            "default": "<p>Answer</p>"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "name": "Heading",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Heading",
+            "default": "Heading"
+          }
+        ]
+      },
+      {
+        "type": "content",
+        "name": "Paragraph",
+        "settings": [
+          {
+            "type": "richtext",
+            "id": "content",
+            "label": "Content"
+          }
+        ]
+      },
+      {
+        "type": "button",
+        "name": "Button",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Label",
+            "default": "Button label"
+          },
+          {
+            "type": "url",
+            "id": "link",
+            "label": "Link"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "FAQ",
+        "category": "Text",
+        "settings": {},
+        "blocks": [
+          {
+            "type": "question"
+          },
+          {
+            "type": "question"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

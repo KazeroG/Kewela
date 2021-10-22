@@ -1,0 +1,160 @@
+{% paginate search.results by section.settings.coll_num_per_page_int %}
+
+<div class="container" data-components="accordion,modal">
+  <div class="page-header" data-cc-animate>
+    <h1 class="visually-hidden">{{ 'general.search.title' | t }}</h1>
+
+    <div class="main-search">
+      <div class="main-search__container">
+        <form class="main-search__form" action="{{ routes.search_url }}" method="get" autocomplete="off">
+          <input type="hidden" name="type" value="{{ settings.search_type }}" />
+          <input type="hidden" name="options[prefix]" value="last" />
+          <button class="main-search__button button notabutton" type="submit" aria-label="{{ 'layout.header.search_submit' | t }}">{% render 'svg-search' %}</button>
+          <div class="main-search__input-container">
+            <input
+              class="main-search__input"
+              type="text"
+              name="q"
+              autocomplete="off"
+              placeholder="{{ 'layout.search.placeholder' | t | escape }}"
+              aria-label="{{ 'layout.search.title' | t | escape }}"
+              value="{{ search.terms | escape }}" />
+          </div>
+        </form>
+      </div>
+    </div>
+
+    {% if search.performed %}
+      <div class="lightly-spaced-row lightly-spaced-row-above">{{ 'general.search.results_with_count' | t: count: search.results_count }}</div>
+    {% endif %}
+  </div>
+</div>
+
+{% if search.performed %}
+  <div class="container{% if settings.use_fullwidth_layout %} container--no-max{% endif %}">
+    {% if search.results == empty %}
+      <p class="align-center" data-cc-animate>{{ 'general.search.no_results' | t: terms: search.terms }}</p>
+    {% else %}
+      <div class="collection-listing cf">
+        <div class="product-list product-list--per-row-{{ section.settings.grid }} product-list--image-shape-{{ settings.prod_thumb_shape }}">
+          {%- liquid
+            if settings.prod_thumb_shape == 'portrait-23'
+              assign chosen_product_aspect_ratio = 0.67
+            elsif settings.prod_thumb_shape == 'portrait-45'
+              assign chosen_product_aspect_ratio = 0.8
+            elsif settings.prod_thumb_shape == 'square'
+              assign chosen_product_aspect_ratio = 1.0
+            elsif settings.prod_thumb_shape == 'landscape'
+              assign chosen_product_aspect_ratio = 1.50
+            elsif settings.prod_thumb_shape == 'tallest'
+              assign chosen_product_aspect_ratio = 99
+              for product in search.results
+                if product.object_type == 'product' and product.featured_media.preview_image.aspect_ratio < chosen_product_aspect_ratio
+                  assign chosen_product_aspect_ratio = product.featured_media.preview_image.aspect_ratio
+                endif
+              endfor
+            else
+              assign chosen_product_aspect_ratio = 0
+              for product in search.results
+                if product.object_type == 'product' and product.featured_media.preview_image.aspect_ratio > chosen_product_aspect_ratio
+                  assign chosen_product_aspect_ratio = product.featured_media.preview_image.aspect_ratio
+                endif
+              endfor
+            endif
+
+            if settings.coll_grid_image_shape == 'portrait-23'
+              assign chosen_collection_aspect_ratio = 0.67
+            elsif settings.coll_grid_image_shape == 'portrait-45'
+              assign chosen_collection_aspect_ratio = 0.8
+            elsif settings.coll_grid_image_shape == 'square'
+              assign chosen_collection_aspect_ratio = 1.0
+            elsif settings.coll_grid_image_shape == 'landscape'
+              assign chosen_collection_aspect_ratio = 1.50
+            elsif settings.coll_grid_image_shape == 'tallest'
+              assign chosen_collection_aspect_ratio = 99
+              for collection in search.results
+                if collection.object_type == 'collection'
+                  if collection.featured_image.aspect_ratio < chosen_collection_aspect_ratio
+                    assign chosen_collection_aspect_ratio = collection.featured_image.aspect_ratio
+                  endif
+                endif
+              endfor
+            else
+              assign chosen_collection_aspect_ratio = 0
+              for collection in search.results
+                if collection.object_type == 'collection'
+                  if collection.featured_image.aspect_ratio > chosen_collection_aspect_ratio
+                    assign chosen_collection_aspect_ratio = collection.featured_image.aspect_ratio
+                  endif
+                endif
+              endfor
+            endif
+          -%}
+          {% for item in search.results %}
+            {% if item.object_type == 'product' %}
+              {% render 'product-block', product: item, custom_aspect_ratio: chosen_product_aspect_ratio, animate: true %}
+            {% elsif item.object_type == 'collection' %}
+              {% render 'collection-block', collection: item, custom_aspect_ratio: chosen_collection_aspect_ratio, animate: true %}
+            {% else %}
+              <div class="product-block page-block" data-cc-animate>
+                <div class="block-inner">
+                  {% if item.object_type == 'article' and item.image %}
+                    <div class="article-image">
+                      <a href="{{ item.url }}">
+                        {%- render 'responsive-image', image: item.image -%}
+                      </a>
+                    </div>
+                  {% endif %}
+                  <div class="text-cont">
+                    <h6><a href="{{ item.url }}">{{ item.title }}</a></h6>
+                    {% unless item.object_type == 'article' and item.image %}
+                      <p><a href="{{ item.url }}">{{ item.content | strip_html | truncatewords: 20 | highlight: search.terms }}</a></p>
+                    {% endunless %}
+                    <a href="{{ item.url }}">{{ 'general.search.continue_reading' | t }} {% render 'svg-chevron-right' %}</a>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+{% endif %}
+
+<div class="container pagination-row" data-cc-animate>{% render 'pagination-control', paginate: paginate %}</div>
+
+{% endpaginate %}
+
+{% schema %}
+  {
+    "name": "Search results",
+    "class": "section-search-template page-section-spacing",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "show_vendor",
+        "label": "Show product vendors",
+        "default": false
+      },
+      {
+        "type": "range",
+        "id": "coll_num_per_page_int",
+        "min": 16,
+        "max": 50,
+        "step": 2,
+        "label": "Number of products to show per page",
+        "default": 24
+      },
+      {
+        "type": "range",
+        "id": "grid",
+        "label": "Products per row",
+        "min": 2,
+        "max": 5,
+        "step": 1,
+        "default": 4
+      }
+    ]
+  }
+{% endschema %}
