@@ -79,7 +79,31 @@
                     {% render 'icon-star' %}
                   {% elsif block.settings.icon == 'telephone' %}
                     {% render 'icon-telephone' %}
-                  {% endif %}
+                {% elsif block.settings.icon == 'anti-pluie' %}
+                    {% render 'icon-anti-pluie' %}
+                {% elsif block.settings.icon == 'anti-virus' %}
+                    {% render 'icon-anti-virus' %}
+                {% elsif block.settings.icon == 'delivery-2' %}
+                    {% render 'icon-delivery-2' %}
+                {% elsif block.settings.icon == 'dessin' %}
+                    {% render 'icon-dessin' %}
+                {% elsif block.settings.icon == 'dry' %}
+                    {% render 'icon-dry' %}
+                {% elsif block.settings.icon == 'horloge' %}
+                    {% render 'icon-horloge' %}
+                {% elsif block.settings.icon == 'package' %}
+                    {% render 'icon-package' %}
+                {% elsif block.settings.icon == 'parapluie' %}
+                    {% render 'icon-parapluie' %}
+                {% elsif block.settings.icon == 'plume' %}
+                    {% render 'icon-plume' %}
+                {% elsif block.settings.icon == 'pluie' %}
+                    {% render 'icon-pluie' %}
+                {% elsif block.settings.icon == 'serviette' %}
+                    {% render 'icon-serviette' %}
+                {% elsif block.settings.icon == 'stars' %}
+                    {% render 'icon-stars' %}
+                {% endif %}
                 {% else %}
                   <div class="icon-with-caption__image-{{ block.settings.image_size }}">
                     {% if block.settings.image == blank %}
@@ -241,7 +265,56 @@
               {
                 "value": "telephone",
                 "label": "Telephone"
+              },
+				{
+                "value": "anti-pluie",
+                "label": "anti-pluie"
+              },
+{
+                "value": "anti-virus",
+                "label": "anti-virus"
+              },
+{
+                "value": "delivery-2",
+                "label": "delivery-2"
+              },
+{
+                "value": "dessin",
+                "label": "dessin"
+              },
+{
+                "value": "dry",
+                "label": "dry"
+              },
+{
+                "value": "horloge",
+                "label": "horloge"
+              },
+{
+                "value": "package",
+                "label": "package"
+              },
+{
+                "value": "parapluie",
+                "label": "parapluie"
+              },
+{
+                "value": "pluie",
+                "label": "pluie"
+              },
+{
+                "value": "plume",
+                "label": "plume"
+              },
+{
+                "value": "serviette",
+                "label": "serviette"
+              },
+{
+                "value": "stars",
+                "label": "stars"
               }
+
             ]
           },
           {

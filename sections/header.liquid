@@ -105,32 +105,37 @@
           {% if shop.customer_accounts_enabled %}
             {% if customer %}
               <a class="header-account-link" href="{{ routes.account_url }}" aria-label="{{ 'layout.customer.account' | t | escape }}">
-                <span class="desktop-only">{{ 'layout.customer.account' | t | escape }}</span>
+                <span class="desktop-only">{% render 'svg-user' %}</span>
                 <span class="mobile-only">{% render 'svg-user' %}</span>
               </a>
             {% else %}
               <a class="header-account-link" href="{{ routes.account_login_url }}" aria-label="{{ 'layout.customer.account' | t | escape }}">
-                <span class="desktop-only">{{ 'layout.customer.account' | t | escape }}</span>
+                <span class="desktop-only">{% render 'svg-user' %}</span>
                 <span class="mobile-only">{% render 'svg-user' %}</span>
               </a>
             {% endif %}
           {% endif %}
           <a class="show-search-link" href="{{ routes.search_url }}">
-            <span class="show-search-link__text">
+            {% comment %}<span class="show-search-link__text">
               {{- 'layout.search.open' | t -}}
             </span>
+            {% endcomment %}
             <span class="show-search-link__icon">
               {%- render 'svg-search' -%}
             </span>
+            
+
           </a>
           <a href="{{ routes.cart_url }}" class="cart-link">
-            <span class="cart-link__label">{{ 'layout.header.cart' | t | escape }}</span>
+            {% comment %}<span class="cart-link__label">{{ 'layout.header.cart' | t | escape }}</span>{% endcomment %}
+            
             <span class="cart-link__icon">
               {%- render 'svg-cart' -%}
               {%- if cart.item_count > 0 -%}
                 <span class="cart-link__count">{{ cart.item_count }}</span>
               {%- endif -%}
             </span>
+            
           </a>
         </div>
       </div>

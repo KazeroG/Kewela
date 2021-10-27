@@ -74,7 +74,7 @@
 
                 <div class="cart-item__column cart-item__price">
                   {% if item.original_line_price > item.final_line_price %}
-                    <div class="struck-out-price"><span class="theme-money">{{ item.original_price | money }}</span></div>
+                    <div class="struck-out-price"><span class="theme-money"><div class="pn-price-item" data-id="{{ item.key }}">{{ item.original_price | money }}</div></span></div>
                   {% endif %}
                   <div><span class="theme-money">{{ item.final_price | money }}</span></div>
 
@@ -124,7 +124,7 @@
 
                 <div class="cart-item__column cart-item__total" data-line="{{ forloop.index }}">
                   {% if item.original_line_price != item.final_line_price %}
-                    <div class="theme-money struck-out-price">{{ item.original_line_price | money }}</div>
+                    <div class="theme-money struck-out-price"><div class="pn-total-line-item" data-id="{{ item.key }}">{{ item.original_line_price | money }}</div></div>
                     <span class="theme-money">{{ item.final_line_price | money }}</span>
                   {% else %}
                     <span class="theme-money">{{ item.final_line_price | money }}</span>

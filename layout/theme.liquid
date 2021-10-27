@@ -74,8 +74,18 @@
     document.documentElement.classList.add('js');
   </script>
 
+  
+  {% include 'meteor-menu', load: 'head' %}
+  {% include 'buddha-megamenu' %}
   {{ content_for_header }}
-</head>
+
+        {% render 'digismoothie-candyrack' %}
+          {% render 'translation-lab-language-management' %}
+{% include 'fa_translate_core' %} 
+  
+  <script type="text/javascript">(function e(){var e=document.createElement("script");e.type="text/javascript",e.async=true,e.src="//staticw2.yotpo.com/GQa8EZVySAHEZ0gcw5587E8KqKGgkHifEhy5vWb8/widget.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();</script>
+ </head>
+        
 
 <body class="template-{{ template | split: '.' | first }}{% if template.suffix %} template-suffix-{{ template.suffix }}{% endif %}" data-cc-animate-timeout="0">
 
@@ -112,5 +122,6 @@
 
   {{ 'vendor.js'  | asset_url | script_tag }}
   {{ 'theme.js'  | asset_url | script_tag }}
-</body>
+{% render 'preorder-now' %}
+  </body>
 </html>

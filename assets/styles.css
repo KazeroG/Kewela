@@ -712,7 +712,7 @@ body.cc-popup-no-scroll {
 }
 
 .store-availabilities-modal .cc-popup-modal .cc-popup-content .store-availability-list__item a {
-  color: #ff79cd;
+  color: #ffbfd6;
 }
 
 .store-availabilities-modal .cc-popup-modal .cc-popup-content .store-availability-list__item .store-availability-list__location {
@@ -2632,6 +2632,7 @@ table {
   position: relative;
   top: 0;
   z-index: 400;
+  box-shadow: 1px 1px 15px -2px #000;
 }
 
 .cart-link {
@@ -2747,7 +2748,7 @@ table {
 }
 
 .navigation__link[aria-expanded="true"] {
-  color: #ff79cd;
+  color: #ffbfd6;
 }
 
 .menu-promotion {
@@ -2826,7 +2827,7 @@ table {
 }
 
 .navigation .featured-link > .navigation__link {
-  color: #ff79cd;
+  color: #ffbfd6;
 }
 
 @media (min-width: 768px) {
@@ -5558,6 +5559,19 @@ hr {
 
 @font-face {
   font-family: "Century Gothic";
+  font-weight: 400;
+  font-style: normal;
+  font-display: fallback;
+  src: url("https://fonts.shopifycdn.com/century_gothic/centurygothic_n4.ad57dd3bb953e5ec072f848ba96048738158e9b0.woff2?h1=a2F3ZWxhLmNh&h2=a2F3ZWxhLmNvbQ&hmac=68ba2292f1c2232c70f2997fe4d6b428ebb86ffc0e61e3b92562a429f9d1c759") format("woff2"),
+       url("https://fonts.shopifycdn.com/century_gothic/centurygothic_n4.346454bcdd76b0c02e149e968e75218ca6ee803f.woff?h1=a2F3ZWxhLmNh&h2=a2F3ZWxhLmNvbQ&hmac=79e5a3a68afafebac580fd1502ae5c7e05f0f903c34185cd51a35ab471365420") format("woff");
+}
+
+body {
+    font-family: "Century Gothic", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}@font-face {
+  font-family: "Century Gothic";
   font-weight: 700;
   font-style: normal;
   font-display: fallback;
@@ -5565,10 +5579,14 @@ hr {
        url("https://fonts.shopifycdn.com/century_gothic/centurygothic_n7.bfbdd76b5b769e73488b72ad922937634199bb91.woff?h1=a2F3ZWxhLmNh&h2=a2F3ZWxhLmNvbQ&hmac=d63ac24bdb8b409d17952d027490ed81bda2a266a9d6f4580b7db7afa9a3eefb") format("woff");
 }
 
-body {
-    font-family: "Century Gothic", sans-serif;
-    font-weight: 700;
-    font-style: normal;
+
+@font-face {
+  font-family: "Century Gothic";
+  font-weight: 400;
+  font-style: italic;
+  font-display: fallback;
+  src: url("https://fonts.shopifycdn.com/century_gothic/centurygothic_i4.057018ca8ff3e7e0367ab50107a08a8a1691315e.woff2?h1=a2F3ZWxhLmNh&h2=a2F3ZWxhLmNvbQ&hmac=3ffce91688cfbf62768bbbe19f8a67192d51c51add6fd8aa23bccb7d485e95e5") format("woff2"),
+       url("https://fonts.shopifycdn.com/century_gothic/centurygothic_i4.6bbeca156a45aa967c74d1bdac2f4ec1824dcada.woff?h1=a2F3ZWxhLmNh&h2=a2F3ZWxhLmNvbQ&hmac=c2757ae0025906fd74b86db54c01f72d3fc6fff095acf572eec4b10eadf228ca") format("woff");
 }
 
 @font-face {
@@ -5579,7 +5597,6 @@ body {
   src: url("https://fonts.shopifycdn.com/century_gothic/centurygothic_i7.a93d43c32633e83d8663433e7b3a668198503674.woff2?h1=a2F3ZWxhLmNh&h2=a2F3ZWxhLmNvbQ&hmac=17b0af0ff3f23da673820b4f80bee6336798bf58d7eb8ae97286ecef1795b10c") format("woff2"),
        url("https://fonts.shopifycdn.com/century_gothic/centurygothic_i7.902eae204ad5c1990bd9339fc5297d31234defc9.woff?h1=a2F3ZWxhLmNh&h2=a2F3ZWxhLmNvbQ&hmac=6e2ebfd2bbeedbeb87acff61ef56c37335bb1173b8b05ab7364b32655d3d7381") format("woff");
 }
-
 
 @font-face {
   font-family: "Century Gothic";
@@ -5656,14 +5673,14 @@ body {
 
 
 a {
-  color: #ff79cd;
+  color: #ffbfd6;
   transition: color 100ms, border-color 100ms, opacity 100ms;
   text-decoration: none;
   -webkit-tap-highlight-color: transparent;
 }
 
 a:hover {
-  color: #ff79cd;
+  color: #ffbfd6;
 }
 
 select {
@@ -5683,7 +5700,7 @@ textarea {
   font-size: 16px;
   line-height: 15px;
     font-family: "Century Gothic", sans-serif;
-    font-weight: 700;
+    font-weight: 400;
     font-style: normal;
   background: #ffffff;
   color: #000000;
@@ -5757,8 +5774,8 @@ button,
 input[type="submit"],
 input[type="reset"],
 input[type="button"] {
-  background: #faa4da;
-  border: 1px solid #faa4da;
+  background: #ffbfd6;
+  border: 1px solid #ffbfd6;
   color: #ffffff;
   font-size: 15px;
   font-family: inherit;
@@ -5776,7 +5793,7 @@ input[type="button"] {
   transition: background-color 100ms, color 100ms, border-color 100ms, opacity 100ms;
   display: inline-block;
     font-family: "Century Gothic", sans-serif;
-    font-weight: 700;
+    font-weight: 400;
     font-style: normal;
   letter-spacing: 0em;
   text-transform: none;
@@ -5966,17 +5983,17 @@ input[type="button"].altcolour svg:not(.feather) {
 
 @media (hover: none) {
   .btn.btn--tertiary:active {
-    background: #faa4da;
+    background: #ffbfd6;
     color: #ffffff;
-    border-color: #faa4da;
+    border-color: #ffbfd6;
   }
 }
 
 @media (hover: hover) {
   .btn.btn--tertiary:hover {
-    background: #faa4da;
+    background: #ffbfd6;
     color: #ffffff;
-    border-color: #faa4da;
+    border-color: #ffbfd6;
   }
 }
 
@@ -5997,7 +6014,7 @@ input[type="submit"].notabutton {
   min-width: 0;
   overflow: visible;
   height: auto;
-  color: #ff79cd;
+  color: #ffbfd6;
   -moz-transition: color 100ms;
   -webkit-transition: color 100ms;
   transition: color 100ms;
@@ -6008,7 +6025,7 @@ input[type="submit"].notabutton {
   a.button.notabutton:active,
   button.notabutton:active,
   input[type="submit"].notabutton:active {
-    color: #ff79cd;
+    color: #ffbfd6;
   }
 }
 
@@ -6017,7 +6034,7 @@ input[type="submit"].notabutton {
   a.button.notabutton:hover,
   button.notabutton:hover,
   input[type="submit"].notabutton:hover {
-    color: #ff79cd;
+    color: #ffbfd6;
   }
 }
 
@@ -6148,27 +6165,27 @@ h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
 }
 
 h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover, h5 a:hover, h6 a:hover {
-  color: #ff79cd;
+  color: #ffbfd6;
 }
 
 h1, .h1-style, .faq-title {
-  font-size: 27px;
+  font-size: 29px;
 }
 
 
 h2,
 .h2-style {
-    font-size: 25px;
+    font-size: 26px;
 }
 
 h3,
 .h3-style {
-    font-size: 23px;
+    font-size: 24px;
 }
 
 h4,
 .h4-style {
-    font-size: 21px;
+    font-size: 22px;
 }
 
 h5,
@@ -6183,7 +6200,7 @@ h6,
 
 @media (max-width: 767px) {
   h1, .h1-style, .faq-title {
-    font-size: 22px;
+    font-size: 23px;
   }
   
   h2,
@@ -6192,19 +6209,19 @@ h6,
   }
   h3,
   .h3-style {
-        font-size: 19px;
+        font-size: 20px;
   }
   h4,
   .h4-style {
-        font-size: 18px;
+        font-size: 19px;
   }
   h5,
   .h5-style {
-        font-size: 17px;
+        font-size: 18px;
   }
   h6,
   .h6-style {
-        font-size: 16.12px;
+        font-size: 16.28px;
   }
 }
 
@@ -6243,12 +6260,12 @@ h6,
 }
 
 .super-large-text {
-  font-size: 47px;
+  font-size: 51px;
 }
 
 @media (max-width: 767px) {
   .super-large-text {
-    font-size: 22px;
+    font-size: 23px;
   }
 }
 
@@ -6265,7 +6282,7 @@ h6,
 }
 
 .small-feature-link {
-  border-bottom: 1px solid #ff79cd;
+  border-bottom: 1px solid #ffbfd6;
   padding-bottom: 1px;
   font-size: 1em;
   font-weight: 500;
@@ -6275,8 +6292,8 @@ h6,
 }
 
 .small-feature-link:hover {
-  color: #ff79cd;
-  border-bottom-color: #ff79cd;
+  color: #ffbfd6;
+  border-bottom-color: #ffbfd6;
 }
 
 img {
@@ -6868,7 +6885,7 @@ svg.feather {
 }
 
 #pagefooter .cross-page-promos {
-  background: #f7b9e0;
+  background: #ffbfd6;
   padding-top: 20px;
   padding-bottom: 20px;
 }
@@ -6953,11 +6970,11 @@ svg.feather {
 }
 
 .sharing a svg, .sharing a svg g {
-  fill: #ff79cd;
+  fill: #ffbfd6;
 }
 
 .sharing a:hover svg, .sharing a:hover svg g {
-  fill: #ff79cd;
+  fill: #ffbfd6;
 }
 
 ul.plain li {
@@ -7405,12 +7422,12 @@ ul.inline li {
 }
 
 .product-label--stock > span {
-  background: #09728c;
+  background: #ffbfd6;
   color: #ffffff;
 }
 
 .product-label--new-in > span {
-  background: #de9d9a;
+  background: #ffbfd6;
   color: #ffffff;
 }
 
@@ -7485,7 +7502,7 @@ ul.inline li {
   position: absolute;
   z-index: 10;
   pointer-events: none;
-  border-bottom-color: #f4f6f8;
+  border-bottom-color: #fcf6f9;
   border-width: 15px;
   left: 50%;
   margin: 1px 0 0 -15px;
@@ -8264,8 +8281,8 @@ shopify-payment-terms {
 }
 
 .product-form .quantity-submit-row.has-spb .shopify-payment-button__button--unbranded {
-  background: #faa4da;
-  border: 1px solid #faa4da;
+  background: #ffbfd6;
+  border: 1px solid #ffbfd6;
   border-radius: 0px;
   color: #ffffff;
   padding: 15px 25px;
@@ -8333,10 +8350,10 @@ shopify-payment-terms {
   height: 0;
   overflow: hidden;
   position: relative;
-  background: #f4f6f8;
+  background: #fcf6f9;
   line-height: 1.6;
   text-align: center;
-  --payment-terms-background-color: #f4f6f8;
+  --payment-terms-background-color: #fcf6f9;
 }
 
 .quickbuy-container .inner {
@@ -9407,13 +9424,13 @@ table.noborders td {
 }
 
 .image-overlay--bg-box .overlay-text .overlay-text__text .small-feature-link {
-  color: #ff79cd;
-  border-bottom-color: #ff79cd;
+  color: #ffbfd6;
+  border-bottom-color: #ffbfd6;
 }
 
 .image-overlay--bg-box .overlay-text .overlay-text__text .small-feature-link:hover {
-  color: #ff79cd;
-  border-bottom-color: #ff79cd;
+  color: #ffbfd6;
+  border-bottom-color: #ffbfd6;
 }
 
 .image-overlay--bg-box .overlay-text .overlay-text__text .video-container__play svg {
@@ -10896,7 +10913,7 @@ select[data-listed][data-colour-swatch="true"] + .clickyboxes a::before {
 
 .flexible-layout--variable-columns .column {
   flex: 1 0 auto;
-  width: 33%;
+  width: 20%;
   max-width: 50%;
 }
 
@@ -12155,7 +12172,7 @@ html.template-password #shoplogo {
 }
 
 html.template-password #shoplogo .logotext {
-  font-size: 27px;
+  font-size: 29px;
   line-height: 1em;
 }
 
@@ -12188,7 +12205,7 @@ html.template-password .password-signup input[type=submit] {
   line-height: 36px;
   height: 36px;
   padding: 4px 18px;
-  border: 1px solid #faa4da;
+  border: 1px solid #ffbfd6;
   border-radius: 0 3px 3px 0;
 }
 
@@ -12318,3 +12335,9 @@ html.template-password.js #password-login-container {
 /*************    ---                   ---                   ---   *************/
 /*************    |     ENTER YOUR CUSTOM CODE BELOW HERE       |   *************/
 /*************    ---                   ---                   ---   *************/
+  
+
+  .icon-with-caption__icon svg {
+  width:50px;
+  height:50px;
+}

@@ -1,3 +1,8 @@
+
+{% capture powered_by_allowebs %}
+<a href="https://www.allowebs.com">Cette boutique a été réalisée avec soin par Allowebs.com</a>
+{% endcapture %}
+
 <div data-section-type="footer">
   {% if section.blocks != blank %}
     <div class="container container--no-max section-footer__row-container">
@@ -163,8 +168,7 @@
 
         <div class="copyright">
           <span class="copy">&copy; {{ "now" | date: "%Y" }} <a href="{{ routes.root_url }}">{{ shop.name }}</a>.</span>
-
-          {{ powered_by_link }}
+          {{ powered_by_link }} - {{ powered_by_allowebs }}
 
         </div>
       </div>
